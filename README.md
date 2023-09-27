@@ -50,7 +50,7 @@ The following commands must be executed within the `app` directory.
     python3 manage.py makemigrations
     python3 manage.py migrate
     ```
-5. **Create a django superuser** 
+5. **Create a Django superuser** 
 
     This will allow you to log into the admin page of the django app.
     
@@ -60,7 +60,7 @@ The following commands must be executed within the `app` directory.
     ```
     python3 manage.py createsuperuser
     ```
-6. Start django server
+6. Start Django server
     ```
     python3 manage.py runserver
     ```
@@ -72,4 +72,7 @@ The following commands must be executed within the `app` directory.
 
 ### Optional stuff
 
-#### 
+#### [Beekeeper Studio](https://github.com/beekeeper-studio/beekeeper-studio/releases/tag/v3.9.20)
+- Gives nice GUI to interact with relational databases
+- Allows running sql queries on the database
+- We can use it to look at the tables in our postgres database
