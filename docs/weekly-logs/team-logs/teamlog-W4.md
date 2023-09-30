@@ -16,7 +16,7 @@
 | Create Project Plan       | Esteban, Ferdinand, Keiran, Liam | [Project Plan][1] | Completed | All group members contributed equally and met at the group meetings |
 |                           |               |                           |           |       |
 
-[1]: https://github.com/COSC-499-W2023/word-chain-exercise-team-7/issues/11
+[1]: https://docs.google.com/document/d/18U3K607QbEoZFy_O4bKOMl64O0OOUe0IOVW4NVq2NdY/
 
 <br>
 
