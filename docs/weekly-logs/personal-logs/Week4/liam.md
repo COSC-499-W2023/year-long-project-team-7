@@ -8,9 +8,9 @@ _Team Evaluation Screenshot_
 
 ### Goal Recap
 
-| Goal          | Link(s)      | Status    | Notes |
-| ------------- | ------------ | --------- | ----- |
-| Create Project Plan | [Project Plan][1] | Completed | All group members contributed equally |
-|               |              |           |       |
+| Goal          | Member(s)    | Link(s)      | Status    | Notes |
+| ------------- |------------- | ------------ | --------- | ----- |
+| Create Project Plan | Esteban, Ferdinand, Keiran, Liam | [Project Plan][1] | Completed | All group members contributed equally and met at the group meetings |
+|               |              |              |           |       |
 
 [1]: https://docs.google.com/document/d/18U3K607QbEoZFy_O4bKOMl64O0OOUe0IOVW4NVq2NdY
