@@ -20,10 +20,14 @@
 
 <br>
 
-_No Burnup chart Screenshot (No features added)_
+![table-screenshot](../../img/burnup-4.png)
+<br>
+_Burnup chart Screenshot_
 
+![table-screenshot](../../img/table-4.png)
 <br>
 _Tasks table Screenshot_
 
 <br>
+
 _No Test output Screenshot (No testing needed)_
