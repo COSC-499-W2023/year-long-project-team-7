@@ -19,13 +19,18 @@ The following commands must be executed within the `app` directory.
 
 1. **Build and run docker image:** 
     
-    The build only has to be done once for initial setup.
+    These commands only have to be done once for initial setup.
     
     You can use the command to run the container every time or use the Docker desktop GUI.
     ```
     docker build -t capstone-postgres .
     docker run --name capstone-postgres -p 5432:5432 -d capstone-postgres
     ```
+    To run the container after initial build, you can start it in docker desktop GUI or run:
+    ```
+    docker run capstone-postgres
+    ```
+
 2. **Setup virtual environment**
 
     This is so that our python environment only contains the dependancies that the project needs.
