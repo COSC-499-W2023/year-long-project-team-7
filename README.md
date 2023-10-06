@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Ai Content transformer
 
 ## Project setup
