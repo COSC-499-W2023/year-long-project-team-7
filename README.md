@@ -1,18 +1,82 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=11948270&assignment_repo_type=AssignmentRepo)
-# Project-Starter
+# Ai Content transformer
 
-Please use the provided folder structure for your docs (project plan, design documentation, communications log, weekly logs, and final documentation), source code, testing, etc.    You are free to organize any additional internal folder structure as required by the project.  Please use a branching workflow and once an item is ready, do remember to issue a PR, code review, and merge it into the develop branch and then the master branch.
-```
-.
-├── docs                    # Documentation files (alternatively `doc`)
-│   ├── project plan        # Project plan document
-│   ├── design              # Getting started guide
-│   ├── final               # Getting started guide
-│   ├── logs                # Team Logs
-│   └── ...          
-├── app                     # Source files
-├── tests                   # Automated tests 
-├── utils                   # Tools and utilities
-└── README.md
-```
-Also, update your README.md file with the team and client/project information.  You can find details on writing GitHub Markdown [here](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) as well as a [handy cheatsheet](https://enterprise.github.com/downloads/en/markdown-cheatsheet.pdf).   
+## Project setup
+
+### Requirements
+- [Docker](https://www.docker.com/)
+- [Virtualenv](https://pypi.org/project/virtualenv/)
+    ```
+    pip install virtualenv
+    # or
+    pip3 install virtualenv
+    ```
+
+<br>
+
+### Running dev environment
+
+The following commands must be executed within the `app` directory.
+
+1. **Build and run docker image:** 
+    
+    These commands only have to be done once for initial setup.
+    
+    ```
+    docker build -t capstone-postgres .
+    docker run --name capstone-postgres -p 5432:5432 -d capstone-postgres
+    ```
+    To run the container after initial build, you can start it in docker desktop GUI or run:
+    ```
+    docker run capstone-postgres
+    ```
+
+2. **Setup virtual environment**
+
+    This is so that our python environment only contains the dependancies that the project needs.
+
+
+    ```
+    virtualenv venv
+
+    . venv/bin/activate
+    
+    pip3 install -r requirements.txt
+    ```
+3. **Go into Django project**
+    ```
+    cd capstone
+    ```
+
+4. **Django migrations**
+
+    Django uses 'models' to interact with the database. Each model represents a table. These commands update the postgres database so that all models are correctly represented.
+    ```
+    python3 manage.py makemigrations
+    python3 manage.py migrate
+    ```
+5. **Create a Django superuser** 
+
+    This will allow you to log into the admin page of the django app.
+    
+    It will ask you to create a username and password.
+
+    You can skip the emaiil
+    ```
+    python3 manage.py createsuperuser
+    ```
+6. Start Django server
+    ```
+    python3 manage.py runserver
+    ```
+7. All done! You can now access the site through your browser.
+    
+    Site: http://127.0.0.1:8000/ 
+    
+    Admin panel: http://127.0.0.1:8000/admin
+
+### Optional stuff
+
+#### [Beekeeper Studio](https://github.com/beekeeper-studio/beekeeper-studio/releases/tag/v3.9.20)
+- Gives nice GUI to interact with relational databases
+- Allows running sql queries on the database
+- We can use it to look at the tables in our postgres database
