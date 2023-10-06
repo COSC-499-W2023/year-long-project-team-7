@@ -22,7 +22,6 @@ The following commands must be executed within the `app` directory.
     
     These commands only have to be done once for initial setup.
     
-    You can use the command to run the container every time or use the Docker desktop GUI.
     ```
     docker build -t capstone-postgres .
     docker run --name capstone-postgres -p 5432:5432 -d capstone-postgres
