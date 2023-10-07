@@ -76,7 +76,7 @@ The following commands must be executed within the `app` directory.
 
     It will ask you to create a username and password.
 
-    You can skip the emaiil
+    You can skip the email
 
     ```
     python3 manage.py createsuperuser
