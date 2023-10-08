@@ -1,6 +1,6 @@
 # [Ferdinand Haaben](https://github.com/Ferdinand737) Personal Log
 
-## Sept 24 2023 -> Oct 1 2023
+## Oct 1 2023 -> Oct 8 2023
 
 ![evaluation-screenshot](../../../img/ferdinand-eval-5.png)
 <br>
