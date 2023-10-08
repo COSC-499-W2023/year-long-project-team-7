@@ -10,7 +10,6 @@ _Team Evaluation Screenshot_
 
 ### Goals this week
 
-**1: Create initial database design**
 | Goal/Feature              | Pull Request             | Status    | Notes                                          |
 | ------------------------- | ------------------------ | --------- | ---------------------------------------------- |
 | Setup project/Research Django|                       | Completed | Ran into many technical difficulties getting project set up. Ferdinand and Esteban assisted greatly. Also researched Django in order to create home page. |
