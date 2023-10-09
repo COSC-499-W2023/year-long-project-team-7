@@ -31,17 +31,40 @@ _Team Evaluation Screenshot_
 **1: Set up django project**
 | Issue                     | Pull Request             | Status    | Notes                                          |
 | ------------------------- | ------------------------ | --------- | ---------------------------------------------- |
-| [Set up project][1]       | [Project setup][2]       | Completed |   Docker+database, Django, How-to instructions |
+| [Set up project][3]       | [Project setup][4]       | Completed |   Docker+database, Django, How-to instructions |
 
 <br>
 
 **2: Complete project plan**
 | Issue                     | Pull Request             | Status    | Notes            |
 | ------------------------- | ------------------------ | --------- | -----------------|
-| [Project Plan][3]         | N/A                      | Completed |  [GoogleDoc][4]  |
+| [Project Plan][5]         | N/A                      | Completed |  [GoogleDoc][6]  |
 
 
-[1]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/5
-[2]: https://github.com/COSC-499-W2023/year-long-project-team-7/pull/6
-[3]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/2
-[4]: https://docs.google.com/document/d/18U3K607QbEoZFy_O4bKOMl64O0OOUe0IOVW4NVq2NdY/edit?pli=1
+[3]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/5
+[4]: https://github.com/COSC-499-W2023/year-long-project-team-7/pull/6
+[5]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/2
+[6]: https://docs.google.com/document/d/18U3K607QbEoZFy_O4bKOMl64O0OOUe0IOVW4NVq2NdY/edit?pli=1
+
+
+## Oct 1 2023 -> Oct 8 2023
+
+![evaluation-screenshot](../../img/ferdinand-eval-5.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals this week
+
+**1: Create initial database design**
+| Issue                     | Pull Request             | Status    | Notes                                          |
+| ------------------------- | ------------------------ | --------- | ---------------------------------------------- |
+| [Database model][7]       | [Project setup][8]       | Completed |   Created database [diagram][9] and added django models |
+
+<br>
+
+
+[7]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/15
+[8]: https://github.com/COSC-499-W2023/year-long-project-team-7/pull/19
+[9]: https://dbdiagram.io/d/Capstone-651f4dbcffbf5169f023111f
