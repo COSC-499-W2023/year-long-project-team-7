@@ -32,8 +32,31 @@ _Team Evaluation Screenshot_
 
 | Feature                   | Issue(s)                           | Status             | Notes                      |
 | ------------------------- | ---------------------------------- | ------------------ | -------------------------- |
-| Create Project Plan       | [Project Plan][2]                               | Completed          | w/Liam, Keiran, Ferdinand  |
-| Personal Log              | [Individual Log (Keiran)][1]      | Completed          |                            |
+| Create Project Plan       | [Project Plan][3]                               | Completed          | w/Liam, Keiran, Ferdinand  |
+| Personal Log              | [Individual Log (Keiran)][4]      | Completed          |                            |
 
-[1]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/10
-[2]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/13
+[4]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/10
+[3]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/13
+
+## Oct 1 2023 -> Oct 8 2023
+
+![evaluation-screenshot](../../img/keiran-eval-5.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals this week
+-   Set up project environment
+-   Research tech stack
+-   Fix project environment setup issues
+
+
+### Tasks
+
+| Feature                   | Issue(s)                           | Status             | Notes                      |
+| ------------------------- | ---------------------------------- | ------------------ | -------------------------- |
+| Personal Log              | None      | Completed          |   
+| Contribute to Team Log     | [Team Log][5]                   | Completed | w/ Liam, Esteban, Ferdinand |
+
+[5]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/26

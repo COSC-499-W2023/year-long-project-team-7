@@ -50,13 +50,13 @@ _Team Evaluation Screenshot_
 | Feature                   | Issue(s)                           | Status             | Notes                      |
 | ------------------------- | ---------------------------------- | ------------------ | -------------------------- |
 | Create Project Plan       | None                               | Completed          | w/Liam, Keiran, Ferdinand  |
-| Personal Log              | [Individual Log (Esteban)][1]      | Completed          |                            |
-| Contribute to Team Log    | [Team Log][2]                      | Completed          | w/ Liam, Keiran, Ferdinand |
-| Consolidate Previous Logs | [Added logs from previous week][3] | Waiting for Review |                            |
+| Personal Log              | [Individual Log (Esteban)][8]      | Completed          |                            |
+| Contribute to Team Log    | [Team Log][9]                      | Completed          | w/ Liam, Keiran, Ferdinand |
+| Consolidate Previous Logs | [Added logs from previous week][10] | Waiting for Review |                            |
 
-[1]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/11
-[2]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/12
-[3]: https://github.com/COSC-499-W2023/year-long-project-team-7/pull/7
+[8]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/11
+[9]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/12
+[10]: https://github.com/COSC-499-W2023/year-long-project-team-7/pull/7
 
 ### Goals
 
@@ -83,15 +83,15 @@ _Team Evaluation Screenshot_
 
 | Feature                    | Issue(s)                        | Status    | Notes                      |
 | -------------------------- | ------------------------------- | --------- | -------------------------- |
-| Unify Personal Logs        | [Consolidated Personal Logs][1] | Completed |                            |
+| Unify Personal Logs        | [Consolidated Personal Logs][11] | Completed |                            |
 | Personal Log               | None                            | Completed |                            |
-| Contribute to Team Log     | [Team Log][2]                   | Completed | w/ Liam, Keiran, Ferdinand |
-| Set Up Working Environment | [Set Up Working Environment][3] | Completed |                            |
+| Contribute to Team Log     | [Team Log][12]                   | Completed | w/ Liam, Keiran, Ferdinand |
+| Set Up Working Environment | [Set Up Working Environment][13] | Completed |                            |
 | Help Teammates Setup WSL   | None                            | Completed | w/ Liam                    |
 
-[1]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/18
-[2]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/26
-[3]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/24
+[11]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/18
+[12]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/26
+[13]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/24
 
 ### Goals
 
