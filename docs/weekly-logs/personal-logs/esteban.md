@@ -70,3 +70,37 @@ _Team Evaluation Screenshot_
 This week's meeting was particularly important in determining how to move forward with the project. In particular, we needed to narrow down the idea we have for it into a minimum viable product (MVP) and roughly break this down into sections we expect to work on.
 
 One of the challenges this week was trying to predict our workload for the coming year. We are all very aware that these kinds of plans are often subject to change, but we wanted to have a timeline that was as realistic as possible to our actual needs. This was challenging, but we hope that our plan is robust enough to guide us as the project becomes more complicated.
+
+## Oct 1 2023 -> Oct 8 2023
+
+![evaluation-screenshot](../../img/esteban-eval-5.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+| Feature                    | Issue(s)                        | Status    | Notes                      |
+| -------------------------- | ------------------------------- | --------- | -------------------------- |
+| Unify Personal Logs        | [Consolidated Personal Logs][1] | Completed |                            |
+| Personal Log               | None                            | Completed |                            |
+| Contribute to Team Log     | [Team Log][2]                   | Completed | w/ Liam, Keiran, Ferdinand |
+| Set Up Working Environment | [Set Up Working Environment][3] | Completed |                            |
+| Help Teammates Setup WSL   | None                            | Completed | w/ Liam                    |
+
+[1]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/18
+[2]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/26
+[3]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/24
+
+### Goals
+
+-   Set up the project working environment for everyone
+-   Troubleshoot Operating System issues
+-   Make a basic landing page and navigation functionality
+
+### Self Reflection and Learning
+
+This week was slower than others because of the ramping up of work in other classes, as well as the unexpected issues we faced when setting up the project in all of our machines. This required an additional meeting and troubleshooting to be able to get everyone up to speed.
+
+Despite this challenge, we were able to work through the issues we had and have a basic landing page set up. We are confident about the work moving forward.
