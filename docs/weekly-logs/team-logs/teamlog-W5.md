@@ -7,7 +7,7 @@
 | Keiran Malott    | [kmalott](https://github.com/kmalott)           |
 | Liam Rasmussen   | [liamras](https://github.com/liamras)           |
 
-## Sept 24 2023 -> Oct 1 2023
+## Oct 1 2023 -> Oct 8 2023
 
 ### Recap of goals
 
