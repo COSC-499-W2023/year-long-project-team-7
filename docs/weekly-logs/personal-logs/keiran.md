@@ -58,5 +58,7 @@ _Team Evaluation Screenshot_
 | ------------------------- | ---------------------------------- | ------------------ | -------------------------- |
 | Personal Log              | None      | Completed          |   
 | Contribute to Team Log     | [Team Log][5]                   | Completed | w/ Liam, Esteban, Ferdinand |
+| Fix setup issues           | [Setup Working Environment][6]  | Completed | w/ Liam, Esteban, Ferdinand |
 
 [5]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/26
+[6]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/24
