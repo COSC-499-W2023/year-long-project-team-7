@@ -4,9 +4,6 @@ from .models import *
 import json
 from .generator import *
 
-
-# Create your views here.
-
 def index(request):
     return render(request, 'index.html')
 
@@ -25,7 +22,7 @@ def transform(request):
             conversion.save()
 
             files = []
-
+        
             for uploaded_file in request.FILES.getlist('files'):
                 new_file = File()
                 new_file.user = request.user if request.user.is_authenticated else None
