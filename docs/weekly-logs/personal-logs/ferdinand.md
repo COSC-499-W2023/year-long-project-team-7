@@ -68,3 +68,43 @@ _Team Evaluation Screenshot_
 [7]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/15
 [8]: https://github.com/COSC-499-W2023/year-long-project-team-7/pull/19
 [9]: https://dbdiagram.io/d/Capstone-651f4dbcffbf5169f023111f
+
+## Oct 8 2023 -> Oct 15 2023
+
+![evaluation-screenshot](../../img/ferdinand-eval-6.png)
+
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+
+![tasks-screenshot](../../img/ferdinand-tasks-6.png)
+<br>
+_Tasks Screenshot_
+
+<br>
+
+### Goals this week
+
+**1: Basic File Ingestion Functionality**
+| Issue                               | Pull Request                      | Status    | Notes                                          |
+| ----------------------------------- | --------------------------------- | --------- | ---------------------------------------------- |
+| [File Ingestion Page Design][10]    | [Basic Tansformer page][11]       | Completed | Inital page design                             |
+| [File Ingestion Implementation][12] | [Basic Tansformer page][11]       | Completed | User can upload files. Storage in files and db |
+
+<br>
+
+**2: Complete Database Design**
+
+| Issue                               | Pull Request                      | Status    | Notes                                          |
+| ----------------------------------- | --------------------------------- | --------- | ---------------------------------------------- |
+| [Database Diagram][13]              | [Add to docs][14]                 | Completed | Current Database design, Will be updated       |
+
+
+
+[10]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/16
+[11]: https://github.com/COSC-499-W2023/year-long-project-team-7/pull/37
+[12]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/31
+[13]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/35
+[14]: https://github.com/COSC-499-W2023/year-long-project-team-7/pull/49
