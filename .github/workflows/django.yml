@@ -27,5 +27,5 @@ jobs:
         pip install -r app/requirements.txt
     - name: Run Tests
       run: |
-        python app/capstone/manage.py test
+        python app/capstone/transformer/tests.py test
         
