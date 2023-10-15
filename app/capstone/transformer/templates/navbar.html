@@ -1,11 +1,27 @@
-{% include 'head.html' with page_title='TITLE HERE' %}
-
-<div class='bg-dark fw-bold d-flex flex-column align-items-center justify-content-center'>
-    <nav>
-        <ul>
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'about' %}">About</a></li>
-            <li><a href="{% url 'transform' %}">Transform</a></li>
-        </ul>
-    </nav>
-</div>
+<nav class="navbar navbar-expand-lg navbar-custom navbar-light">
+    <div class="container-fluid">
+        <!-- Navbar toggler button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarLinks" aria-controls="navbarLinks" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>              
+        <!-- Title/logo -->
+        <a class="navbar-brand" href="{% url 'home' %}"><b>Cool Company Name</b></a>
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarLinks">
+            <ul class="navbar-nav ml-auto">
+                <!-- Add navigation links here -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'transform' %}">Transform</a>
+                </li>
+            </ul>
+        </div>
+        <!-- Profile picture (Example source used) -->
+        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Profile Picture" class="profile-picture">
+    </div>
+</nav>
