@@ -99,3 +99,12 @@ The following commands must be executed within the `app` directory.
 -   Gives nice GUI to interact with relational databases
 -   Allows running sql queries on the database
 -   We can use it to look at the tables in our postgres database
+
+
+<br>
+<hr>
+
+## Database Design
+[View on dbdiagram.io](https://dbdiagram.io/d/Capstone-651f4dbcffbf5169f023111f)
+
+![Image](https://github.com/COSC-499-W2023/year-long-project-team-7/assets/71345367/34576831-7193-46e8-9c9f-5e1fb650138c)
