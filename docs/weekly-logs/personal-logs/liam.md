@@ -50,3 +50,21 @@ _Team Evaluation Screenshot_
 [3]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/17
 [4]: https://github.com/COSC-499-W2023/year-long-project-team-7/pull/21
 
+## Oct 8 2023 -> Oct 15 2023
+
+![evaluation-screenshot](../../img/liam-eval-6.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w6-tasks.png)
+[Individual Tasks][5]
+
+
+<br>
+
+[5]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
+
