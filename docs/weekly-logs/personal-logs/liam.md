@@ -61,8 +61,16 @@ _Team Evaluation Screenshot_
 ### Goals/Features this week
 
 ![tasks-screenshot](../../img/liam-w6-tasks.png)
+<br>
 [Individual Tasks][5]
 
+<br>
+
+### Additional Feature Screenshots
+
+![navbar-screenshot](../../img/liam-w6-navbar.png)
+<br>
+_Updated Navbar Screenshot_
 
 <br>
 
