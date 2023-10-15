@@ -38,6 +38,6 @@ jobs:
     - name: Run Tests
       run: |
         cd app/capstone
-        python manage.py test
+        python manage.py test --verbosity=2
       env:
         DATABASE_URL: "postgres://postgres:password@localhost:5432/dev"
