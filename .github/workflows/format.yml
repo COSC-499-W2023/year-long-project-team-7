@@ -35,9 +35,17 @@ jobs:
       - name: Format HTML with djlint
         run: djlint . --reformat --format-css
 
-      - name: Commit and push changes
+      - name: Commit and Push Changes
         run: |
-          git config --global user.name 'Your Name'
-          git config --global user.email 'your.email@example.com'
-          git commit -am "Apply code formatting"
-          git push
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          git add .
+
+          # Check if there are changes to commit
+          if git diff-index --quiet HEAD; then
+            echo "No code changes to commit."
+          else
+            git commit -m "Auto-format code"
+            git push
+          fi
