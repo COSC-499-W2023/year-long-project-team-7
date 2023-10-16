@@ -39,8 +39,8 @@ jobs:
       - name: Format code with Black
         run: black .
 
-      - name: Format HTML with djhtml
-        run: djhtml .
+      - name: Format HTML with djlint
+        run: djlint . --reformat --format-css --format-js
 
       - name: Check for changes
         run: git diff --exit-code
