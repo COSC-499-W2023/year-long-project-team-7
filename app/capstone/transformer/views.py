@@ -6,26 +6,26 @@ from .generator import *
 
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, "index.html")
 
 
 def transform(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = TransformerForm(request.POST)
         if form.is_valid():
             conversion = Conversion()
             user_params = {
-                'text_input': form.cleaned_data['text_input'],
-                'language': form.cleaned_data['language'],
-                'complexity': form.cleaned_data['complexity'],
-                'length': form.cleaned_data['length'],
+                "text_input": form.cleaned_data["text_input"],
+                "language": form.cleaned_data["language"],
+                "complexity": form.cleaned_data["complexity"],
+                "length": form.cleaned_data["length"],
             }
             conversion.user_parameters = json.dumps(user_params)
             conversion.save()
 
             files = []
 
-            for uploaded_file in request.FILES.getlist('files'):
+            for uploaded_file in request.FILES.getlist("files"):
                 new_file = File()
                 new_file.user = request.user if request.user.is_authenticated else None
                 new_file.conversion = conversion
@@ -38,20 +38,20 @@ def transform(request):
             except:
                 pass
 
-            return redirect('results')
+            return redirect("results")
     else:
         form = TransformerForm()
 
-    return render(request, 'transform.html', {'form': form})
+    return render(request, "transform.html", {"form": form})
 
 
 def results(request):
-    return render(request, 'results.html')
+    return render(request, "results.html")
 
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, "home.html")
 
 
 def about(request):
-    return render(request, 'about.html')
+    return render(request, "about.html")

@@ -6,39 +6,42 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('transformer', '0003_delete_uploadedfile_remove_file_path_file_file_and_more'),
+        ("transformer", "0003_delete_uploadedfile_remove_file_path_file_file_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='file',
-            name='conversion',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='transformer.conversion'),
+            model_name="file",
+            name="conversion",
+            field=models.ForeignKey(
+                default=0,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="transformer.conversion",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='conversion',
-            name='date',
+            model_name="conversion",
+            name="date",
             field=models.DateField(default=django.utils.timezone.now),
         ),
         migrations.AlterField(
-            model_name='file',
-            name='file',
-            field=models.FileField(upload_to='files/'),
+            model_name="file",
+            name="file",
+            field=models.FileField(upload_to="files/"),
         ),
         migrations.AlterField(
-            model_name='transaction',
-            name='date',
+            model_name="transaction",
+            name="date",
             field=models.DateField(default=django.utils.timezone.now),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='date',
+            model_name="user",
+            name="date",
             field=models.DateField(default=django.utils.timezone.now),
         ),
         migrations.DeleteModel(
-            name='FileConversion',
+            name="FileConversion",
         ),
     ]
