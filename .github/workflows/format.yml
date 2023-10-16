@@ -9,6 +9,10 @@ on:
 jobs:
   code-formatting:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.10"]
 
     services:
       postgres:
@@ -22,35 +26,32 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r app/requirements.txt
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.10
+      - name: Format code with Black
+        run: black .
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r app/requirements.txt
+      - name: Format HTML with djhtml
+        run: djhtml .
 
-    - name: Format code with Black
-      run: black .
+      - name: Check for changes
+        run: git diff --exit-code
 
-    - name: Format HTML with djhtml
-      run: djhtml .
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'Your Name'
+          git config --global user.email 'your.email@example.com'
+          git add .
+          git commit -m "Apply code formatting"
+          git push
 
-    - name: Check for changes
-      run: git diff --exit-code
-
-    - name: Commit and push changes
-      run: |
-        git config --global user.name 'Your Name'
-        git config --global user.email 'your.email@example.com'
-        git add .
-        git commit -m "Apply code formatting"
-        git push
-
-      env:
-        DATABASE_URL: "postgres://postgres:password@localhost:5432/dev"
+        env:
+          DATABASE_URL: "postgres://postgres:password@localhost:5432/dev"
