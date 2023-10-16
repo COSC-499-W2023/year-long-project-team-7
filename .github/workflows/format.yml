@@ -33,7 +33,7 @@ jobs:
         run: black .
 
       - name: Format HTML with djlint
-        run: djlint . --reformat --format-css
+        run: djlint . --reformat --format-css || true
 
       - name: Commit and Push Changes
         run: |
