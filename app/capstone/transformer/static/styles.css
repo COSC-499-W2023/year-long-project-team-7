@@ -1,11 +1,11 @@
 /* ----------NAVBAR CSS---------- */
 .navbar-custom {
-    background-color: MediumSlateBlue ;
+    background-color: MediumSlateBlue;
 }
 .profile-picture {
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     margin-left: 10px;
 }
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
@@ -13,12 +13,33 @@
     .navbar {
         flex-direction: column;
     }
-    
+
     .profile-picture {
         order: 1;
     }
-    
+
     .navbar-collapse {
         order: 2;
+    }
+}
+
+/* -----------LANDING------------ */
+.landing-h1 {
+    color: aquamarine;
+}
+
+.fadeIn {
+    animation: fadeIn 5s;
+    -webkit-animation: fadeIn 5s;
+    -moz-animation: fadeIn 5s;
+    -o-animation: fadeIn 5s;
+    -ms-animation: fadeIn 5s;
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }
