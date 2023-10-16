@@ -24,16 +24,17 @@ _Team Evaluation Screenshot_
 <br>
 
 ### My Goals this week
--   Create a project plan 
--   Decide on the MVP of the project
--   Decide on a tech stack to use
+
+- Create a project plan
+- Decide on the MVP of the project
+- Decide on a tech stack to use
 
 ### Tasks
 
-| Feature                   | Issue(s)                           | Status             | Notes                      |
-| ------------------------- | ---------------------------------- | ------------------ | -------------------------- |
-| Create Project Plan       | [Project Plan][3]                               | Completed          | w/Liam, Keiran, Ferdinand  |
-| Personal Log              | [Individual Log (Keiran)][4]      | Completed          |                            |
+| Feature             | Issue(s)                     | Status    | Notes                     |
+| ------------------- | ---------------------------- | --------- | ------------------------- |
+| Create Project Plan | [Project Plan][3]            | Completed | w/Liam, Keiran, Ferdinand |
+| Personal Log        | [Individual Log (Keiran)][4] | Completed |                           |
 
 [4]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/10
 [3]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/13
@@ -47,16 +48,16 @@ _Team Evaluation Screenshot_
 <br>
 
 ### Goals this week
--   Set up project environment
--   Research tech stack
--   Fix project environment setup issues
 
+- Set up project environment
+- Research tech stack
+- Fix project environment setup issues
 
 ### Tasks
 
-| Feature                   | Issue(s)                           | Status             | Notes                      |
-| ------------------------- | ---------------------------------- | ------------------ | -------------------------- |
-| Personal Log              | None      | Completed          |   
-| Contribute to Team Log     | [Team Log][5]                   | Completed | w/ Liam, Esteban, Ferdinand |
+| Feature                | Issue(s)      | Status    | Notes                       |
+| ---------------------- | ------------- | --------- | --------------------------- |
+| Personal Log           | None          | Completed |
+| Contribute to Team Log | [Team Log][5] | Completed | w/ Liam, Esteban, Ferdinand |
 
 [5]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/26

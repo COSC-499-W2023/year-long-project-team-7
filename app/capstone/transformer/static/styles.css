@@ -1,24 +1,24 @@
 /* ----------NAVBAR CSS---------- */
 .navbar-custom {
-    background-color: MediumSlateBlue ;
+  background-color: MediumSlateBlue;
 }
 .profile-picture {
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
-    margin-left: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 10px;
 }
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
 @media (max-width: 1000px) {
-    .navbar {
-        flex-direction: column;
-    }
-    
-    .profile-picture {
-        order: 1;
-    }
-    
-    .navbar-collapse {
-        order: 2;
-    }
+  .navbar {
+    flex-direction: column;
+  }
+
+  .profile-picture {
+    order: 1;
+  }
+
+  .navbar-collapse {
+    order: 2;
+  }
 }

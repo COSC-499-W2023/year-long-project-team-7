@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
-from .forms import  TransformerForm
+from .forms import TransformerForm
 from .models import *
 import json
 from .generator import *
 
+
 def index(request):
     return render(request, 'index.html')
+
 
 def transform(request):
     if request.method == 'POST':
@@ -22,7 +24,7 @@ def transform(request):
             conversion.save()
 
             files = []
-        
+
             for uploaded_file in request.FILES.getlist('files'):
                 new_file = File()
                 new_file.user = request.user if request.user.is_authenticated else None
@@ -42,11 +44,14 @@ def transform(request):
 
     return render(request, 'transform.html', {'form': form})
 
+
 def results(request):
     return render(request, 'results.html')
 
+
 def home(request):
     return render(request, 'home.html')
+
 
 def about(request):
     return render(request, 'about.html')
