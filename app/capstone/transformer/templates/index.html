@@ -2,18 +2,24 @@
 
 {% load static %} 
 
-{% block content %} 
+{% block content %}
 
 {% include 'navbar.html' %}
+
+{% load bootstrap5 %}
+
+{% bootstrap_css %}
+
+{% bootstrap_javascript %}
 
 <div class="vh-100 d-flex justify-content-center align-items-center">
     <div
         class="h-75 d-flex flex-column align-items-center justify-content-center gap-3"
     >
         <h1 class="text-light fw-bold">
-            Welcome to our AI driven educational assistant
+            Welcome to Platonix
         </h1>
-        <p class="text-light fw-bold">This is a basic home page.</p>
+        <p class="text-light fw-bold">Your personal AI driven educational assistant</p>
     </div>
 </div>
 

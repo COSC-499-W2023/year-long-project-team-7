@@ -3,3 +3,4 @@ Django==4.2.5
 psycopg2==2.9.7
 sqlparse==0.4.4
 typing_extensions==4.8.0
+django-bootstrap-v5==1.0.11
