@@ -1,3 +1,24 @@
+/* -----------LANDING------------ */
+.fade-in {
+    animation: fadeIn 5s;
+    -webkit-animation: fadeIn 5s;
+    -moz-animation: fadeIn 5s;
+    -o-animation: fadeIn 5s;
+    -ms-animation: fadeIn 5s;
+}
+.delayed {
+    opacity: 0;
+    animation-delay: 1s;
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 /* ----------NAVBAR CSS---------- */
 .navbar-custom {
     background-color: MediumSlateBlue;
@@ -20,26 +41,5 @@
 
     .navbar-collapse {
         order: 2;
-    }
-}
-
-/* -----------LANDING------------ */
-.landing-h1 {
-    color: aquamarine;
-}
-
-.fadeIn {
-    animation: fadeIn 5s;
-    -webkit-animation: fadeIn 5s;
-    -moz-animation: fadeIn 5s;
-    -o-animation: fadeIn 5s;
-    -ms-animation: fadeIn 5s;
-}
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
     }
 }
