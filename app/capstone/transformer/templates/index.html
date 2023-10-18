@@ -1,11 +1,12 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 {% block content %}
-    {% include 'navbar.html' %}
-    <div class="vertical-center justify-content-center">
-        <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3">
-            <h1 class="text-light fw-bold fade-in">Welcome to Platonix</h1>
-            <p class="text-light fw-bold fade-in-delayed">Your personal AI driven educational assistant</p>
-        </div>
+{% include "navbar.html" %}
+<div class="vertical-center justify-content-center gap-5">
+    <div id="welcome-text" class="h-75 d-flex flex-column align-items-center justify-content-center gap-3 text-light">
+        <h1 class="fade-in-first">Welcome to Platonix</h1>
+        <p class="fade-in-second">Your personal AI driven educational assistant</p>
+        <button onclick="myFunction()">Click me!</button>
     </div>
+</div>
 {% endblock %}
