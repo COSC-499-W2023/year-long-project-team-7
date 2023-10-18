@@ -5,7 +5,11 @@
 //         welcomeText.style.color = "red";
 //     }, 3000); // Adjust the delay in milliseconds as needed
 // });
-
-function myFunc() {
-    Window.alert("Hello from me");
-}
+$(document).ready(function () {
+    console.log("HELLO WORLD");
+});
+$(document).ready(function () {
+    $("#btnSubmit").click(function () {
+        alert("button");
+    });
+});
