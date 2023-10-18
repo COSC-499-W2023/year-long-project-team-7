@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import  TransformerForm
 from .models import *
 import json
-from .generator import *
+from .generator import generate_output
 
 def index(request):
     return render(request, 'index.html')
@@ -31,6 +31,7 @@ def transform(request):
                 new_file.file = uploaded_file
                 new_file.save()
                 files.append(new_file)
+                
             try:
                 result = generate_output(files, conversion)
             except:
