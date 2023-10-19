@@ -1,4 +1,4 @@
-# Ai Content transformer
+# Platonix: Ai Content transformer
 
 ## Project setup
 
@@ -14,19 +14,20 @@
 
 <br>
 
-### Running dev environment
+### Setup dev environment
 
-The following commands must be executed within the `app` directory.
+**Take note of what directory each command is being executed in**
 
 1. **Build and run docker image:**
 
     These commands only have to be done once for initial setup.
 
     ```
+    /year-long-project-team-7/app$
+
     docker build -t capstone-postgres .
     docker run --name capstone-postgres -p 5432:5432 -d capstone-postgres
     ```
-
     To run the container after initial build, you can start it in docker desktop GUI or run:
 
     ```
@@ -38,27 +39,31 @@ The following commands must be executed within the `app` directory.
     This is so that our python environment only contains the dependencies that the project needs.
 
     ```
+    /year-long-project-team-7/app$
+
     virtualenv venv
-
     . venv/bin/activate
-
-    pip3 install -r requirements.txt
+    pip install -r requirements.txt
     ```
 
     On Windows run this instead:
 
     ```
+    /year-long-project-team-7/app$
+
     virtualenv venv
-
     venv\Scripts\activate
-
     pip install -r requirements.txt
     ```
+3. **Set up mypy pre-commit hook**
 
-3. **Go into Django project**
+    Mypy is a static type checker for Python that allows developers to add type annotations to their programs and use it to type check them.
 
+    This command will install the pre-commit hook found in `.pre-commit-config.yaml` into your local git repository. The hook will run every time you commit. The hook will also run on github as a github action when you push.
     ```
-    cd capstone
+    /year-long-project-team-7$
+
+    pre-commit install
     ```
 
 4. **Django migrations**
@@ -66,6 +71,8 @@ The following commands must be executed within the `app` directory.
     Django uses 'models' to interact with the database. Each model represents a table. These commands update the postgres database so that all models are correctly represented.
 
     ```
+    /year-long-project-team-7/app/capstone$
+
     python3 manage.py makemigrations
     python3 manage.py migrate
     ```
@@ -79,13 +86,18 @@ The following commands must be executed within the `app` directory.
     You can skip the email
 
     ```
+    /year-long-project-team-7/app/capstone$
+
     python3 manage.py createsuperuser
     ```
 
 6. Start Django server
     ```
+    /year-long-project-team-7/app/capstone$
+
     python3 manage.py runserver
     ```
+
 7. All done! You can now access the site through your browser.
 
     Site: http://127.0.0.1:8000/
