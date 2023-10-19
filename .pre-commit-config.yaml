@@ -1,0 +1,9 @@
+repos:
+-   repo: local
+    hooks:
+    -   id: mypy
+        name: mypy
+        entry: bash -c 'cd app/capstone && mypy .'
+        language: system
+        stages: [commit]
+        pass_filenames: false
