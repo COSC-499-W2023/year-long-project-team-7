@@ -13,7 +13,7 @@ def transform(request: HttpRequest) -> HttpResponse:
 
     if request.method == 'POST':
 
-        form: TransformerForm = TransformerForm(request.POST)
+        form = TransformerForm(request.POST)
 
         if form.is_valid():
             conversion: Conversion = Conversion()
@@ -26,19 +26,19 @@ def transform(request: HttpRequest) -> HttpResponse:
             conversion.user_parameters = json.dumps(user_params)
             conversion.save()
 
-            files: List[File] = []
+            files = []
         
             for uploaded_file in request.FILES.getlist('files'):
-                new_file: File = File()
+                new_file = File()
                 new_file.user = request.user if request.user.is_authenticated else None
                 new_file.conversion = conversion
-                if uploaded_file.content_type is not None:  # Add this check
+                if uploaded_file.content_type is not None:
                     new_file.type = uploaded_file.content_type
                 new_file.file = uploaded_file
                 new_file.save()
                 files.append(new_file)
             try:
-                result: Dict = generate_output(files, conversion)
+                result = generate_output(files, conversion)
             except:
                 pass
 
