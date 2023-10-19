@@ -55,11 +55,20 @@
     venv\Scripts\activate
     pip install -r requirements.txt
     ```
-3. **Set up mypy pre-commit hook**
+3. **Set up pre-commit hooks**
+
+    The pre-commit hooks run checks every time you try to do a commit.
+    
+    These also run on gitHub so running them locally allows us to find issues before push.
+    
+    1. Run tests
+    2. Run mypy
+
+    **If the checks fail, you cannot commit.**
 
     Mypy is a static type checker for Python that allows developers to add type annotations to their programs and use it to type check them.
 
-    This command will install the pre-commit hook found in `.pre-commit-config.yaml` into your local git repository. The hook will run every time you commit. The hook will also run on github as a github action when you push.
+    This command will install the pre-commit hooks found in `.pre-commit-config.yaml` into your local git repository.
     ```
     /year-long-project-team-7$
 
