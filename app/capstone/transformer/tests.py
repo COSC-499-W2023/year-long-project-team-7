@@ -5,8 +5,6 @@ from .models import Conversion, File
 from .forms import TransformerForm 
 import json
 
-
-
 class TransformViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
