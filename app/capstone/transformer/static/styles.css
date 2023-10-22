@@ -8,6 +8,10 @@
     border-radius: 50%; 
     margin-left: 10px;
 }
+/*----------Button CSS-----------*/
+.custom-button {
+    background-color: mediumslateblue;
+}
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
 @media (max-width: 1000px) {
     .navbar {
