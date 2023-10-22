@@ -10,6 +10,21 @@ a:hover {
     color: #a496ff;
     transform: translateY(-2px);
 }
+.bigger-h1 {
+    font-size: 60px;
+}
+.bigger-p {
+    font-size: 20px;
+}
+.increase-size-fade {
+    font-size: 36px;
+    animation: increaseTextSizeFade 3s ease;
+    -webkit-animation: increaseTextSizeFade 3s ease;
+    -moz-animation: increaseTextSizeFade 3s ease;
+    -o-animation: increaseTextSizeFade 3s ease;
+    -ms-animation: increaseTextSizeFade 3s ease;
+    animation-fill-mode: forwards;
+}
 .fade-in-first {
     animation: fadeIn 5s;
     -webkit-animation: fadeIn 5s;
@@ -50,6 +65,16 @@ a:hover {
     }
     100% {
         opacity: 1;
+    }
+}
+@keyframes increaseTextSizeFade {
+    0% {
+        opacity: 0;
+        font-size: 36px;
+    }
+    100% {
+        opacity: 1;
+        font-size: 50px;
     }
 }
 
