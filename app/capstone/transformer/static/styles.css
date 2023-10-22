@@ -52,10 +52,10 @@ a:hover {
     animation-delay: 2s;
     animation-fill-mode: forwards;
 }
-.vertical-center {
+.vertical-center-top {
     min-height: calc(100vh - 56px); /* Accounts for navbar */
-
     display: flex;
+    margin-top: -3em;
     align-items: center;
 }
 
