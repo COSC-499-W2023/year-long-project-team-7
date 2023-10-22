@@ -6,8 +6,14 @@
         <h1 class="fade-in-first">Welcome to Platonix</h1>
         <p class="fade-in-second">Your personal AI driven educational assistant</p>
     </div>
-    <div>
-        <h1 class="text-light">Something</h1>
+    <div class="d-flex flex-column align-items-center justify-content-center text-light fade-in-second">
+        <p>
+            Turn your slides into beautiful slide presentations, using <a href="{% url 'transform' %}">the latest AI technology</a>.
+        </p>
+        <p>
+            Learn what makes us <a href="{% url 'about' %}">tick</a>.
+        </p>
     </div>
 </div>
+
 {% endblock %}

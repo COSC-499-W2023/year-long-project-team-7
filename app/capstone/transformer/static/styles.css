@@ -16,6 +16,16 @@
     animation-delay: 1s;
     animation-fill-mode: forwards;
 }
+.fade-in-third {
+    opacity: 0;
+    animation: fadeIn 5s;
+    -webkit-animation: fadeIn 5s;
+    -moz-animation: fadeIn 5s;
+    -o-animation: fadeIn 5s;
+    -ms-animation: fadeIn 5s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+}
 .vertical-center {
     min-height: calc(100vh - 56px); /* Accounts for navbar */
 
