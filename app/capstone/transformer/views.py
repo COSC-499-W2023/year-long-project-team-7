@@ -38,10 +38,9 @@ def transform(request: HttpRequest) -> HttpResponse:
                 new_file.save()
                 files.append(new_file)
                 
-            try:
-                result = generate_output(files, conversion)
-            except:
-                pass
+        
+            #result = generate_output(files, conversion)
+         
 
             return redirect('results')        
 
