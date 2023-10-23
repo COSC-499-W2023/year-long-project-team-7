@@ -28,6 +28,7 @@
     docker build -t capstone-postgres .
     docker run --name capstone-postgres -p 5432:5432 -d capstone-postgres
     ```
+
     To run the container after initial build, you can start it in docker desktop GUI or run:
 
     ```
@@ -54,12 +55,13 @@
     . venv\Scripts\activate
     pip install -r requirements.txt
     ```
+
 3. **Set up pre-commit hooks**
 
     The pre-commit hooks run checks every time you try to do a commit.
-    
+
     These also run on gitHub so running them locally allows us to find issues before push.
-    
+
     1. Run tests
     2. Run mypy
 
@@ -68,6 +70,7 @@
     Mypy is a static type checker for Python that allows developers to add type annotations to their programs and use it to type check them.
 
     This command will install the pre-commit hooks found in `.pre-commit-config.yaml` into your local git repository.
+
     ```
     /year-long-project-team-7$
 
@@ -100,6 +103,7 @@
     ```
 
 6. Start Django server
+
     ```
     /year-long-project-team-7/app/capstone$
 
