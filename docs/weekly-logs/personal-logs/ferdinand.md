@@ -101,3 +101,18 @@ _Tasks Screenshot_
 [12]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/31
 [13]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/35
 [14]: https://github.com/COSC-499-W2023/year-long-project-team-7/pull/49
+
+
+
+## Oct 16 2023 -> Oct 22 2023
+
+![evaluation-screenshot](../../img/ferdinand-eval-7.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+![tasks-screenshot](../../img/ferdinand-tasks-7.png)
+<br>
+_Tasks Screenshot_
+
