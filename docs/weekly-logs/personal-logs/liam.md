@@ -75,8 +75,6 @@ _Updated Navbar Screenshot_
 <br>
 
 [5]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
-<<<<<<< HEAD
-=======
 
 ## Oct 15 2023 -> Oct 22 2023
 
@@ -113,5 +111,3 @@ _Signin page Screenshot_
 <br>
 
 [6]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
-
->>>>>>> 37408caa5a6674965bb5bd4172e4f2079ff3bc34
