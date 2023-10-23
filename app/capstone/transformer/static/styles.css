@@ -1,11 +1,91 @@
+/* -----------LANDING------------ */
+a {
+    display: inline-block;
+    color: #7b68ee;
+    text-decoration: none;
+    transition: color 0.2s;
+    transition: transform 0.2s;
+}
+a:hover {
+    color: #a496ff;
+    transform: translateY(-2px);
+}
+.bigger-h1 {
+    font-size: 60px;
+}
+.bigger-p {
+    font-size: 20px;
+}
+.increase-size-fade {
+    font-size: 36px;
+    animation: increaseTextSizeFade 3s ease;
+    -webkit-animation: increaseTextSizeFade 3s ease;
+    -moz-animation: increaseTextSizeFade 3s ease;
+    -o-animation: increaseTextSizeFade 3s ease;
+    -ms-animation: increaseTextSizeFade 3s ease;
+    animation-fill-mode: forwards;
+}
+.fade-in-first {
+    animation: fadeIn 5s;
+    -webkit-animation: fadeIn 5s;
+    -moz-animation: fadeIn 5s;
+    -o-animation: fadeIn 5s;
+    -ms-animation: fadeIn 5s;
+}
+.fade-in-second {
+    opacity: 0;
+    animation: fadeIn 5s;
+    -webkit-animation: fadeIn 5s;
+    -moz-animation: fadeIn 5s;
+    -o-animation: fadeIn 5s;
+    -ms-animation: fadeIn 5s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+}
+.fade-in-third {
+    opacity: 0;
+    animation: fadeIn 5s;
+    -webkit-animation: fadeIn 5s;
+    -moz-animation: fadeIn 5s;
+    -o-animation: fadeIn 5s;
+    -ms-animation: fadeIn 5s;
+    animation-delay: 2s;
+    animation-fill-mode: forwards;
+}
+.vertical-center {
+    min-height: calc(100vh - 56px); /* Accounts for navbar */
+
+    display: flex;
+    align-items: center;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes increaseTextSizeFade {
+    0% {
+        opacity: 0;
+        font-size: 36px;
+    }
+    100% {
+        opacity: 1;
+        font-size: 50px;
+    }
+}
+
 /* ----------NAVBAR CSS---------- */
 .navbar-custom {
-    background-color: MediumSlateBlue ;
+    background-color: MediumSlateBlue;
 }
 .profile-picture {
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     margin-left: 10px;
 }
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
@@ -13,11 +93,11 @@
     .navbar {
         flex-direction: column;
     }
-    
+
     .profile-picture {
         order: 1;
     }
-    
+
     .navbar-collapse {
         order: 2;
     }

@@ -1,15 +1,19 @@
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
 {% block content %}
-
-{% include 'navbar.html' %}
-
-
-<div class="vh-100 d-flex justify-content-center align-items-center">
-    <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3">
-        <h1 class='text-light fw-bold'>HELLO WORLD!</h1>
+{% include "navbar.html" %}
+<div class="vertical-center flex-column justify-content-center gap-5">
+    <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3 text-light">
+        <h1 class="fade-in-first bigger-h1">Welcome to Platonix</h1>
+        <p class="fade-in-second bigger-p">Your personal AI driven educational assistant</p>
+    </div>
+    <div class="d-flex flex-column align-items-center justify-content-center text-light fade-in-third">
+        <p class="bigger-p">
+            Turn your texts into beautiful slide presentations, using <a href="{% url 'transform' %}">the latest AI technology</a>.
+        </p>
+        <p class="bigger-p">
+            Learn what makes us <a href="{% url 'about' %}">tick</a>.
+        </p>
     </div>
 </div>
-
 
 {% endblock %}

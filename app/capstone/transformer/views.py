@@ -10,7 +10,6 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, 'index.html')
 
 def transform(request: HttpRequest) -> HttpResponse:
-
     if request.method == 'POST':
 
         form = TransformerForm(request.POST)
@@ -27,7 +26,7 @@ def transform(request: HttpRequest) -> HttpResponse:
             conversion.save()
 
             files = []
-        
+
             for uploaded_file in request.FILES.getlist('files'):
                 new_file = File()
                 new_file.user = request.user if request.user.is_authenticated else None
