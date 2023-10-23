@@ -92,7 +92,7 @@ _Team Evaluation Screenshot_
 
 <br>
 
-TODO: Add tests, use type annotations
+TODO for account functionality: Add tests, use type annotations
 
 <br>
 
