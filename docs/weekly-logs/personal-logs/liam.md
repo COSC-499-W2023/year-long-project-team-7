@@ -76,3 +76,39 @@ _Updated Navbar Screenshot_
 
 [5]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
 
+## Oct 15 2023 -> Oct 22 2023
+
+![evaluation-screenshot](../../img/liam-eval-7.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w7-tasks.png)
+<br>
+[Individual Tasks][6]
+
+<br>
+
+TODO: Add tests, use type annotations
+
+<br>
+
+### Additional Feature Screenshots
+
+![signup-screenshot](../../img/liam-w7-signup.png)
+<br>
+_Signup page Screenshot_
+
+<br>
+
+![signin-screenshot](../../img/liam-w7-signin.png)
+<br>
+_Signin page Screenshot_
+
+<br>
+
+[6]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
+
