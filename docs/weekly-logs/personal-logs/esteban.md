@@ -26,10 +26,10 @@ _Team Evaluation Screenshot_
 
 ### Goals
 
--   Get an image of team dynamics and setup tools for long term
--   Try out a small exercise to get to know our workflow
--   Create an automated testing suite with GitHub Actions
--   Get a feel for logging and documenting work and experiences
+- Get an image of team dynamics and setup tools for long term
+- Try out a small exercise to get to know our workflow
+- Create an automated testing suite with GitHub Actions
+- Get a feel for logging and documenting work and experiences
 
 ### Self Reflection and Learning
 
@@ -47,11 +47,11 @@ _Team Evaluation Screenshot_
 
 ### Tasks
 
-| Feature                   | Issue(s)                           | Status             | Notes                      |
-| ------------------------- | ---------------------------------- | ------------------ | -------------------------- |
-| Create Project Plan       | None                               | Completed          | w/Liam, Keiran, Ferdinand  |
-| Personal Log              | [Individual Log (Esteban)][8]      | Completed          |                            |
-| Contribute to Team Log    | [Team Log][9]                      | Completed          | w/ Liam, Keiran, Ferdinand |
+| Feature                   | Issue(s)                            | Status             | Notes                      |
+| ------------------------- | ----------------------------------- | ------------------ | -------------------------- |
+| Create Project Plan       | None                                | Completed          | w/Liam, Keiran, Ferdinand  |
+| Personal Log              | [Individual Log (Esteban)][8]       | Completed          |                            |
+| Contribute to Team Log    | [Team Log][9]                       | Completed          | w/ Liam, Keiran, Ferdinand |
 | Consolidate Previous Logs | [Added logs from previous week][10] | Waiting for Review |                            |
 
 [8]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/11
@@ -60,10 +60,10 @@ _Team Evaluation Screenshot_
 
 ### Goals
 
--   Create a project plan to guide us with the project and help partition the work
--   Decide on a Tech Stack we feel comfortable with
--   Get an idea for how we will subdivide the work going forward
--   Determine a MVP to keep scope and expectations under control
+- Create a project plan to guide us with the project and help partition the work
+- Decide on a Tech Stack we feel comfortable with
+- Get an idea for how we will subdivide the work going forward
+- Determine a MVP to keep scope and expectations under control
 
 ### Self Reflection and Learning
 
@@ -81,13 +81,13 @@ _Team Evaluation Screenshot_
 
 ### Tasks
 
-| Feature                    | Issue(s)                        | Status    | Notes                      |
-| -------------------------- | ------------------------------- | --------- | -------------------------- |
+| Feature                    | Issue(s)                         | Status    | Notes                      |
+| -------------------------- | -------------------------------- | --------- | -------------------------- |
 | Unify Personal Logs        | [Consolidated Personal Logs][11] | Completed |                            |
-| Personal Log               | None                            | Completed |                            |
+| Personal Log               | None                             | Completed |                            |
 | Contribute to Team Log     | [Team Log][12]                   | Completed | w/ Liam, Keiran, Ferdinand |
 | Set Up Working Environment | [Set Up Working Environment][13] | Completed |                            |
-| Help Teammates Setup WSL   | None                            | Completed | w/ Liam                    |
+| Help Teammates Setup WSL   | None                             | Completed | w/ Liam                    |
 
 [11]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/18
 [12]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/26
@@ -95,9 +95,9 @@ _Team Evaluation Screenshot_
 
 ### Goals
 
--   Set up the project working environment for everyone
--   Troubleshoot Operating System issues
--   Make a basic landing page and navigation functionality
+- Set up the project working environment for everyone
+- Troubleshoot Operating System issues
+- Make a basic landing page and navigation functionality
 
 ### Self Reflection and Learning
 

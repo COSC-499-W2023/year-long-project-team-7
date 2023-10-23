@@ -23,10 +23,10 @@ _Team Evaluation Screenshot_
 
 ### Goal Recap
 
-| Goal          | Member(s)    | Link(s)      | Status    | Notes |
-| ------------- |------------- | ------------ | --------- | ----- |
+| Goal                | Member(s)                        | Link(s)           | Status    | Notes                                                               |
+| ------------------- | -------------------------------- | ----------------- | --------- | ------------------------------------------------------------------- |
 | Create Project Plan | Esteban, Ferdinand, Keiran, Liam | [Project Plan][2] | Completed | All group members contributed equally and met at the group meetings |
-|               |              |              |           |       |
+|                     |                                  |                   |           |                                                                     |
 
 [2]: https://docs.google.com/document/d/18U3K607QbEoZFy_O4bKOMl64O0OOUe0IOVW4NVq2NdY
 
@@ -40,10 +40,10 @@ _Team Evaluation Screenshot_
 
 ### Goals this week
 
-| Goal/Feature              | Pull Request             | Status    | Notes                                          |
-| ------------------------- | ------------------------ | --------- | ---------------------------------------------- |
-| Setup project/Research Django|                       | Completed | Ran into many technical difficulties getting project set up. Ferdinand and Esteban assisted greatly. Also researched Django in order to create home page. |
-| [Create basic home page][3] | [Created basic home page, about us page, and navigation bar][4] | Completed |    |
+| Goal/Feature                  | Pull Request                                                    | Status    | Notes                                                                                                                                                     |
+| ----------------------------- | --------------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Setup project/Research Django |                                                                 | Completed | Ran into many technical difficulties getting project set up. Ferdinand and Esteban assisted greatly. Also researched Django in order to create home page. |
+| [Create basic home page][3]   | [Created basic home page, about us page, and navigation bar][4] | Completed |                                                                                                                                                           |
 
 <br>
 
@@ -75,6 +75,8 @@ _Updated Navbar Screenshot_
 <br>
 
 [5]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
+<<<<<<< HEAD
+=======
 
 ## Oct 15 2023 -> Oct 22 2023
 
@@ -112,3 +114,4 @@ _Signin page Screenshot_
 
 [6]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
 
+>>>>>>> 37408caa5a6674965bb5bd4172e4f2079ff3bc34

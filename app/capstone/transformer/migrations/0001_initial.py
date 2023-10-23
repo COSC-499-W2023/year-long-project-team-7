@@ -5,68 +5,151 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Conversion',
+            name="Conversion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('user_parameters', models.JSONField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("user_parameters", models.JSONField()),
             ],
         ),
         migrations.CreateModel(
-            name='File',
+            name="File",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('path', models.TextField()),
-                ('type', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("path", models.TextField()),
+                ("type", models.TextField()),
             ],
         ),
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('email', models.EmailField(max_length=254, unique=True)),
-                ('username', models.CharField(max_length=50, unique=True)),
-                ('password', models.CharField(max_length=100)),
-                ('role', models.CharField(blank=True, choices=[('ADMIN', 'Admin'), ('USER', 'User'), ('PAID_USER', 'Paid User')], max_length=10, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("email", models.EmailField(max_length=254, unique=True)),
+                ("username", models.CharField(max_length=50, unique=True)),
+                ("password", models.CharField(max_length=100)),
+                (
+                    "role",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("ADMIN", "Admin"),
+                            ("USER", "User"),
+                            ("PAID_USER", "Paid User"),
+                        ],
+                        max_length=10,
+                        null=True,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Transaction',
+            name="Transaction",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('amount', models.IntegerField()),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='transformer.user')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("amount", models.IntegerField()),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="transformer.user",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='FileConversion',
+            name="FileConversion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('conversion', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='transformer.conversion')),
-                ('input_file', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='input_file', to='transformer.file')),
-                ('output_file', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='output_file', to='transformer.file')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                (
+                    "conversion",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="transformer.conversion",
+                    ),
+                ),
+                (
+                    "input_file",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="input_file",
+                        to="transformer.file",
+                    ),
+                ),
+                (
+                    "output_file",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="output_file",
+                        to="transformer.file",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='file',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='transformer.user'),
+            model_name="file",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="transformer.user",
+            ),
         ),
         migrations.AddField(
-            model_name='conversion',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='transformer.user'),
+            model_name="conversion",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="transformer.user"
+            ),
         ),
     ]
