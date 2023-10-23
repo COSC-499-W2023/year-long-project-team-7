@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<div class="vh-100 d-flex justify-content-center align-items-center">
+    <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3">
+        
+        <h3>Sign In</h3>
+
+        <form action="/signin" method="post">
+        {% csrf_token %}
+            <label for="">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter username" required>
+            <br>
+
+            <label for="">Password</label>
+            <input type="password" id="pass1" name="pass1" placeholder="Enter password" required>
+            <br>
+
+
+            <button type="submit">Sign In</button>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
