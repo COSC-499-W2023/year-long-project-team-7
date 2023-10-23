@@ -1,7 +1,8 @@
 import pdfplumber
 from .models import Conversion, File
 from typing import List, Dict
-
+import openai
+from .openaiManager import OpenAiManager
 
 def pdf_to_text(pdf_path: str) -> str:
     text = ""
@@ -19,4 +20,9 @@ def multiple_pdf_to_text(paths: List[str]) -> dict[str, str]:
 
 def generate_output(files: List[File], conversion: Conversion) -> dict[str, str]:
     texts = multiple_pdf_to_text([f.file.path for f in files])
-    return Dict()
+
+    manager = OpenAiManager(texts, conversion)
+
+    return texts
+
+
