@@ -104,3 +104,31 @@ _Team Evaluation Screenshot_
 This week was slower than others because of the ramping up of work in other classes, as well as the unexpected issues we faced when setting up the project in all of our machines. This required an additional meeting and troubleshooting to be able to get everyone up to speed.
 
 Despite this challenge, we were able to work through the issues we had and have a basic landing page set up. We are confident about the work moving forward.
+
+## Oct 8 2023 -> Oct 22 2023
+
+![evaluation-screenshot](../../img/esteban-eval-6.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-6.png)
+
+### Goals
+
+-   Create front end for landing page
+    -   Content
+    -   Animations + Style
+-   Create workflow for automatic formatting
+    -   GitHub Actions
+-   Troubleshoot Javascript issues w/ Ferdinand
+-   Troubleshoot CSS issues
+
+### Self Reflection and Learning
+
+In this week I saw good progress with my personal task and felt like I learned to work with CSS in a better way this week. Creating the landing page was simple, but I wanted to have a sophisticated look that reflected modern design language. For this reason, I got more involved with bootstrap CSS and had a fair bit of fun learning to create more interesting design.
+
+Additionally, in this two week period I wanted to create something that would help out the CI process for the whole team. I had previously used an autoformatting tool set up with GitHub actions, so I decided to do the same for this project. I investigated some options and landed on Black for Python and DjLint for HTML with Django. I set up a YAML file to automatically format the code as we push it to the repo. I feel like this change will make our codebase more readable and standarized, and generally keep things tidy in the future.
