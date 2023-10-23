@@ -80,29 +80,6 @@ a:hover {
 
 /* ----------NAVBAR CSS---------- */
 .navbar-custom {
-<<<<<<< HEAD
-  background-color: MediumSlateBlue;
-}
-.profile-picture {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-left: 10px;
-}
-/* CSS for small screens (Keeps formatting order when toggler is pushed) */
-@media (max-width: 1000px) {
-  .navbar {
-    flex-direction: column;
-  }
-
-  .profile-picture {
-    order: 1;
-  }
-
-  .navbar-collapse {
-    order: 2;
-  }
-=======
     background-color: MediumSlateBlue;
 }
 .profile-picture {
@@ -124,5 +101,4 @@ a:hover {
     .navbar-collapse {
         order: 2;
     }
->>>>>>> 719a99463b174c32adc932cc3bd13450e9831d57
 }
