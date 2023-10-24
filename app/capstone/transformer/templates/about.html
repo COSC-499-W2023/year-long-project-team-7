@@ -1,16 +1,12 @@
 {% extends 'base.html' %}
-
-{% load static %}
-
 {% block content %}
-
-{% include 'navbar.html' %}
-
-<div class="vh-100 d-flex justify-content-center align-items-center">
-    <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3">
-        <h1 class='text-light fw-bold'>About page</h1>
-        <p class='text-light fw-bold'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam tortor, sollicitudin eget arcu at, mollis lacinia sem. Nulla metus arcu, molestie nec euismod vel, commodo sit amet justo. Proin congue feugiat tortor, et semper urna consequat id. Phasellus eu lorem id mi posuere pellentesque in sit amet velit. Sed rhoncus tellus turpis, quis suscipit nisl lacinia imperdiet. Nam convallis leo at rutrum volutpat. Suspendisse et nunc eget elit lacinia ultricies. Integer sagittis pretium sapien non elementum. Quisque a facilisis mi, vitae ultrices odio. </p>
+    {% include 'navbar.html' %}
+    <div class="vh-100 d-flex justify-content-center align-items-center">
+        <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3">
+            <h1 class="text-light fw-bold">About page</h1>
+            <p class="text-light fw-bold">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam tortor, sollicitudin eget arcu at, mollis lacinia sem. Nulla metus arcu, molestie nec euismod vel, commodo sit amet justo. Proin congue feugiat tortor, et semper urna consequat id. Phasellus eu lorem id mi posuere pellentesque in sit amet velit. Sed rhoncus tellus turpis, quis suscipit nisl lacinia imperdiet. Nam convallis leo at rutrum volutpat. Suspendisse et nunc eget elit lacinia ultricies. Integer sagittis pretium sapien non elementum. Quisque a facilisis mi, vitae ultrices odio.
+            </p>
+        </div>
     </div>
-</div>
-
 {% endblock %}

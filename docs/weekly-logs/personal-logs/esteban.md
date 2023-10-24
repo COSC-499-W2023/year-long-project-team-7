@@ -26,10 +26,10 @@ _Team Evaluation Screenshot_
 
 ### Goals
 
--   Get an image of team dynamics and setup tools for long term
--   Try out a small exercise to get to know our workflow
--   Create an automated testing suite with GitHub Actions
--   Get a feel for logging and documenting work and experiences
+- Get an image of team dynamics and setup tools for long term
+- Try out a small exercise to get to know our workflow
+- Create an automated testing suite with GitHub Actions
+- Get a feel for logging and documenting work and experiences
 
 ### Self Reflection and Learning
 
@@ -47,11 +47,11 @@ _Team Evaluation Screenshot_
 
 ### Tasks
 
-| Feature                   | Issue(s)                           | Status             | Notes                      |
-| ------------------------- | ---------------------------------- | ------------------ | -------------------------- |
-| Create Project Plan       | None                               | Completed          | w/Liam, Keiran, Ferdinand  |
-| Personal Log              | [Individual Log (Esteban)][8]      | Completed          |                            |
-| Contribute to Team Log    | [Team Log][9]                      | Completed          | w/ Liam, Keiran, Ferdinand |
+| Feature                   | Issue(s)                            | Status             | Notes                      |
+| ------------------------- | ----------------------------------- | ------------------ | -------------------------- |
+| Create Project Plan       | None                                | Completed          | w/Liam, Keiran, Ferdinand  |
+| Personal Log              | [Individual Log (Esteban)][8]       | Completed          |                            |
+| Contribute to Team Log    | [Team Log][9]                       | Completed          | w/ Liam, Keiran, Ferdinand |
 | Consolidate Previous Logs | [Added logs from previous week][10] | Waiting for Review |                            |
 
 [8]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/11
@@ -60,10 +60,10 @@ _Team Evaluation Screenshot_
 
 ### Goals
 
--   Create a project plan to guide us with the project and help partition the work
--   Decide on a Tech Stack we feel comfortable with
--   Get an idea for how we will subdivide the work going forward
--   Determine a MVP to keep scope and expectations under control
+- Create a project plan to guide us with the project and help partition the work
+- Decide on a Tech Stack we feel comfortable with
+- Get an idea for how we will subdivide the work going forward
+- Determine a MVP to keep scope and expectations under control
 
 ### Self Reflection and Learning
 
@@ -81,13 +81,13 @@ _Team Evaluation Screenshot_
 
 ### Tasks
 
-| Feature                    | Issue(s)                        | Status    | Notes                      |
-| -------------------------- | ------------------------------- | --------- | -------------------------- |
+| Feature                    | Issue(s)                         | Status    | Notes                      |
+| -------------------------- | -------------------------------- | --------- | -------------------------- |
 | Unify Personal Logs        | [Consolidated Personal Logs][11] | Completed |                            |
-| Personal Log               | None                            | Completed |                            |
+| Personal Log               | None                             | Completed |                            |
 | Contribute to Team Log     | [Team Log][12]                   | Completed | w/ Liam, Keiran, Ferdinand |
 | Set Up Working Environment | [Set Up Working Environment][13] | Completed |                            |
-| Help Teammates Setup WSL   | None                            | Completed | w/ Liam                    |
+| Help Teammates Setup WSL   | None                             | Completed | w/ Liam                    |
 
 [11]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/18
 [12]: https://github.com/COSC-499-W2023/year-long-project-team-7/issues/26
@@ -95,12 +95,40 @@ _Team Evaluation Screenshot_
 
 ### Goals
 
--   Set up the project working environment for everyone
--   Troubleshoot Operating System issues
--   Make a basic landing page and navigation functionality
+- Set up the project working environment for everyone
+- Troubleshoot Operating System issues
+- Make a basic landing page and navigation functionality
 
 ### Self Reflection and Learning
 
 This week was slower than others because of the ramping up of work in other classes, as well as the unexpected issues we faced when setting up the project in all of our machines. This required an additional meeting and troubleshooting to be able to get everyone up to speed.
 
 Despite this challenge, we were able to work through the issues we had and have a basic landing page set up. We are confident about the work moving forward.
+
+## Oct 8 2023 -> Oct 22 2023
+
+![evaluation-screenshot](../../img/esteban-eval-6.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-6.png)
+
+### Goals
+
+-   Create front end for landing page
+    -   Content
+    -   Animations + Style
+-   Create workflow for automatic formatting
+    -   GitHub Actions
+-   Troubleshoot Javascript issues w/ Ferdinand
+-   Troubleshoot CSS issues
+
+### Self Reflection and Learning
+
+In this week I saw good progress with my personal task and felt like I learned to work with CSS in a better way this week. Creating the landing page was simple, but I wanted to have a sophisticated look that reflected modern design language. For this reason, I got more involved with bootstrap CSS and had a fair bit of fun learning to create more interesting design.
+
+Additionally, in this two week period I wanted to create something that would help out the CI process for the whole team. I had previously used an autoformatting tool set up with GitHub actions, so I decided to do the same for this project. I investigated some options and landed on Black for Python and DjLint for HTML with Django. I set up a YAML file to automatically format the code as we push it to the repo. I feel like this change will make our codebase more readable and standarized, and generally keep things tidy in the future.
