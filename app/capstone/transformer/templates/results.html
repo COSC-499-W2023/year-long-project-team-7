@@ -1,24 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-{% include 'navbar.html' %}
-    
-<div class="col d-flex justify-content-center">
-    <div class="card w-75 bg-secondary mt-5">
-        <div class="card-body">
-            <h5 class="card-title text-light fw-bold">Transformation Results</h5>
-            <h6 class="card-subtitle mt-3 text-light">File Preview:</h6>
-            <div class="d-flex justify-content-center align-items-center">
-            <p class="card-text mt-5 ">(file preview here)</p>
-            </div>
-            <div class="d-flex justify-content-center align-items-center">
-            <button class="w-25 btn custom-button mt-5">Download</button>
-            </div>
-            <div class="d-flex justify-content-center align-items-center">
-            <button class="w-25 btn custom-button mt-3">Back to Transform</button>
+    {% include 'navbar.html' %}
+    <div class="col d-flex justify-content-center">
+        <div class="card w-75 bg-secondary mt-5">
+            <div class="card-body">
+                <h5 class="card-title text-light fw-bold">Transformation Results</h5>
+                <h6 class="card-subtitle mt-3 text-light">File Preview:</h6>
+                <div class="d-flex justify-content-center align-items-center">
+                    <p class="card-text mt-5 ">(file preview here)</p>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <button class="w-25 btn custom-button mt-5">Download</button>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <button class="w-25 btn custom-button mt-3">Back to Transform</button>
+                </div>
             </div>
         </div>
     </div>
-</div> 
-
 {% endblock %}
