@@ -62,14 +62,14 @@ def signup(request: HttpRequest) -> HttpResponse:
     
     # Create new user based on user input
     if request.method == "POST":
-        username = request.POST.get('username')
-        fname = request.POST.get("fname")
-        lname = request.POST.get("lname")
-        email = request.POST.get("email")
-        pass1 = request.POST.get("pass1")
-        pass2 = request.POST.get("pass2")
+        username: str = request.POST.get('username')
+        fname: str = request.POST.get("fname")
+        lname: str = request.POST.get("lname")
+        email: str = request.POST.get("email")
+        pass1: str = request.POST.get("pass1")
+        pass2: str = request.POST.get("pass2")
 
-        myuser = User.objects.create_user(username, email, pass1)
+        myuser: User = User.objects.create_user(username, email, pass1)
         myuser.first_name = fname
         myuser.last_name = lname
 
@@ -84,14 +84,14 @@ def signup(request: HttpRequest) -> HttpResponse:
 def signin(request: HttpRequest) -> HttpResponse:
     
     if request.method == 'POST':
-        username = request.POST.get("username")
-        pass1 = request.POST.get("pass1")
+        username: str = request.POST.get("username")
+        pass1: str = request.POST.get("pass1")
 
-        user = authenticate(username=username, password=pass1)
+        user = authenticate(request, username=username, password=pass1)
 
         if user is not None:
             login(request, user)
-            fname = user.first_name
+            fname: str = user.first_name
             return render(request, "home.html", {'fname': fname})
 
         else:
@@ -100,7 +100,7 @@ def signin(request: HttpRequest) -> HttpResponse:
 
     return render(request, 'signin.html')
 
-def signout(request):
+def signout(request: HttpRequest) -> HttpResponse:
     logout(request)
     messages.success(request, "Logged Out Successfully.")
     return redirect('home')
