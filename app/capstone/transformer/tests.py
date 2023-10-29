@@ -9,7 +9,6 @@ from unittest.mock import patch
 
 
 
-
 class TransformViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()

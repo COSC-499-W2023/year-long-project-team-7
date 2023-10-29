@@ -7,11 +7,11 @@
             <h1 class='text-light fw-bold'>Results Page</h1>
             {% if output_files %}
                 <ul>
-                {% for file in output_files %}
-                    <li>
-                        <a href="{{ file.file.url }}" download>{{ file.file.name }}</a>
-                    </li>
-                {% endfor %}
+                    {% for file in output_files %}
+                        <li>
+                            <a href="{{ file.file.url }}" download>{{ file.file.name }}</a>
+                        </li>
+                    {% endfor %}
                 </ul>
             {% else %}
                 <p>No output files available.</p>

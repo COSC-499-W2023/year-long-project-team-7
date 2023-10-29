@@ -45,22 +45,23 @@ def transform(request: HttpRequest) -> HttpResponse:
     return render(request, "transform.html", {"form": TransformerForm()})
 
 
-
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
-    
     conversion = get_object_or_404(Conversion, id=conversion_id)
-    
+
     if request.user.is_authenticated:
         if conversion.user != request.user:
-            return HttpResponseForbidden('You do not have permission to access this resource.')
+            return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+            )
     else:
         if conversion.user is not None:
-            return HttpResponseForbidden('You do not have permission to access this resource.')
-    
-    output_files = File.objects.filter(conversion=conversion, is_output=True)
-    
-    return render(request, 'results.html', {'output_files': output_files})
+            return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+            )
 
+    output_files = File.objects.filter(conversion=conversion, is_output=True)
+
+    return render(request, "results.html", {"output_files": output_files})
 
 
 def home(request: HttpRequest) -> HttpResponse:

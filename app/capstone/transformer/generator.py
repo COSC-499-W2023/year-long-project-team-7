@@ -43,6 +43,12 @@ def generate_output(files: List[File], conversion: Conversion) -> None:
         except ObjectDoesNotExist:
             user = None
 
-    new_file = File(user=user, conversion=conversion, type=file_extension, file=output_file_path, is_output=True)
+    new_file = File(
+        user=user,
+        conversion=conversion,
+        type=file_extension,
+        file=output_file_path,
+        is_output=True,
+    )
     new_file.save()
 
