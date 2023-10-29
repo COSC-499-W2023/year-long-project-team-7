@@ -62,12 +62,41 @@ def signup(request: HttpRequest) -> HttpResponse:
     
     # Create new user based on user input
     if request.method == "POST":
-        username: str = request.POST.get('username')
-        fname: str = request.POST.get("fname")
-        lname: str = request.POST.get("lname")
-        email: str = request.POST.get("email")
-        pass1: str = request.POST.get("pass1")
-        pass2: str = request.POST.get("pass2")
+        username = request.POST.get('username')
+        if username is not None:
+            username = str(username)
+        else:
+            username = ""
+        
+        fname = request.POST.get("fname")
+        if fname is not None:
+            fname = str(fname)
+        else:
+            fname = "" 
+        
+        lname = request.POST.get("lname")
+        if lname is not None:
+            lname = str(lname)
+        else:
+            lname = "" 
+        
+        email = request.POST.get("email")
+        if email is not None:
+            email = str(email)
+        else:
+            email = ""  
+        
+        pass1 = request.POST.get("pass1")
+        if pass1 is not None:
+            pass1 = str(pass1)  
+        else:
+            pass1 = "" 
+        
+        pass2 = request.POST.get("pass2")
+        if pass2 is not None:
+            pass2 = str(pass2)
+        else:
+            pass2 = "" 
 
         myuser: User = User.objects.create_user(username, email, pass1)
         myuser.first_name = fname
