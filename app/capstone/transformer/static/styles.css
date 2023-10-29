@@ -6,6 +6,11 @@ a {
     transition: color 0.2s;
     transition: transform 0.2s;
 }
+
+something {
+    text-decoration: underline;
+    color: grey;
+}
 a:hover {
     color: #a496ff;
     transform: translateY(-2px);
@@ -15,6 +20,8 @@ a:hover {
 }
 .bigger-p {
     font-size: 20px;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
 }
 .increase-size-fade {
     font-size: 36px;
