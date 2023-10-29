@@ -17,13 +17,13 @@ class PresentationGenerator:
         chosen_model: str,
         texts: Dict[str, str],
         conversion: Conversion,
-        temprature: int,
+        temperature: int,
     ):
         available_models = {"gpt-3.5-turbo": 4096, "gpt-4": 8191}
 
         openai.api_key = settings.OPENAI_API_KEY
 
-        self.temprature = temprature
+        self.temperature = temperature
         self.conversion = conversion
         self.texts = texts
         self.chosen_model = chosen_model
@@ -150,7 +150,7 @@ class PresentationGenerator:
         response = openai.ChatCompletion.create(
             model=self.chosen_model,
             messages=messages,
-            temperature=self.temprature,
+            temperature=self.temperature,
             max_tokens=tokens,
             top_p=1,
             frequency_penalty=0,
