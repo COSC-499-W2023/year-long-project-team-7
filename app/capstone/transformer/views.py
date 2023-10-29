@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from .forms import TransformerForm
 from .models import Conversion, File
 from typing import List, Dict
 import json
 from .generator import generate_output
+from django.shortcuts import render, get_object_or_404, redirect
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -38,15 +38,29 @@ def transform(request: HttpRequest) -> HttpResponse:
                 new_file.save()
                 files.append(new_file)
 
-            # result = generate_output(files, conversion)
+            #result = generate_output(files, conversion)
 
-            return redirect("results")
+            return redirect("results", conversion_id=conversion.id)
 
     return render(request, "transform.html", {"form": TransformerForm()})
 
 
-def results(request: HttpRequest) -> HttpResponse:
-    return render(request, "results.html")
+
+def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
+    
+    conversion = get_object_or_404(Conversion, id=conversion_id)
+    
+    if request.user.is_authenticated:
+        if conversion.user != request.user:
+            return HttpResponseForbidden('You do not have permission to access this resource.')
+    else:
+        if conversion.user is not None:
+            return HttpResponseForbidden('You do not have permission to access this resource.')
+    
+    output_files = File.objects.filter(conversion=conversion, is_output=True)
+    
+    return render(request, 'results.html', {'output_files': output_files})
+
 
 
 def home(request: HttpRequest) -> HttpResponse:

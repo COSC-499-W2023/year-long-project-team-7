@@ -7,6 +7,7 @@ from reportlab.lib import colors  # type: ignore
 from reportlab.lib.styles import getSampleStyleSheet  # type: ignore
 from reportlab.platypus import SimpleDocTemplate, Paragraph  # type: ignore
 from django.core.exceptions import ObjectDoesNotExist
+import os
 
 
 def pdf_to_text(pdf_path: str) -> str:
@@ -31,24 +32,18 @@ def generate_output(files: List[File], conversion: Conversion) -> File:
         "gpt-3.5-turbo", texts, conversion, temprature=1
     )
 
-    pres_manager.build_presentation()
+    output_file_path = pres_manager.build_presentation()
+    file_name, file_extension = os.path.splitext(output_file_path)
 
-    # pdf_file_path = f"files/conversion_ouput_{conversion.id}.pdf"
+    user = None
 
-    # pdf = SimpleDocTemplate(pdf_file_path, pagesize=letter)
-    # styles = getSampleStyleSheet()
-    # flowables = [Paragraph(output_text, styles["Normal"])]
-    # pdf.build(flowables)
+    if conversion.user_id is not None:
+        try:
+            user = User.objects.get(id=conversion.user_id)
+        except ObjectDoesNotExist:
+            user = None
 
-    # user = None  # Initialize user to None by default
+    new_file = File(user=user, conversion=conversion, type=file_extension, file=output_file_path, is_output=True)
+    new_file.save()
 
-    # if conversion.user_id is not None:
-    #     try:
-    #         user = User.objects.get(id=conversion.user_id)
-    #     except ObjectDoesNotExist:
-    #         user = None
-
-    # new_file = File(user=user, conversion=conversion, type="pdf", file=pdf_file_path)
-    # new_file.save()
-
-    return File()
+    return new_file

@@ -5,7 +5,10 @@ from typing import List, Dict
 from django.conf import settings
 import json
 import openai
-
+import os
+from django.core.files.storage import FileSystemStorage
+from django.core.files.base import ContentFile
+from io import BytesIO
 
 class PresentationGenerator:
     def __init__(
@@ -30,7 +33,7 @@ class PresentationGenerator:
         with open("app/capstone/prompts.json", "r") as file:
             self.prompts = json.load(file)
 
-    def build_presentation(self) -> None:
+    def build_presentation(self) -> str:
         prs = Presentation()
         slide_layout = prs.slide_layouts[1]
         layouts = prs.slide_layouts
@@ -40,7 +43,7 @@ class PresentationGenerator:
         # messages.append(self.user_message(self.prompts['markdown']))
         # messages.append(self.user_message(self.prompts['summary']))
         # messages.append(self.user_message(self.user_prompt))
-        messages.append(self.user_message(self.prompts["slide"]))
+        messages.append(self.user_message(self.prompts["slides"]))
         messages.append(self.user_message(f"Respond in {self.language}"))
 
         responses = self.prompt_with_text(messages)
@@ -57,7 +60,17 @@ class PresentationGenerator:
                 content.text = new_slide_content
                 title.top = 0
 
-        prs.save("files/sample_presentation.pptx")
+        buffer = BytesIO()
+        prs.save(buffer)
+        buffer.seek(0)  
+        file_content = ContentFile(buffer.read())
+
+        rel_path = f"conversion_output_{self.conversion.id}.pptx"
+
+        fs = FileSystemStorage()
+        fs.save(rel_path, file_content)
+
+        return rel_path
 
     def count_tokens(self, text: str) -> int:
         return len(text) // 4 + int(

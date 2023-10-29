@@ -4,6 +4,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import Conversion, File
 from .forms import TransformerForm
 import json
+from urllib.parse import urlencode
+
 
 
 class TransformViewTestCase(TestCase):
@@ -28,7 +30,6 @@ class TransformViewTestCase(TestCase):
         response = self.client.post(self.url, data, format="multipart")
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse("results"))
 
         self.assertEqual(Conversion.objects.count(), 1)
         conversion = Conversion.objects.first()
@@ -39,6 +40,8 @@ class TransformViewTestCase(TestCase):
             "complexity": 1,
             "length": 1,
         }
+        
+        self.assertEqual(response.url, reverse('results', args=[conversion.id]))
         expected_user_params = json.dumps(expected_user_params_dict)
 
         self.assertEqual(conversion.user_parameters, expected_user_params)
