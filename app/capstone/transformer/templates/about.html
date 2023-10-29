@@ -1,39 +1,38 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
-{% block content %} 
-{% include 'navbar.html' %}
-
-<div class="vertical-center-top flex-column justify-content-center gap-5">
-    
-    <h1 class="fade-in-first bigger-h1">About Us</h1>
-
-    <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3 text-light">
-        <p class="text-center fade-in-second bigger-p">
-            We are working towards making teaching and learning more convenient
-            by empowering professors.
-        </p>
-        <p class="text-center fade-in-second bigger-p">
-            We are are a group of students working to integrate AI into the learning process by giving professors a fast and convenient way to turn their existing course content into leaning aids for students. We believe in the promise of AI in improving the way we learn.
-        </p>
-        <p class="text-center fade-in-second bigger-p">
-            Check out our project repository if you are
-            <a href="https://github.com/COSC-499-W2023/year-long-project-team-7"> interested in contributing.</a>
-        </p>
+{% block content %}
+    {% include 'navbar.html' %}
+    <div class="vertical-center-top flex-column justify-content-center gap-5">
+        <h1 class="fade-in-first bigger-h1">About Us</h1>
+        <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3 text-light">
+            <p class="text-center fade-in-second bigger-p">
+                We are working towards making teaching and learning more convenient
+                by empowering professors.
+            </p>
+            <p class="text-center fade-in-second bigger-p">
+                We are are a group of students working to integrate AI into the learning process by giving professors a fast and convenient way to turn their existing course content into leaning aids for students. We believe in the promise of AI in improving the way we learn.
+            </p>
+            <p class="text-center fade-in-second bigger-p">
+                Check out our project repository if you are
+                <a href="https://github.com/COSC-499-W2023/year-long-project-team-7">interested in contributing.</a>
+            </p>
+        </div>
+        <div class="flex-row fade-in-second">
+            <a class="mx-3" target="_blank" href="https://example.com/">
+                <img src="{% static 'img/discord-dark.svg' %}" alt="Discord">
+            </a>
+            <a class="mx-3" target="_blank" href="https://example.com/">
+                <img src="{% static 'img/github-dark.svg' %}" alt="Github">
+            </a>
+        </div>
     </div>
-
-    <div class="flex-row fade-in-second">
-        <a class="mx-3" target="_blank" href="https://example.com/">
-            <img src="{% static 'img/discord-dark.svg' %}" alt="Discord">
-        </a>        
-        <a class="mx-3" target="_blank" href="https://example.com/">
-            <img src="{% static 'img/github-dark.svg' %}" alt="Github">
-        </a>        
-    </div>
-</div>
-
-
-<footer>
-<p class="text-center" style="color: grey">Icons by <a style="text-decoration: underline; color: grey; text-underline-offset: 5px; text-decoration-thickness: 1px;" href="https://icons8.com/">Icons8</a></p>
-</footer>
-
+    <footer>
+        <p class="text-center" style="color: grey">
+            Icons by <a style="text-decoration: underline;
+           color: grey;
+           text-underline-offset: 5px;
+           text-decoration-thickness: 1px"
+    href="https://icons8.com/">Icons8</a>
+        </p>
+    </footer>
 {% endblock %}
