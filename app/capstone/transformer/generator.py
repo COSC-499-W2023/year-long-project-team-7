@@ -1,7 +1,7 @@
 import pdfplumber
 from .models import Conversion, File, User
 from typing import List, Dict
-from .openaiManager import OpenAiManager
+from .presentationGenerator import PresentationGenerator
 from reportlab.lib.pagesizes import letter  # type: ignore
 from reportlab.lib import colors  # type: ignore
 from reportlab.lib.styles import getSampleStyleSheet  # type: ignore
@@ -27,26 +27,27 @@ def multiple_pdf_to_text(paths: List[str]) -> dict[str, str]:
 def generate_output(files: List[File], conversion: Conversion) -> File:
     texts = multiple_pdf_to_text([f.file.path for f in files])
 
-    manager = OpenAiManager("gpt-3.5-turbo", texts, conversion)
+    pres_manager = PresentationGenerator("gpt-3.5-turbo", texts, conversion, temprature=1)
 
-    output_text = manager.prompt(1)
+    pres_manager.build_presentation()
 
-    pdf_file_path = "files/some-random-sting" + ".pdf"
 
-    pdf = SimpleDocTemplate(pdf_file_path, pagesize=letter)
-    styles = getSampleStyleSheet()
-    flowables = [Paragraph(output_text, styles["Normal"])]
-    pdf.build(flowables)
+    # pdf_file_path = f"files/conversion_ouput_{conversion.id}.pdf"
 
-    user = None  # Initialize user to None by default
+    # pdf = SimpleDocTemplate(pdf_file_path, pagesize=letter)
+    # styles = getSampleStyleSheet()
+    # flowables = [Paragraph(output_text, styles["Normal"])]
+    # pdf.build(flowables)
 
-    if conversion.user_id is not None:
-        try:
-            user = User.objects.get(id=conversion.user_id)
-        except ObjectDoesNotExist:
-            user = None
+    # user = None  # Initialize user to None by default
 
-    new_file = File(user=user, conversion=conversion, type="pdf", file=pdf_file_path)
-    new_file.save()
+    # if conversion.user_id is not None:
+    #     try:
+    #         user = User.objects.get(id=conversion.user_id)
+    #     except ObjectDoesNotExist:
+    #         user = None
 
-    return new_file
+    # new_file = File(user=user, conversion=conversion, type="pdf", file=pdf_file_path)
+    # new_file.save()
+
+    return File()

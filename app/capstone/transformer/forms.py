@@ -5,7 +5,7 @@ from django.forms import TextInput, Select
 class TransformerForm(forms.Form):
     text_input = forms.CharField(label="Prompt", widget=TextInput())
     language = forms.ChoiceField(
-        choices=[("en", "English"), ("fr", "French"), ("es", "Spanish")],
+        choices=[("English", "English"), ("French", "French"), ("Spanish", "Spanish")],
         widget=Select(),
     )
     complexity = forms.IntegerField(

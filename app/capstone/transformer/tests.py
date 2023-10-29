@@ -20,7 +20,7 @@ class TransformViewTestCase(TestCase):
         file = SimpleUploadedFile("file.txt", b"file_content")
         data = {
             "text_input": "sample_text",
-            "language": "en",
+            "language": "English",
             "complexity": 1,
             "length": 1,
             "files": file,
@@ -35,7 +35,7 @@ class TransformViewTestCase(TestCase):
 
         expected_user_params_dict = {
             "text_input": "sample_text",
-            "language": "en",
+            "language": "English",
             "complexity": 1,
             "length": 1,
         }
