@@ -25,7 +25,7 @@ def multiple_pdf_to_text(paths: List[str]) -> dict[str, str]:
     return result
 
 
-def generate_output(files: List[File], conversion: Conversion) -> File:
+def generate_output(files: List[File], conversion: Conversion) -> None:
     texts = multiple_pdf_to_text([f.file.path for f in files])
 
     pres_manager = PresentationGenerator(
@@ -46,4 +46,3 @@ def generate_output(files: List[File], conversion: Conversion) -> File:
     new_file = File(user=user, conversion=conversion, type=file_extension, file=output_file_path, is_output=True)
     new_file.save()
 
-    return new_file
