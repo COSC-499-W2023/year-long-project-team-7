@@ -125,11 +125,16 @@ def signin(request: HttpRequest) -> HttpResponse:
         else:
             pass1 = "" 
 
+        fname = request.POST.get("fname")
+        if fname is not None:
+            fname = str(fname)
+        else:
+            fname = "" 
+
         user = authenticate(request, username=username, password=pass1)
 
         if user is not None:
             login(request, user)
-            fname: str = user.first_name
             return render(request, "home.html", {'fname': fname})
 
         else:
