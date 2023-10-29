@@ -10,6 +10,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
 from io import BytesIO
 
+
 class PresentationGenerator:
     def __init__(
         self,
@@ -62,7 +63,7 @@ class PresentationGenerator:
 
         buffer = BytesIO()
         prs.save(buffer)
-        buffer.seek(0)  
+        buffer.seek(0)
         file_content = ContentFile(buffer.read())
 
         rel_path = f"conversion_output_{self.conversion.id}.pptx"

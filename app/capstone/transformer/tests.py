@@ -7,7 +7,6 @@ import json
 from urllib.parse import urlencode
 
 
-
 class TransformViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
@@ -40,8 +39,8 @@ class TransformViewTestCase(TestCase):
             "complexity": 1,
             "length": 1,
         }
-        
-        self.assertEqual(response.url, reverse('results', args=[conversion.id]))
+
+        self.assertEqual(response.url, reverse("results", args=[conversion.id]))
         expected_user_params = json.dumps(expected_user_params_dict)
 
         self.assertEqual(conversion.user_parameters, expected_user_params)
