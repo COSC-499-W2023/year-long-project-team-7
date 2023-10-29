@@ -1,5 +1,5 @@
-from pptx import Presentation # type: ignore
-from pptx.util import Inches # type: ignore
+from pptx import Presentation  # type: ignore
+from pptx.util import Inches  # type: ignore
 from .models import Conversion
 from typing import List, Dict
 from django.conf import settings
@@ -8,9 +8,14 @@ import openai
 
 
 class PresentationGenerator:
-
-    def __init__(self, chosen_model: str, texts: Dict[str, str], conversion: Conversion, temprature: int):
-        available_models = {"gpt-3.5-turbo": 4096, "gpt-4":8191}
+    def __init__(
+        self,
+        chosen_model: str,
+        texts: Dict[str, str],
+        conversion: Conversion,
+        temprature: int,
+    ):
+        available_models = {"gpt-3.5-turbo": 4096, "gpt-4": 8191}
 
         openai.api_key = settings.OPENAI_API_KEY
 
@@ -22,9 +27,8 @@ class PresentationGenerator:
         self.user_prompt = json.loads(conversion.user_parameters).get("text_input", "")
         self.language = json.loads(conversion.user_parameters).get("language", "")
 
-        with open('app/capstone/prompts.json', 'r') as file:
+        with open("app/capstone/prompts.json", "r") as file:
             self.prompts = json.load(file)
-    
 
     def build_presentation(self) -> None:
         prs = Presentation()
@@ -33,10 +37,10 @@ class PresentationGenerator:
 
         messages = []
 
-        #messages.append(self.user_message(self.prompts['markdown']))
-        #messages.append(self.user_message(self.prompts['summary']))
-        #messages.append(self.user_message(self.user_prompt))
-        messages.append(self.user_message(self.prompts['slide']))
+        # messages.append(self.user_message(self.prompts['markdown']))
+        # messages.append(self.user_message(self.prompts['summary']))
+        # messages.append(self.user_message(self.user_prompt))
+        messages.append(self.user_message(self.prompts["slide"]))
         messages.append(self.user_message(f"Respond in {self.language}"))
 
         responses = self.prompt_with_text(messages)
@@ -44,8 +48,8 @@ class PresentationGenerator:
         for response in responses:
             split_for_slides = response.split("\n\n")
             for new_slide_content in split_for_slides:
-                title_text =  new_slide_content.split('\n')[0]
-                new_slide_content = new_slide_content.replace(title_text,'')
+                title_text = new_slide_content.split("\n")[0]
+                new_slide_content = new_slide_content.replace(title_text, "")
                 slide = prs.slides.add_slide(slide_layout)
                 title = slide.shapes.title
                 content = slide.placeholders[1]
@@ -53,13 +57,15 @@ class PresentationGenerator:
                 content.text = new_slide_content
                 title.top = 0
 
-        prs.save('files/sample_presentation.pptx')
+        prs.save("files/sample_presentation.pptx")
 
     def count_tokens(self, text: str) -> int:
-        return len(text) // 4 + int(len(text) * 0.05) #this is temporary we need to find a better way to limit tokens
-    
-    def user_message(self, text: str) -> dict[str,str]:
-        return {"role":"user","content":text}
+        return len(text) // 4 + int(
+            len(text) * 0.05
+        )  # this is temporary we need to find a better way to limit tokens
+
+    def user_message(self, text: str) -> dict[str, str]:
+        return {"role": "user", "content": text}
 
     def get_chunks(self, text: str, prompt_tokens: int) -> list[str]:
         chunks = []
@@ -80,14 +86,16 @@ class PresentationGenerator:
             chunks.append(current_chunk.strip())
 
         return chunks
-    
+
     # messages + completion =< max tokens
     # prompts + file content =< messages
     # prompts + file + completion = max tokens
-    def prompt_with_text(self, messages: List[dict[str,str]]) -> List[str]:
+    def prompt_with_text(self, messages: List[dict[str, str]]) -> List[str]:
         responses = []
 
-        prompt_tokens = self.count_tokens(" ".join([msg["content"] for msg in messages]))
+        prompt_tokens = self.count_tokens(
+            " ".join([msg["content"] for msg in messages])
+        )
 
         if prompt_tokens > self.max_tokens // 4:
             responses.append("Error: Prompt too long")
@@ -102,27 +110,29 @@ class PresentationGenerator:
                 chunks = self.get_chunks(text, prompt_tokens)
 
                 for chunk in chunks:
-                    available_tokens = self.max_tokens - prompt_tokens - self.count_tokens(chunk)
+                    available_tokens = (
+                        self.max_tokens - prompt_tokens - self.count_tokens(chunk)
+                    )
                     messages.append(self.user_message(chunk))
-                    
+
                     chunk_response = self.prompt(messages, available_tokens)
-                     
+
                     messages.pop()
                     responses.append(chunk_response)
-                
+
             else:
                 messages.append(self.user_message(text))
-                
-                text_response = self.prompt(messages, self.max_tokens - prompt_tokens - text_tokens)
-            
+
+                text_response = self.prompt(
+                    messages, self.max_tokens - prompt_tokens - text_tokens
+                )
+
                 messages.pop()
                 responses.append(text_response)
 
+        return responses
 
-        return responses 
-
-
-    def prompt(self, messages:list[dict[str,str]], tokens: int) -> str:
+    def prompt(self, messages: list[dict[str, str]], tokens: int) -> str:
         response = openai.ChatCompletion.create(
             model=self.chosen_model,
             messages=messages,
@@ -134,6 +144,3 @@ class PresentationGenerator:
         )
 
         return str(response["choices"][0]["message"]["content"])
-
-
-

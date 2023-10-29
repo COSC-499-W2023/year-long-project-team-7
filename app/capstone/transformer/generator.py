@@ -27,10 +27,11 @@ def multiple_pdf_to_text(paths: List[str]) -> dict[str, str]:
 def generate_output(files: List[File], conversion: Conversion) -> File:
     texts = multiple_pdf_to_text([f.file.path for f in files])
 
-    pres_manager = PresentationGenerator("gpt-3.5-turbo", texts, conversion, temprature=1)
+    pres_manager = PresentationGenerator(
+        "gpt-3.5-turbo", texts, conversion, temprature=1
+    )
 
     pres_manager.build_presentation()
-
 
     # pdf_file_path = f"files/conversion_ouput_{conversion.id}.pdf"
 
