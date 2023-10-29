@@ -51,4 +51,3 @@ def generate_output(files: List[File], conversion: Conversion) -> None:
         is_output=True,
     )
     new_file.save()
-
