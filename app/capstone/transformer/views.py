@@ -113,8 +113,17 @@ def signup(request: HttpRequest) -> HttpResponse:
 def signin(request: HttpRequest) -> HttpResponse:
     
     if request.method == 'POST':
-        username: str = request.POST.get("username")
-        pass1: str = request.POST.get("pass1")
+        username = request.POST.get('username')
+        if username is not None:
+            username = str(username)
+        else:
+            username = ""
+        
+        pass1 = request.POST.get("pass1")
+        if pass1 is not None:
+            pass1 = str(pass1)  
+        else:
+            pass1 = "" 
 
         user = authenticate(request, username=username, password=pass1)
 
