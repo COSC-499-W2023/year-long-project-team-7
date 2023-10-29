@@ -29,7 +29,7 @@ def generate_output(files: List[File], conversion: Conversion) -> None:
     texts = multiple_pdf_to_text([f.file.path for f in files])
 
     pres_manager = PresentationGenerator(
-        "gpt-3.5-turbo", texts, conversion, temprature=1
+        "gpt-3.5-turbo", texts, conversion, temperature=1
     )
 
     output_file_path = pres_manager.build_presentation()
