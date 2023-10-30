@@ -95,6 +95,12 @@ body {
     padding-top: 56px; /* Compensate for navbar */
 }
 
+.logo {
+    width: 50px;
+    height: auto;
+    margin-left: -22px;
+}
+
 .navbar-custom {
     background-color: MediumSlateBlue;
 }
