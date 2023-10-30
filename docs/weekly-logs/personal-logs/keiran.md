@@ -98,3 +98,18 @@ _Tasks Screenshot_
 2. Create basic results page
 
 [8]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=assignees%3Akmalott++milestone%3A%22Week+7%22+&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Assignees
+
+## Oct 23 -> Oct 29
+
+![evaluation screenshot](../../img/keiran-eval-8.png)
+_Team evaluation Screenshot_
+
+![w8 taks screenshot](../../img/keiran-w7-tasks.png)
+_Tasks Screenshot_
+
+[Individual W8 Tasks][9]
+
+### Goals this week
+1. Update Results page based on TA/Group member feedback
+2. Create slides for W9 mini presentation
+3. Update Log in / Sign up UI
