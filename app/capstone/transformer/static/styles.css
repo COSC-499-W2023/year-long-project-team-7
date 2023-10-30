@@ -104,6 +104,11 @@ a:hover {
     transform: scale(1.05);
 }
 
+.navbar {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
 /*----------Button CSS-----------*/
 .custom-button {
     background-color: mediumslateblue;
