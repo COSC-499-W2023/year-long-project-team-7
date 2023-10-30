@@ -1,4 +1,7 @@
 /* ----------UNIVERSAL----------- */
+@import url("https://fonts.googleapis.com/css?family=GFS+Didot");
+@import url("https://fonts.googleapis.com/css?family=Noto+Serif+Display");
+
 a {
     display: inline-block;
     color: #7b68ee;
@@ -20,6 +23,11 @@ a:hover {
 }
 
 /* -----------LANDING------------ */
+.welcome {
+    font-weight: bold;
+    font-family: "Noto Serif Display";
+}
+
 .increase-size-fade {
     font-size: 36px;
     animation: increaseTextSizeFade 3s ease;
@@ -96,6 +104,10 @@ body {
     height: 40px;
     border-radius: 50%;
     margin-left: 10px;
+}
+
+.navbar-brand {
+    font-family: "Noto Serif Display";
 }
 
 .navbar-brand:hover {
