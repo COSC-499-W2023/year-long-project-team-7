@@ -100,7 +100,7 @@ a:hover {
 }
 
 .nav-link:hover {
-    color: aliceblue;
+    color: rgb(238, 209, 255);
     transform: scale(1.05);
 }
 
