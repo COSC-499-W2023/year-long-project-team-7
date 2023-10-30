@@ -68,7 +68,6 @@ _Team Evaluation Screenshot_
 ## Oct 8 2023 -> Oct 15 2023
 
 ![evaluation-screenshot](../../img/ferdinand-eval-6.png)
-
 <br>
 _Team Evaluation Screenshot_
 
@@ -115,4 +114,19 @@ _Team Evaluation Screenshot_
 ![tasks-screenshot](../../img/ferdinand-tasks-7.png)
 <br>
 _Tasks Screenshot_
+
+<br>
+
+## Oct 22 2023 -> Oct 29 2023
+
+![evaluation-screenshot](../../img/ferdinand-eval-8.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+![tasks-screenshot](../../img/ferdinand-tasks-8.png)
+<br>
+_Tasks Screenshot_
+
 
