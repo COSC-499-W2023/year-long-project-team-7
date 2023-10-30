@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-custom navbar-light">
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-custom navbar-light fixed-top">
     <div class="container-fluid">
         <!-- Navbar toggler button -->
         <button class="navbar-toggler"
@@ -11,7 +12,10 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <!-- Title/logo -->
-        <a class="navbar-brand" href="{% url 'index' %}"><b>Platonix</b></a>
+        <a class="navbar-brand" href="{% url 'index' %}"><b>PLATONIX</b></a>
+        <img class="logo"
+             src="{% static 'img/thinker-100-solid.png' %}"
+             alt="Logo">
         <!-- Links -->
         <div class="collapse navbar-collapse" id="navbarLinks">
             <ul class="navbar-nav ml-auto">
