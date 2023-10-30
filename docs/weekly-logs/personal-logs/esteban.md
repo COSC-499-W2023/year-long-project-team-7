@@ -26,10 +26,10 @@ _Team Evaluation Screenshot_
 
 ### Goals
 
-- Get an image of team dynamics and setup tools for long term
-- Try out a small exercise to get to know our workflow
-- Create an automated testing suite with GitHub Actions
-- Get a feel for logging and documenting work and experiences
+-   Get an image of team dynamics and setup tools for long term
+-   Try out a small exercise to get to know our workflow
+-   Create an automated testing suite with GitHub Actions
+-   Get a feel for logging and documenting work and experiences
 
 ### Self Reflection and Learning
 
@@ -60,10 +60,10 @@ _Team Evaluation Screenshot_
 
 ### Goals
 
-- Create a project plan to guide us with the project and help partition the work
-- Decide on a Tech Stack we feel comfortable with
-- Get an idea for how we will subdivide the work going forward
-- Determine a MVP to keep scope and expectations under control
+-   Create a project plan to guide us with the project and help partition the work
+-   Decide on a Tech Stack we feel comfortable with
+-   Get an idea for how we will subdivide the work going forward
+-   Determine a MVP to keep scope and expectations under control
 
 ### Self Reflection and Learning
 
@@ -95,9 +95,9 @@ _Team Evaluation Screenshot_
 
 ### Goals
 
-- Set up the project working environment for everyone
-- Troubleshoot Operating System issues
-- Make a basic landing page and navigation functionality
+-   Set up the project working environment for everyone
+-   Troubleshoot Operating System issues
+-   Make a basic landing page and navigation functionality
 
 ### Self Reflection and Learning
 
@@ -132,3 +132,33 @@ _Team Evaluation Screenshot_
 In this week I saw good progress with my personal task and felt like I learned to work with CSS in a better way this week. Creating the landing page was simple, but I wanted to have a sophisticated look that reflected modern design language. For this reason, I got more involved with bootstrap CSS and had a fair bit of fun learning to create more interesting design.
 
 Additionally, in this two week period I wanted to create something that would help out the CI process for the whole team. I had previously used an autoformatting tool set up with GitHub actions, so I decided to do the same for this project. I investigated some options and landed on Black for Python and DjLint for HTML with Django. I set up a YAML file to automatically format the code as we push it to the repo. I feel like this change will make our codebase more readable and standarized, and generally keep things tidy in the future.
+
+## Oct 22 2023 -> Oct 29 2023
+
+![evaluation-screenshot](../../img/esteban-eval-8.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-8.png)
+
+### Goals
+
+-   Create front end for about page
+    -   Content
+    -   Style
+-   Improve Styling of Navbar
+    -   Make it sticky
+    -   Better styling for accessibility
+-   Style transformer page
+
+### Self Reflection and Learning
+
+This week I mainly focused on getting the front end of our project to a good level prior to our presentation. We wanted a better looking navbar, as well as to prepare the look for the about page and the transformer page.
+
+Unfortunately, at the time of writing I am not done styling the transformer page, but will do so still as part of this milestone ahead of our presentation. This is the first time I feel like I was not able to fully realise all the work I assigned myself this week, so I am re-evaluating my workflow finish tasks earlier in the week and leave time for troubleshooting which usually happens unexpectedly. I think this is a good lesson in preempting problems and taking that into account when thinking about tasks.
+
+I had a chance to use GIMP to modify a free icon for our purposes. This was a nice creative change from the usual work that I enjoyed. I also contributed in keeping with best practices by pruning some deprecated dependencies from the project.
