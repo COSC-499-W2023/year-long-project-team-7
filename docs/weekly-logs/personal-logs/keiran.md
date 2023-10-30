@@ -104,7 +104,7 @@ _Tasks Screenshot_
 ![evaluation screenshot](../../img/keiran-eval-8.png)
 _Team evaluation Screenshot_
 
-![w8 taks screenshot](../../img/keiran-w7-tasks.png)
+![w8 taks screenshot](../../img/keiran-w8-tasks.png)
 _Tasks Screenshot_
 
 [Individual W8 Tasks][9]
