@@ -62,12 +62,11 @@
 
     These also run on gitHub so running them locally allows us to find issues before push.
 
-    1. Run tests
-    2. Run mypy
+    1. Format code with black (python) and djlint (html)
+    2. Run mypy to check correct typing
+    3. Run tests
 
     **If the checks fail, you cannot commit.**
-
-    Mypy is a static type checker for Python that allows developers to add type annotations to their programs and use it to type check them.
 
     This command will install the pre-commit hooks found in `.pre-commit-config.yaml` into your local git repository.
 
