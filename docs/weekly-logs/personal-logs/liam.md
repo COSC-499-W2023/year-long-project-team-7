@@ -111,3 +111,21 @@ _Signin page Screenshot_
 <br>
 
 [6]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
+
+## Oct 22 2023 -> Oct 29 2023
+
+![evaluation-screenshot](../../img/liam-eval-8.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w8-tasks.png)
+<br>
+[Individual Tasks][6]
+
+<br>
+
+[7]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
