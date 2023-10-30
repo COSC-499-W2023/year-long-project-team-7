@@ -1,4 +1,4 @@
-/* -----------LANDING------------ */
+/* ----------UNIVERSAL----------- */
 a {
     display: inline-block;
     color: #7b68ee;
@@ -10,12 +10,16 @@ a:hover {
     color: #a496ff;
     transform: translateY(-2px);
 }
+
 .bigger-h1 {
     font-size: 60px;
 }
+
 .bigger-p {
     font-size: 20px;
 }
+
+/* -----------LANDING------------ */
 .increase-size-fade {
     font-size: 36px;
     animation: increaseTextSizeFade 3s ease;
@@ -79,9 +83,14 @@ a:hover {
 }
 
 /* ----------NAVBAR CSS---------- */
+body {
+    padding-top: 56px; /* Compensate for navbar */
+}
+
 .navbar-custom {
     background-color: MediumSlateBlue;
 }
+
 .profile-picture {
     width: 40px;
     height: 40px;
