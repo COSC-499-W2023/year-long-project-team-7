@@ -153,7 +153,7 @@ _Team Evaluation Screenshot_
 -   Improve Styling of Navbar
     -   Make it sticky
     -   Better styling for accessibility
--   Style transformer page
+-   Style transformer page ahead of presentation
 
 ### Self Reflection and Learning
 
