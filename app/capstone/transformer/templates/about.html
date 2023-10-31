@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
 {% block content %} 
 {% include 'navbar.html' %}
@@ -19,21 +19,22 @@
             Check out our project repository if you are
             <a href="https://github.com/COSC-499-W2023/year-long-project-team-7"> interested in contributing.</a>
         </p> {% endcomment %}
+        <div class="flex-row fade-in-second">
+            <a class="mx-3" target="_blank" href="https://example.com/">
+                <img src="{% static 'img/discord-dark.svg' %}" alt="Discord">
+            </a>
+            <a class="mx-3" target="_blank" href="https://example.com/">
+                <img src="{% static 'img/github-dark.svg' %}" alt="Github">
+            </a>
+        </div>
     </div>
-
-    <div class="flex-row fade-in-second">
-        <a class="mx-3" target="_blank" href="https://example.com/">
-            <img src="{% static 'img/discord-dark.svg' %}" alt="Discord">
-        </a>        
-        <a class="mx-3" target="_blank" href="https://example.com/">
-            <img src="{% static 'img/github-dark.svg' %}" alt="Github">
-        </a>        
-    </div>
-</div>
-
-
-<footer>
-<p class="text-center" style="color: grey">Icons by <a style="text-decoration: underline; color: grey; text-underline-offset: 5px; text-decoration-thickness: 1px;" href="https://icons8.com/">Icons8</a></p>
-</footer>
-
+    <footer>
+        <p class="text-center" style="color: grey">
+            Icons by <a style="text-decoration: underline;
+           color: grey;
+           text-underline-offset: 5px;
+           text-decoration-thickness: 1px"
+    href="https://icons8.com/">Icons8</a>
+        </p>
+    </footer>
 {% endblock %}
