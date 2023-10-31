@@ -8,12 +8,16 @@
                 {% csrf_token %}
                 <div class="flex-column d-flex gap-5">
                     <div>
-                        <h2>Upload input files</h2>
-                        <input required
-                               name="files"
-                               type="file"
-                               multiple
-                               class="form-control-file mt-3 upload-file">
+                        <h1 class="title bigger-h1">Transform</h1>
+                        <h2 class="mb-4">Upload a file</h2>
+                        <label class="custom-file-upload">
+                            <input required
+                                   name="files"
+                                   type="file"
+                                   multiple
+                                   class="form-control-file custom-file-input">
+                            <span class="file-upload-text">Choose File</span>
+                        </label>
                     </div>
                     <div>
                         <h4>Additional Parameters</h4>
