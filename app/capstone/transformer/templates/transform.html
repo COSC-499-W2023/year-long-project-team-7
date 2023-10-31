@@ -3,7 +3,7 @@
 {% block content %}
     {% include 'navbar.html' %}
     <div class="vertical-center-top container-fluid     justify-content-center">
-        <div class="w-75 text-center">
+        <div class="w-50 text-center">
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="flex-column d-flex gap-5">
@@ -13,13 +13,13 @@
                                name="files"
                                type="file"
                                multiple
-                               class="form-control-file p-2 mt-3">
+                               class="form-control-file mt-3 upload-file">
                     </div>
                     <div>
                         <h4>Additional Parameters</h4>
                         {{ form.as_p }}
                     </div>
-                    <button type="submit" class="btn btn-primary w-15 align-self-center">Convert</button>
+                    <button type="submit" class="btn btn-primary align-self-center">Convert</button>
                 </div>
             </form>
         </div>

@@ -153,3 +153,10 @@ body {
         order: 2;
     }
 }
+
+/*-----------TRANSFORM------------*/
+.upload-file {
+    border: 2px solid #a496ff;
+    border-radius: 20px;
+    padding: 10px;
+}
