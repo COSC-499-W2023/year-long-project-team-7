@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Serif+Display");
+
 /* -----------LANDING------------ */
 a {
     display: inline-block;
@@ -7,10 +9,6 @@ a {
     transition: transform 0.2s;
 }
 
-something {
-    text-decoration: underline;
-    color: grey;
-}
 a:hover {
     color: #a496ff;
     transform: translateY(-2px);
@@ -112,4 +110,10 @@ a:hover {
     .navbar-collapse {
         order: 2;
     }
+}
+
+/*----------ABOUT PAGE----------*/
+.title {
+    font-weight: bold;
+    font-family: "Noto Serif Display";
 }
