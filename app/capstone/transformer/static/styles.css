@@ -9,6 +9,7 @@ a {
     transition: color 0.2s;
     transition: transform 0.2s;
 }
+
 a:hover {
     color: #a496ff;
     transform: translateY(-2px);
@@ -20,6 +21,8 @@ a:hover {
 
 .bigger-p {
     font-size: 20px;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
 }
 
 /* -----------LANDING------------ */
@@ -38,29 +41,29 @@ a:hover {
     animation-fill-mode: forwards;
 }
 .fade-in-first {
-    animation: fadeIn 5s;
-    -webkit-animation: fadeIn 5s;
-    -moz-animation: fadeIn 5s;
-    -o-animation: fadeIn 5s;
-    -ms-animation: fadeIn 5s;
+    animation: fadeIn 2.5s;
+    -webkit-animation: fadeIn 2.5s;
+    -moz-animation: fadeIn 2.5s;
+    -o-animation: fadeIn 2.5s;
+    -ms-animation: fadeIn 2.5s;
 }
 .fade-in-second {
     opacity: 0;
-    animation: fadeIn 5s;
-    -webkit-animation: fadeIn 5s;
-    -moz-animation: fadeIn 5s;
-    -o-animation: fadeIn 5s;
-    -ms-animation: fadeIn 5s;
+    animation: fadeIn 2.5s;
+    -webkit-animation: fadeIn 2.5s;
+    -moz-animation: fadeIn 2.5s;
+    -o-animation: fadeIn 2.5s;
+    -ms-animation: fadeIn 2.5s;
     animation-delay: 1s;
     animation-fill-mode: forwards;
 }
 .fade-in-third {
     opacity: 0;
-    animation: fadeIn 5s;
-    -webkit-animation: fadeIn 5s;
-    -moz-animation: fadeIn 5s;
-    -o-animation: fadeIn 5s;
-    -ms-animation: fadeIn 5s;
+    animation: fadeIn 2.5s;
+    -webkit-animation: fadeIn 2.5s;
+    -moz-animation: fadeIn 2.5s;
+    -o-animation: fadeIn 2.5s;
+    -ms-animation: fadeIn 2.5s;
     animation-delay: 2s;
     animation-fill-mode: forwards;
 }
@@ -152,4 +155,10 @@ body {
     .navbar-collapse {
         order: 2;
     }
+}
+
+/*----------ABOUT PAGE----------*/
+.title {
+    font-weight: bold;
+    font-family: "Noto Serif Display";
 }
