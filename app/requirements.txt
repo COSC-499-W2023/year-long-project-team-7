@@ -27,7 +27,7 @@ nodeenv==1.8.0
 openai==0.28.1
 pdfminer.six==20221105
 pdfplumber==0.10.2
-Pillow==10.1.0
+Pillow==9.5.0
 platformdirs==3.11.0
 pre-commit==3.5.0
 psycopg2==2.9.7
