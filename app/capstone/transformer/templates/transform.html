@@ -2,26 +2,31 @@
 {% load static %}
 {% block content %}
     {% include 'navbar.html' %}
-    <div class="vertical-center-top container-fluid     justify-content-center">
+    <div class="vertical-center-top container-fluid justify-content-center"
+         style="padding-top: 20px">
         <div class="w-50 text-center">
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="flex-column d-flex gap-5">
-                    <div>
-                        <h1 class="title bigger-h1">Transform</h1>
-                        <h2 class="mb-4">Upload a file</h2>
-                        <label class="custom-file-upload">
-                            <input required
-                                   name="files"
-                                   type="file"
-                                   multiple
-                                   class="form-control-file custom-file-input">
-                            <span class="file-upload-text">Choose File</span>
-                        </label>
-                    </div>
-                    <div>
-                        <h4>Additional Parameters</h4>
-                        {{ form.as_p }}
+                    <h1 class="title bigger-h1">Transform</h1>
+                    <div class="flex-row d-flex justify-content-center gap-5">
+                        <div>
+                            <h2 class="mb-4">Upload a file</h2>
+                            <label class="custom-file-upload">
+                                <input required
+                                       name="files"
+                                       type="file"
+                                       multiple
+                                       class="form-control-file custom-file-input"
+                                       onchange="updateFilename(this);">
+                                <span class="file-upload-text">Choose File</span>
+                            </label>
+                            <p id="selected-file-name" class="mt-2">No file selected</p>
+                        </div>
+                        <div>
+                            <h4>Additional Parameters</h4>
+                            {{ form.as_p }}
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary align-self-center">Convert</button>
                 </div>
