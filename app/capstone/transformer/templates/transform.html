@@ -2,24 +2,26 @@
 {% load static %}
 {% block content %}
     {% include 'navbar.html' %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <form method="post" enctype="multipart/form-data" class="text-center">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-6 text-center">
-                            <h4>Upload input files</h4>
-                            <input required name="files" type="file" multiple class="form-control-file">
-                        </div>
-                        <div class="col-md-6">
-                            <h4>Additional Parameters</h4>
-                            {{ form.as_p }}
-                        </div>
+    <div class="vertical-center-top container-fluid     justify-content-center">
+        <div class="w-75 text-center">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="flex-column d-flex gap-5">
+                    <div>
+                        <h2>Upload input files</h2>
+                        <input required
+                               name="files"
+                               type="file"
+                               multiple
+                               class="form-control-file p-2 mt-3">
                     </div>
-                    <button type="submit" class="btn btn-primary">Convert</button>
-                </form>
-            </div>
+                    <div>
+                        <h4>Additional Parameters</h4>
+                        {{ form.as_p }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-15 align-self-center">Convert</button>
+                </div>
+            </form>
         </div>
     </div>
 {% endblock %}
