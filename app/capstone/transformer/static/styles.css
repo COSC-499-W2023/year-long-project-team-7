@@ -1,4 +1,7 @@
-/* -----------LANDING------------ */
+/* ----------UNIVERSAL----------- */
+@import url("https://fonts.googleapis.com/css?family=GFS+Didot");
+@import url("https://fonts.googleapis.com/css?family=Noto+Serif+Display");
+
 a {
     display: inline-block;
     color: #7b68ee;
@@ -10,12 +13,21 @@ a:hover {
     color: #a496ff;
     transform: translateY(-2px);
 }
+
 .bigger-h1 {
     font-size: 60px;
 }
+
 .bigger-p {
     font-size: 20px;
 }
+
+/* -----------LANDING------------ */
+.welcome {
+    font-weight: bold;
+    font-family: "Noto Serif Display";
+}
+
 .increase-size-fade {
     font-size: 36px;
     animation: increaseTextSizeFade 3s ease;
@@ -67,7 +79,7 @@ a:hover {
         opacity: 1;
     }
 }
-@keyframes increaseTextSizeFade {
+@keyframes increaseTextSize {
     0% {
         opacity: 0;
         font-size: 36px;
@@ -79,19 +91,71 @@ a:hover {
 }
 
 /* ----------NAVBAR CSS---------- */
+body {
+    padding-top: 56px; /* Compensate for navbar */
+}
+
+.logo {
+    width: 50px;
+    height: auto;
+    margin-left: -22px;
+}
+
 .navbar-custom {
     background-color: MediumSlateBlue;
 }
+
 .profile-picture {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-left: 10px;
 }
+.navbar-brand {
+    font-family: "Noto Serif Display";
+}
+
+.navbar-brand:hover {
+    transform: none;
+}
+
+.nav-link {
+    font-weight: 600;
+    color: rgb(34, 34, 34);
+    transition: transform 0.3s;
+}
+
+.nav-link:hover {
+    color: rgb(238, 209, 255);
+    transform: scale(1.05);
+}
+
+.navbar {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
 /*----------Button CSS-----------*/
 .custom-button {
     background-color: mediumslateblue;
 }
+
+.custom-button:hover {
+    background-color: royalblue;
+}
+
+.file-link {
+    color: white;
+}
+
+.file-item {
+    list-style: none;
+}
+
+.file-download-button {
+    margin-left: 10px;
+}
+
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
 @media (max-width: 1000px) {
     .navbar {
