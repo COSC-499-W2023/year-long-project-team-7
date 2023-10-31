@@ -41,7 +41,6 @@ soupsieve==2.5
 sqlparse==0.4.4
 tomli==2.0.1
 tqdm==4.66.1
-typed-ast==1.4.3
 types-pytz==2023.3.1.1
 types-PyYAML==6.0.12.12
 typing_extensions==4.8.0
