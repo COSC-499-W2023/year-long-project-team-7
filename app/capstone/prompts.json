@@ -1,0 +1,6 @@
+{
+    "markdown": "Use markdown syntax in response.",
+    "summary": "Summarize the following text.",
+    "point-form": "Respond only in point form.",
+    "slides": "Summarize the following text in point form. Points should be logically grouped and each group should have a title. There should only be a maximum of 3 short sentances per group"
+}

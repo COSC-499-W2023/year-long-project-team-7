@@ -142,6 +142,23 @@ a:hover {
 .custom-button {
     background-color: mediumslateblue;
 }
+
+.custom-button:hover {
+    background-color: royalblue;
+}
+
+.file-link {
+    color: white;
+}
+
+.file-item {
+    list-style: none;
+}
+
+.file-download-button {
+    margin-left: 10px;
+}
+
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
 @media (max-width: 1000px) {
     .navbar {
