@@ -26,7 +26,7 @@ a:hover {
 }
 
 /* -----------LANDING------------ */
-.welcome {
+.title {
     font-weight: bold;
     font-family: "Noto Serif Display";
 }
@@ -70,7 +70,6 @@ a:hover {
 .vertical-center-top {
     min-height: calc(100vh - 56px); /* Accounts for navbar */
     display: flex;
-    margin-top: -3em;
     align-items: center;
 }
 
@@ -94,9 +93,10 @@ a:hover {
 }
 
 /* ----------NAVBAR CSS---------- */
-body {
-    padding-top: 56px; /* Compensate for navbar */
-}
+/* body {
+    padding-top: 56px; 
+    Compensate for navbar
+} */
 
 .logo {
     width: 50px;
@@ -157,8 +157,86 @@ body {
     }
 }
 
-/*----------ABOUT PAGE----------*/
-.title {
-    font-weight: bold;
-    font-family: "Noto Serif Display";
+/*-----------TRANSFORM------------*/
+
+/* Sliders */
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 15rem;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    border-radius: 0.5rem;
+    background: #053a5f;
+    height: 0.5rem;
+}
+
+input[type="range"]::-moz-range-track {
+    border-radius: 0.5rem;
+    background: #053a5f;
+    height: 0.5rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -8px; /* Centers thumb on the track */
+    background-color: mediumslateblue;
+    border-radius: 1rem;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+input[type="range"]::-moz-range-thumb {
+    border: none;
+    border-radius: 0;
+    background-color: mediumslateblue;
+    border-radius: 1rem;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+/* Everything else */
+
+.custom-file-upload {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border: 2px solid mediumslateblue;
+    background-color: mediumslateblue;
+    color: #fff;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.custom-file-input {
+    display: none;
+}
+
+.file-upload-text {
+    position: relative;
+    z-index: 1;
+}
+
+.custom-file-upload:hover {
+    background-color: #fff;
+    color: mediumslateblue;
+    border-color: mediumslateblue;
+}
+
+.btn-primary {
+    background-color: mediumslateblue !important;
+    border-color: mediumslateblue !important;
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+    background-color: #fff;
+    border-color: #fff;
 }
