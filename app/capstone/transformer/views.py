@@ -66,37 +66,43 @@ def signup(request: HttpRequest) -> HttpResponse:
         if username is not None:
             username = str(username)
         else:
-            username = ""
+            messages.error(request, "Cannot be blank.")
+            return redirect('signup')
         
         fname = request.POST.get("fname")
         if fname is not None:
             fname = str(fname)
         else:
-            fname = "" 
+            messages.error(request, "First name cannot be blank.")
+            return redirect('signup') 
         
         lname = request.POST.get("lname")
         if lname is not None:
             lname = str(lname)
         else:
-            lname = "" 
+            messages.error(request, "Last name cannot be blank.")
+            return redirect('signup')
         
         email = request.POST.get("email")
         if email is not None:
             email = str(email)
         else:
-            email = ""  
+            messages.error(request, "Email cannot be blank.")
+            return redirect('signup')
         
         pass1 = request.POST.get("pass1")
         if pass1 is not None:
             pass1 = str(pass1)  
         else:
-            pass1 = "" 
+            messages.error(request, "Password cannot be blank.")
+            return redirect('signup') 
         
         pass2 = request.POST.get("pass2")
         if pass2 is not None:
             pass2 = str(pass2)
         else:
-            pass2 = "" 
+            messages.error(request, "Password cannot be blank.")
+            return redirect('signup') 
 
         myuser: User = User.objects.create_user(username, email, pass1)
         myuser.first_name = fname
@@ -117,13 +123,15 @@ def signin(request: HttpRequest) -> HttpResponse:
         if username is not None:
             username = str(username)
         else:
-            username = ""
+            messages.error(request, "Username cannot be blank.")
+            return redirect('signin') 
         
         pass1 = request.POST.get("pass1")
         if pass1 is not None:
             pass1 = str(pass1)  
         else:
-            pass1 = "" 
+            messages.error(request, "Password cannot be blank.")
+            return redirect('signin')  
 
         fname = request.POST.get("fname")
         if fname is not None:
@@ -139,7 +147,7 @@ def signin(request: HttpRequest) -> HttpResponse:
 
         else:
             messages.error(request, "Incorrect Credentials.")
-            return redirect('home')
+            return redirect('signin')
 
     return render(request, 'signin.html')
 
