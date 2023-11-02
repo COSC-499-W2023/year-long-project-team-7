@@ -9,8 +9,12 @@ class TransformerForm(forms.Form):
         widget=Select(),
     )
     complexity = forms.IntegerField(
-        widget=forms.NumberInput(attrs={"type": "range", "min": 0, "max": 100})
+        widget=forms.NumberInput(
+            attrs={"type": "range", "min": 0, "max": 100, "class": "custom-slider"}
+        )
     )
     length = forms.IntegerField(
-        widget=forms.NumberInput(attrs={"type": "range", "min": 0, "max": 100})
+        widget=forms.NumberInput(
+            attrs={"type": "range", "min": 0, "max": 100, "class": "custom-slider"}
+        )
     )
