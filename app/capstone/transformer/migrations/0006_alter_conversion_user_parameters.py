@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('transformer', '0005_alter_conversion_user_alter_file_user_and_more'),
+        ("transformer", "0005_alter_conversion_user_alter_file_user_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='conversion',
-            name='user_parameters',
+            model_name="conversion",
+            name="user_parameters",
             field=models.JSONField(null=True),
         ),
     ]

@@ -5,28 +5,29 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('transformer', '0002_uploadedfile'),
+        ("transformer", "0002_uploadedfile"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='UploadedFile',
+            name="UploadedFile",
         ),
         migrations.RemoveField(
-            model_name='file',
-            name='path',
+            model_name="file",
+            name="path",
         ),
         migrations.AddField(
-            model_name='file',
-            name='file',
-            field=models.FileField(default=django.utils.timezone.now, upload_to='uploads/'),
+            model_name="file",
+            name="file",
+            field=models.FileField(
+                default=django.utils.timezone.now, upload_to="uploads/"
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='file',
-            name='date',
+            model_name="file",
+            name="date",
             field=models.DateField(default=django.utils.timezone.now),
         ),
     ]

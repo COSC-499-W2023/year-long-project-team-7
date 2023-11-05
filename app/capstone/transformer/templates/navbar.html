@@ -1,17 +1,27 @@
-<nav class="navbar navbar-expand-lg navbar-custom navbar-light">
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-custom navbar-light fixed-top">
     <div class="container-fluid">
         <!-- Navbar toggler button -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarLinks" aria-controls="navbarLinks" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarLinks"
+                aria-controls="navbarLinks"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>              
+        </button>
         <!-- Title/logo -->
-        <a class="navbar-brand" href="{% url 'home' %}"><b>Cool Company Name</b></a>
+        <a class="navbar-brand" href="{% url 'index' %}"><b>PLATONIX</b></a>
+        <img class="logo"
+             src="{% static 'img/thinker-100-solid.png' %}"
+             alt="Logo">
         <!-- Links -->
         <div class="collapse navbar-collapse" id="navbarLinks">
             <ul class="navbar-nav ml-auto">
                 <!-- Add navigation links here -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'about' %}">About</a>
@@ -22,12 +32,14 @@
             </ul>
         </div>
         <!-- Profile picture (Example source used) -->
-        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Profile Picture" class="profile-picture">
+        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+             alt="Profile Picture"
+             class="profile-picture">
         {% if user.is_authenticated %}
-        <a class="nav-link" style="margin-left: 10px;" href="/signout"><b>SignOut</b></a>
+            <a class="nav-link" style="margin-left: 10px;" href="/signout"><b>SignOut</b></a>
         {% else %}
-        <a class="nav-link" style="margin-left: 10px;" href="/signin"><b>SignIn</b></a>
-        <a class="nav-link" style="margin-left: 10px;" href="/signup"><b>SignUp</b></a>
+            <a class="nav-link" style="margin-left: 10px;" href="/signin"><b>SignIn</b></a>
+            <a class="nav-link" style="margin-left: 10px;" href="/signup"><b>SignUp</b></a>
         {% endif %}
     </div>
 </nav>

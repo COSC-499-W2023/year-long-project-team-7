@@ -1,24 +1,259 @@
-/* ----------NAVBAR CSS---------- */
-.navbar-custom {
-    background-color: MediumSlateBlue ;
+/* ----------UNIVERSAL----------- */
+@import url("https://fonts.googleapis.com/css?family=GFS+Didot");
+@import url("https://fonts.googleapis.com/css?family=Noto+Serif+Display");
+
+a {
+    display: inline-block;
+    color: #7b68ee;
+    text-decoration: none;
+    transition: color 0.2s;
+    transition: transform 0.2s;
 }
+
+a:hover {
+    color: #a496ff;
+    transform: translateY(-2px);
+}
+
+.bigger-h1 {
+    font-size: 60px;
+}
+
+.bigger-p {
+    font-size: 20px;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+}
+
+/* -----------LANDING------------ */
+.title {
+    font-weight: bold;
+    font-family: "Noto Serif Display";
+}
+
+.increase-size-fade {
+    font-size: 36px;
+    animation: increaseTextSizeFade 3s ease;
+    -webkit-animation: increaseTextSizeFade 3s ease;
+    -moz-animation: increaseTextSizeFade 3s ease;
+    -o-animation: increaseTextSizeFade 3s ease;
+    -ms-animation: increaseTextSizeFade 3s ease;
+    animation-fill-mode: forwards;
+}
+.fade-in-first {
+    animation: fadeIn 2.5s;
+    -webkit-animation: fadeIn 2.5s;
+    -moz-animation: fadeIn 2.5s;
+    -o-animation: fadeIn 2.5s;
+    -ms-animation: fadeIn 2.5s;
+}
+.fade-in-second {
+    opacity: 0;
+    animation: fadeIn 2.5s;
+    -webkit-animation: fadeIn 2.5s;
+    -moz-animation: fadeIn 2.5s;
+    -o-animation: fadeIn 2.5s;
+    -ms-animation: fadeIn 2.5s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+}
+.fade-in-third {
+    opacity: 0;
+    animation: fadeIn 2.5s;
+    -webkit-animation: fadeIn 2.5s;
+    -moz-animation: fadeIn 2.5s;
+    -o-animation: fadeIn 2.5s;
+    -ms-animation: fadeIn 2.5s;
+    animation-delay: 2s;
+    animation-fill-mode: forwards;
+}
+.vertical-center-top {
+    min-height: calc(100vh - 56px); /* Accounts for navbar */
+    display: flex;
+    align-items: center;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes increaseTextSize {
+    0% {
+        opacity: 0;
+        font-size: 36px;
+    }
+    100% {
+        opacity: 1;
+        font-size: 50px;
+    }
+}
+
+/* ----------NAVBAR CSS---------- */
+/* body {
+    padding-top: 56px; 
+    Compensate for navbar
+} */
+
+.logo {
+    width: 50px;
+    height: auto;
+    margin-left: -22px;
+}
+
+.navbar-custom {
+    background-color: MediumSlateBlue;
+}
+
 .profile-picture {
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     margin-left: 10px;
 }
+.navbar-brand {
+    font-family: "Noto Serif Display";
+}
+
+.navbar-brand:hover {
+    transform: none;
+}
+
+.nav-link {
+    font-weight: 600;
+    color: rgb(34, 34, 34);
+    transition: transform 0.3s;
+}
+
+.nav-link:hover {
+    color: rgb(238, 209, 255);
+    transform: scale(1.05);
+}
+
+.navbar {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+/*----------Button CSS-----------*/
+.custom-button {
+    background-color: mediumslateblue;
+}
+
+.custom-button:hover {
+    background-color: royalblue;
+}
+
+.file-link {
+    color: white;
+}
+
+.file-item {
+    list-style: none;
+}
+
+.file-download-button {
+    margin-left: 10px;
+}
+
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
 @media (max-width: 1000px) {
     .navbar {
         flex-direction: column;
     }
-    
+
     .profile-picture {
         order: 1;
     }
-    
+
     .navbar-collapse {
         order: 2;
     }
+}
+
+/*-----------TRANSFORM------------*/
+
+/* Sliders */
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 15rem;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    border-radius: 0.5rem;
+    background: #053a5f;
+    height: 0.5rem;
+}
+
+input[type="range"]::-moz-range-track {
+    border-radius: 0.5rem;
+    background: #053a5f;
+    height: 0.5rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -8px; /* Centers thumb on the track */
+    background-color: mediumslateblue;
+    border-radius: 1rem;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+input[type="range"]::-moz-range-thumb {
+    border: none;
+    border-radius: 0;
+    background-color: mediumslateblue;
+    border-radius: 1rem;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+/* Everything else */
+
+.custom-file-upload {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border: 2px solid mediumslateblue;
+    background-color: mediumslateblue;
+    color: #fff;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.custom-file-input {
+    display: none;
+}
+
+.file-upload-text {
+    position: relative;
+    z-index: 1;
+}
+
+.custom-file-upload:hover {
+    background-color: #fff;
+    color: mediumslateblue;
+    border-color: mediumslateblue;
+}
+
+.btn-primary {
+    background-color: mediumslateblue !important;
+    border-color: mediumslateblue !important;
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+    background-color: #fff;
+    border-color: #fff;
 }
