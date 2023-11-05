@@ -46,7 +46,6 @@ class TransformViewTestCase(TestCase):
 
             self.assertEqual(response.url, reverse("results", args=[conversion.id]))
             expected_user_params = json.dumps(expected_user_params_dict)
-
             self.assertEqual(conversion.user_parameters, expected_user_params)
             self.assertEqual(File.objects.count(), 1)
             mock_generate_output.assert_called_once_with(saved_files, conversion)
