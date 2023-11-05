@@ -14,24 +14,25 @@
                     </button>
                 </div>
             {% endfor %}
-            <h3>Sign In</h3>
-            <form action="/signin" method="post">
+            <img src="..\static\img\favicon-purple.png" alt width="90" height="90">
+            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+            <form class="text-center" action="/signin" method="post">
                 {% csrf_token %}
-                <label for="">Username</label>
                 <input type="text"
                        id="username"
                        name="username"
-                       placeholder="Enter username"
+                       class="form-control"
+                       placeholder="Username"
                        required>
                 <br>
-                <label for="">Password</label>
                 <input type="password"
                        id="pass1"
                        name="pass1"
-                       placeholder="Enter password"
+                       class="form-control"
+                       placeholder="Password"
                        required>
                 <br>
-                <button type="submit">Sign In</button>
+                <button class="btn btn-primary align-self-center" type="submit">Sign in</button>
             </form>
         </div>
     </div>
