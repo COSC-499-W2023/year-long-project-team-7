@@ -3,7 +3,7 @@
 {% block content %}
     {% include 'navbar.html' %}
     <div class="vh-100 d-flex justify-content-center align-items-center">
-        <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3">
+        <div class="card h-50 w-25 bg-secondary mt-5 justify-content-center align-items-center">
             <!-- ISSUE: Messages do not close. Gotta figure out why in the future -->
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
@@ -15,24 +15,22 @@
                 </div>
             {% endfor %}
             <img src="..\static\img\favicon-purple.png" alt width="90" height="90">
-            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+            <h1 class="h3 mb-3 mt-3 font-weight-normal">Please sign in</h1>
             <form class="text-center" action="/signin" method="post">
                 {% csrf_token %}
                 <input type="text"
-                       id="username"
-                       name="username"
-                       class="form-control"
-                       placeholder="Username"
-                       required>
-                <br>
+                    id="username"
+                    name="username"
+                    class="form-control mb-3"
+                    placeholder="Username"
+                    required>
                 <input type="password"
-                       id="pass1"
-                       name="pass1"
-                       class="form-control"
-                       placeholder="Password"
-                       required>
-                <br>
-                <button class="btn btn-primary " type="submit">Sign in</button>
+                    id="pass1"
+                    name="pass1"
+                    class="form-control"
+                    placeholder="Password"
+                    required>
+                <button class="btn btn-primary mt-3" type="submit">Sign in</button>
             </form>
         </div>
     </div>
