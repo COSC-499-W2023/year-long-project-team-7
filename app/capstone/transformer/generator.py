@@ -1,7 +1,6 @@
 import pdfplumber
 from pptx import Presentation  # type: ignore
 from .models import Conversion, File, User
-from typing import List, Dict
 from .presentationGenerator import PresentationGenerator
 from reportlab.lib.pagesizes import letter  # type: ignore
 from reportlab.lib import colors  # type: ignore
@@ -20,7 +19,7 @@ def pdf_to_text(pdf_path: str) -> str:
     return text
 
 
-def multiple_pdf_to_text(paths: List[str]) -> dict[str, str]:
+def multiple_pdf_to_text(paths: list[str]) -> dict[str, str]:
     result = {}
     for path in paths:
         result[path] = pdf_to_text(path)
@@ -48,11 +47,11 @@ def multiple_pdf_to_text(paths: List[str]) -> dict[str, str]:
 #     c.save()
 
 
-def generate_output(files: List[File], conversion: Conversion) -> None:
+def generate_output(files: list[File], conversion: Conversion) -> None:
     texts = multiple_pdf_to_text([f.file.path for f in files])
 
     pres_manager = PresentationGenerator(
-        "gpt-3.5-turbo", texts, conversion, temperature=1
+        "gpt-3.5-turbo-0613", texts, conversion, temperature=1
     )
 
     output_file_path = pres_manager.build_presentation()
