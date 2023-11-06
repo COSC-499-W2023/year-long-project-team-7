@@ -113,3 +113,22 @@ _Tasks Screenshot_
 1. Update Results page based on TA/Group member feedback
 2. Create slides for W9 mini presentation
 3. Update Log in / Sign up UI
+
+[9]: https://github.com/orgs/COSC-499-W2023/projects/1/views/1?filterQuery=assignee%3Akmalott+milestone%3A%22Week+8%22
+
+## Oct 30 -> Nov 05
+
+![evaluation screenshot](../../img/keiran-eval-9.png)
+_Team evaluation Screenshot_
+
+![w8 taks screenshot](../../img/keiran-w9-tasks.png)
+_Tasks Screenshot_
+
+[Individual W9 Tasks][10]
+
+### Goals this week
+1. Finish updating Log in / SIgn up UI
+2. Update slides for mini presentation
+3. Complete feedback for other teams mini presentation
+
+[10]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=assignee%3Akmalott+milestone%3A%22Week+9%22+
