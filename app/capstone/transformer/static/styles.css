@@ -257,3 +257,25 @@ input[type="range"]::-moz-range-thumb {
     background-color: #fff;
     border-color: #fff;
 }
+
+/*-----------Sign in------------*/
+.custom-signin{
+    display: inline-block;
+    color: #7b68ee;
+    text-decoration: none;
+    transition: color 0s;
+    transition: transform 0s;
+}
+
+.custom-signin:hover{
+    color: #7b68ee;
+    transform: translateY(0px);
+}
+
+.line {
+    height: 0;
+    width: 55%;
+    border: 1px solid rgb(178, 187, 197);
+    margin: 1px;
+    display:inline-block;
+  }
