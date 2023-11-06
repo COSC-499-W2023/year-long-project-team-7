@@ -11,8 +11,10 @@ function updateFilename(input) {
 
 $(document).ready(updateFilename);
 
-$('.file-download-button').click(function() {
-    const fileUrl = $(this).attr('data-fileurl');
-    window.location.href = fileUrl;
+$(document).ready(function () {
+    $(".file-download-button").click(function () {
+        alert("I work!");
+        const fileUrl = $(this).attr("data-fileurl");
+        window.location.href = fileUrl;
+    });
 });
-
