@@ -162,3 +162,28 @@ This week I mainly focused on getting the front end of our project to a good lev
 Unfortunately, at the time of writing I am not done styling the transformer page, but will do so still as part of this milestone ahead of our presentation. This is the first time I feel like I was not able to fully realise all the work I assigned myself this week, so I am re-evaluating my workflow finish tasks earlier in the week and leave time for troubleshooting which usually happens unexpectedly. I think this is a good lesson in preempting problems and taking that into account when thinking about tasks.
 
 I had a chance to use GIMP to modify a free icon for our purposes. This was a nice creative change from the usual work that I enjoyed. I also contributed in keeping with best practices by pruning some deprecated dependencies from the project.
+
+## Oct 29 2023 -> Nov 05 2023
+
+![evaluation-screenshot](../../img/esteban-eval-9.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-9.png)
+
+### Goals
+
+-   Improve Styling of Transformer Page
+-   Fix Bugs
+    -   Javascript not working
+    -   Pathing errors
+
+### Self Reflection and Learning
+
+My goals for this week were simply to improve the styling for the transformer page of the application and work on some bugs.
+
+Most of our attention this week went towards building up the app ahead of the presentation, so we wanted to be sure that everything that we currently had was working. For this reason, we didn't stretch ourselves with new features and instead focused on refining our current product.
