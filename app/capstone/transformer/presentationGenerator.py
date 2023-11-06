@@ -9,6 +9,7 @@ import os
 from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
 from io import BytesIO
+from capstone.settings import BASE_DIR
 
 
 class PresentationGenerator:
@@ -31,7 +32,9 @@ class PresentationGenerator:
         self.user_prompt = json.loads(conversion.user_parameters).get("text_input", "")
         self.language = json.loads(conversion.user_parameters).get("language", "")
 
-        with open("app/capstone/prompts.json", "r") as file:
+        prompt_path = os.path.join(BASE_DIR, "prompts.json")
+
+        with open(prompt_path, "r") as file:
             self.prompts = json.load(file)
 
     def build_presentation(self) -> str:
