@@ -129,3 +129,23 @@ _Team Evaluation Screenshot_
 <br>
 
 [7]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
+
+## Oct 29 2023 -> Nov 5 2023
+
+![evaluation-screenshot](../../img/liam-eval-9.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w9-tasks.png)
+<br>
+Additional tasks this week: Fixing merge issues with account functionality, preparing for mini-presentations, presenting mini-presentations
+[Individual Tasks][6]
+
+<br>
+
+[8]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
+
