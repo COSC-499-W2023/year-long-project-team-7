@@ -9,8 +9,41 @@ from reportlab.lib.styles import getSampleStyleSheet  # type: ignore
 from reportlab.platypus import SimpleDocTemplate, Paragraph  # type: ignore
 from reportlab.pdfgen import canvas  # type: ignore
 from django.core.exceptions import ObjectDoesNotExist
+from docx2pdf import convert
+from striprtf.striprtf import rtf_to_text
 import os
 
+
+def detect_file_type(paths: List[str]) -> List[str]:
+    type_str = []
+    path_str = []
+
+    for path in paths:
+        file_name, file_extension = os.path.splitext(path)
+        type_str.append(file_extension)
+        path_str.append(file_name)
+
+    for i in range(len(type_str)):
+        if(type_str[i] == '.pptx'):
+            newpath = path_str[i] + '.pdf'
+            pptx_to_pdf(paths[i], newpath)
+            paths[i] = newpath
+        elif(type_str[i] == '.docx' or type_str[i] == '.doc'):
+            newpath = path_str[i] + '.pdf'
+            docx_to_pdf(paths[i], newpath)
+            paths[i] = newpath
+        elif(type_str[i] == '.txt'):
+            newpath = path_str[i] + '.pdf'
+            txt_to_pdf(paths[i], newpath)
+            paths[i] = newpath
+        elif(type_str[i] == '.rtf'):
+            newpath = path_str[i] + '.pdf'
+            rtf_to_pdf(paths[i], newpath)
+            paths[i] = newpath
+        elif(type_str[i] == '.pdf'):
+            paths[i] = paths[i]
+    
+    return paths
 
 def pdf_to_text(pdf_path: str) -> str:
     text = ""
@@ -27,29 +60,58 @@ def multiple_pdf_to_text(paths: List[str]) -> dict[str, str]:
     return result
 
 
-# We will need this later
-# def pptx_to_pdf(pptx_filename, pdf_filename):
-#     prs = Presentation(pptx_filename)
+def pptx_to_pdf(pptx_filename: str, pdf_filename: str):
+    prs = Presentation(pptx_filename)
+    c = canvas.Canvas(pdf_filename, pagesize=letter)
+    for slide in prs.slides:
+        i = 750
+        for shape in slide.shapes:
+            if shape.has_text_frame:
+                for paragraph in shape.text_frame.paragraphs:
+                    for run in paragraph.runs:
+                        text = run.text
+                        c.drawString(15, i, text)
+                        i = i - 12
+                        if(i < 100):
+                            i = 750
+                            c.showPage()
+        c.showPage()
+    c.save()
 
-#     c = canvas.Canvas(pdf_filename, pagesize=letter)
+def docx_to_pdf(docx_filename: str, pdf_filename: str):
+    convert(docx_filename, pdf_filename)
 
-#     for slide in prs.slides:
-#         c.setPageSize((slide.slide_width, slide.slide_height))
+def txt_to_pdf(txt_filename: str, pdf_filename: str):
+    lines = open(txt_filename, 'r').read().splitlines()
+    c = canvas.Canvas(pdf_filename, pagesize=letter)
+    i = 750
+    for j in range(len(lines)):
+        c.drawString(15, i, lines[j])
+        i = i - 12
+        if(j % 20 == 0 & j != 0):
+            c.showPage()
+    c.showPage()
+    c.save()
 
-#         for shape in slide.shapes:
-#             if shape.has_text_frame:
-#                 for paragraph in shape.text_frame.paragraphs:
-#                     for run in paragraph.runs:
-#                         text = run.text
-#                         c.drawString(100, 100, text)
-
-#         c.showPage()
-
-#     c.save()
-
+def rtf_to_pdf(rtf_filename: str, pdf_filename: str):
+    c = canvas.Canvas(pdf_filename, pagesize=letter)
+    with open(rtf_filename) as infile:
+        line = infile.read()
+    text = rtf_to_text(line)
+    lines = text.splitlines()
+    i = 750
+    for j in range(len(lines)):
+        c.drawString(15, i, lines[j])
+        i = i - 12
+        if(j % 20 == 0 & j != 0):
+            c.showPage()
+    c.showPage()
+    c.save()
 
 def generate_output(files: List[File], conversion: Conversion) -> None:
-    texts = multiple_pdf_to_text([f.file.path for f in files])
+    file_paths = detect_file_type([f.file.path for f in files])
+
+    texts = multiple_pdf_to_text(file_paths)
 
     pres_manager = PresentationGenerator(
         "gpt-3.5-turbo", texts, conversion, temperature=1
