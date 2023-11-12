@@ -1,9 +1,10 @@
 {
-    "summary": "Summarize the content you are provided.",
+    "reader": "You are a text analysis tool. Read the input files.",
+    "summary": "Summarize this text",
     "point-form": "Respond only in point form.",
     "translate": "Translate all input into ",
-    "title":"Come up with a title for the input. Title should have a maximum length of 10 words",
-    "sub-title":"Come up with a sub-title for the given input and title. Title: ",
-    "points":"Do not include numbers in output. Come up with a maximum of 6 points for each of these topics ",
-    "section-title":"Find the most important topics within the input text. Each topic can be a maximum of 4 words long. Choose a maximum of 5 topics. Output should not contain numbers."
+    "title":"Come up with a title for the input. Title should have a maximum length of 8 words. Only include the title in response.",
+    "sub-title":"Come up with a sub-title for the given input and title. Only include the sub-title in response. Title: ",
+    "points":"Come up with a maximum of 5 important points from the text. Points should fall into this category:",
+    "section-title":"Find the most important topics within the input text. Each topic can be a maximum of 4 words long. Seperate the topics with '\n'"
 }
