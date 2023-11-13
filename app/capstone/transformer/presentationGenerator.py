@@ -13,6 +13,9 @@ import re
 import random
 from openai import OpenAI
 
+GPT_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
+GPT_4_1106_PREVIEW = "gpt-4-1106-preview"
+
 
 class PresentationGenerator:
     def __init__(self, input_file_paths: list[str], conversion: Conversion):
@@ -21,14 +24,12 @@ class PresentationGenerator:
 
         self.conversion = conversion
         self.language = json.loads(conversion.user_parameters).get("language", "")
-
         self.num_slides = json.loads(conversion.user_parameters).get("length", 3)
         self.complexity = json.loads(conversion.user_parameters).get("complexity", 50)
+        self.user_prompt = json.loads(conversion.user_parameters).get("text_input", "")
 
         openai.api_key = settings.OPENAI_API_KEY
         self.client = OpenAI()
-
-        self.models = {"gpt-3.5-turbo-1106": 16385}
 
         openai_files = []
         for path in input_file_paths:
@@ -37,9 +38,9 @@ class PresentationGenerator:
             )
 
         self.assistant = self.client.beta.assistants.create(
-            instructions=self.prompts["reader"],
+            instructions=f"{self.prompts['reader']} Only respond in {self.language}",
             tools=[{"type": "retrieval"}],
-            model="gpt-3.5-turbo-1106",
+            model=GPT_4_1106_PREVIEW,
             file_ids=[file.id for file in openai_files],
         )
 
@@ -71,7 +72,9 @@ class PresentationGenerator:
             if msg.role == "assistant":
                 content = msg.content[0]
                 if hasattr(content, "text"):
-                    messages.append(content.text.value)
+                    messages.append(
+                        re.sub(r"【.*】", "", content.text.value)
+                    )  # Remove source links
 
         return "\n".join(messages)
 
@@ -118,29 +121,29 @@ class PresentationGenerator:
 
         return rel_path
 
-    def count_tokens(self, text: str) -> int:
-        try:
-            encoding = tiktoken.encoding_for_model("gpt-3.5-turbo-0613")
-        except KeyError:
-            encoding = tiktoken.get_encoding("cl100k_base")
-        return len(encoding.encode(text))
+    # def count_tokens(self, text: str) -> int:
+    #     try:
+    #         encoding = tiktoken.encoding_for_model("gpt-3.5-turbo-0613")
+    #     except KeyError:
+    #         encoding = tiktoken.get_encoding("cl100k_base")
+    #     return len(encoding.encode(text))
 
-    def count_message_tokens(self, messages: list[dict[str, str]]) -> int:
-        num_tokens = 0
-        for message in messages:
-            num_tokens += 4
-            for key, value in message.items():
-                num_tokens += self.count_tokens(value)
-                if key == "name":
-                    num_tokens += -1
-        num_tokens += 2
-        return num_tokens
+    # def count_message_tokens(self, messages: list[dict[str, str]]) -> int:
+    #     num_tokens = 0
+    #     for message in messages:
+    #         num_tokens += 4
+    #         for key, value in message.items():
+    #             num_tokens += self.count_tokens(value)
+    #             if key == "name":
+    #                 num_tokens += -1
+    #     num_tokens += 2
+    #     return num_tokens
 
-    def user_message(self, text: str) -> dict[str, str]:
-        return {"role": "user", "content": text}
+    # def user_message(self, text: str) -> dict[str, str]:
+    #     return {"role": "user", "content": text}
 
-    def system_message(self, text: str) -> dict[str, str]:
-        return {"role": "system", "content": text}
+    # def system_message(self, text: str) -> dict[str, str]:
+    #     return {"role": "system", "content": text}
 
     # def prompt(self, messages: list[dict[str, str]]) -> str:
     #     tokens = self.max_tokens - self.count_message_tokens(messages)
