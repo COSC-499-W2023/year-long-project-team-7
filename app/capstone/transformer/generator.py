@@ -9,8 +9,8 @@ from reportlab.lib.styles import getSampleStyleSheet  # type: ignore
 from reportlab.platypus import SimpleDocTemplate, Paragraph  # type: ignore
 from reportlab.pdfgen import canvas  # type: ignore
 from django.core.exceptions import ObjectDoesNotExist
-from docx2pdf import convert
-from striprtf.striprtf import rtf_to_text
+from docx2pdf import convert # type: ignore
+from striprtf.striprtf import rtf_to_text # type: ignore
 import os
 
 
