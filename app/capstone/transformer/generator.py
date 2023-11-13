@@ -60,7 +60,7 @@ def multiple_pdf_to_text(paths: List[str]) -> dict[str, str]:
     return result
 
 
-def pptx_to_pdf(pptx_filename: str, pdf_filename: str):
+def pptx_to_pdf(pptx_filename: str, pdf_filename: str) -> None:
     prs = Presentation(pptx_filename)
     c = canvas.Canvas(pdf_filename, pagesize=letter)
     for slide in prs.slides:
@@ -78,10 +78,10 @@ def pptx_to_pdf(pptx_filename: str, pdf_filename: str):
         c.showPage()
     c.save()
 
-def docx_to_pdf(docx_filename: str, pdf_filename: str):
+def docx_to_pdf(docx_filename: str, pdf_filename: str) -> None:
     convert(docx_filename, pdf_filename)
 
-def txt_to_pdf(txt_filename: str, pdf_filename: str):
+def txt_to_pdf(txt_filename: str, pdf_filename: str) -> None:
     lines = open(txt_filename, 'r').read().splitlines()
     c = canvas.Canvas(pdf_filename, pagesize=letter)
     i = 750
@@ -93,7 +93,7 @@ def txt_to_pdf(txt_filename: str, pdf_filename: str):
     c.showPage()
     c.save()
 
-def rtf_to_pdf(rtf_filename: str, pdf_filename: str):
+def rtf_to_pdf(rtf_filename: str, pdf_filename: str) -> None:
     c = canvas.Canvas(pdf_filename, pagesize=letter)
     with open(rtf_filename) as infile:
         line = infile.read()
