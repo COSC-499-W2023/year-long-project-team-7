@@ -150,7 +150,7 @@ class PresentationGenerator:
         return responses
 
     def prompt(self, messages: list[dict[str, str]], tokens: int) -> str:
-        response = openai.ChatCompletion.create(
+        response = openai.ChatCompletion.create(  # type: ignore
             model=self.chosen_model,
             messages=messages,
             temperature=self.temperature,
