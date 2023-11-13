@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    {% include 'navbar.html' %}
+    <div class="vh-100 d-flex justify-content-center align-items-center">
+        <div class="card d-flex w-25 bg-secondary mt-5 justify-content-center align-items-center">
+            <!-- ISSUE: Messages do not close. Gotta figure out why in the future -->
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                     role="alert">
+                    <strong>Message:</strong> {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+            <img class="mt-3"
+                 src="..\static\img\favicon-purple.png"
+                 alt
+                 width="90"
+                 height="90">
+            <h1 class="h3 mb-3 mt-3 font-weight-normal">Please Sign In</h1>
+            <form class="text-center" action="/signin" method="post">
+                {% csrf_token %}
+                <input type="text"
+                       id="username"
+                       name="username"
+                       class="form-control mb-3"
+                       placeholder="Username"
+                       required>
+                <input type="password"
+                       id="pass1"
+                       name="pass1"
+                       class="form-control"
+                       placeholder="Password"
+                       required>
+                <button class="btn btn-primary mt-3" style="width:100%" type="submit">Sign In</button>
+            </form>
+            <div class="line mb-3"></div>
+            <!-- ISSUE: Create a new account button width inconsistent. Will fix later-->
+            <a class="custom-signin" href="/signup">
+                <button class="btn btn-primary mb-3" type="submit">Create a new account</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}
