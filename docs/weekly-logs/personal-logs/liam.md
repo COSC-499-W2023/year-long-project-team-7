@@ -149,3 +149,22 @@ Additional tasks this week: Fixing merge issues with account functionality, prep
 
 [8]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
 
+## Nov 5 2023 -> Nov 12 2023
+
+![evaluation-screenshot](../../img/liam-eval-10.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w10-tasks.png)
+<br>
+TODO: Switching to django forms broke all the original signin/signup tests this week. Have to fix before merging to master
+[Individual Tasks][6]
+
+<br>
+
+[9]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras
+
