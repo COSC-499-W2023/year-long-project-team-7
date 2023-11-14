@@ -142,6 +142,7 @@ _Team Evaluation Screenshot_
 ![tasks-screenshot](../../img/liam-w9-tasks.png)
 <br>
 Additional tasks this week: Fixing merge issues with account functionality, preparing for mini-presentations, presenting mini-presentations
+<br>
 [Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras)
 
 <br>
@@ -159,6 +160,7 @@ _Team Evaluation Screenshot_
 ![tasks-screenshot](../../img/liam-w10-tasks.png)
 <br>
 TODO: Switching to django forms broke all the original signin/signup tests this week. Have to fix before merging to master
+<br>
 [Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras)
 
 <br>
