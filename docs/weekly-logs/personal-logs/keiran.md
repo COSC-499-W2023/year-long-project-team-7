@@ -132,3 +132,18 @@ _Tasks Screenshot_
 3. Complete feedback for other teams mini presentation
 
 [10]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=assignee%3Akmalott+milestone%3A%22Week+9%22+
+
+## Nov 06 -> Nov 12
+
+![evaluation screenshot](../../img/keiran-eval-10.png)
+_Team evaluation Screenshot_
+
+![w10 taks screenshot](../../img/keiran-w10-tasks.png)
+_Tasks Screenshot_
+
+[Individual W10 Tasks][11]
+
+### Goals this week
+1. Add conversion to pdf for documents inputted to the transformer
+
+[11]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=assignee%3Akmalott+milestone%3A%22Week+10%22+
