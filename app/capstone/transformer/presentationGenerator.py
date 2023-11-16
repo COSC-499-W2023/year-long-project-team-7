@@ -22,7 +22,7 @@ class PresentationGenerator:
     ):
         available_models = {"gpt-3.5-turbo": 4096, "gpt-4": 8191}
 
-        openai.api_key = os.getenv("OPENAI_API_KEY")
+        openai.api_key = settings.OPENAI_API_KEY
 
         self.temperature = temperature
         self.conversion = conversion
