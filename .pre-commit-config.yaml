@@ -15,7 +15,7 @@ repos:
         pass_filenames: false
     -   id: test
         name: test
-        entry: bash -c 'cd app/capstone && python manage.py test' // add --verbosity=3
+        entry: bash -c 'cd app/capstone && python manage.py test --verbosity=3'
         language: system
         stages: [commit]
         pass_filenames: false
