@@ -11,6 +11,7 @@ class TransformerForm(forms.Form):
 
     prompt = forms.CharField(
         label="Prompt",
+        required=False,
         widget=Textarea(
             attrs={
                 "rows": 10,
