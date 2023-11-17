@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    $('.file-download-button').click(function() {
+    $('#file-download-button').click(function() {
         const fileUrl = $(this).attr('data-fileurl');
         window.location.href = fileUrl;
     });
@@ -33,7 +33,7 @@ $(document).ready(function(){
         if(value == 0) text = 'None';
         else if(value == 1) text = 'A Few';
         else if(value == 2) text = 'Some';
-        else if(value == 3) text = 'Several';
+        else if(value == 3) text = 'Default';
         else if(value == 4) text = 'Many';
         else if(value == 5) text = 'Numerous';
         else if(value == 6) text = 'Lots';

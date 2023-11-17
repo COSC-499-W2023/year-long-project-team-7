@@ -9,23 +9,23 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-5">
-                    <h2 class="text-left">Files</h2>
+                    <h2 class="text-left">Input</h2>
                     <hr>
-                    <label class="custom-file-upload">
-                        <input id="transform-file-upload"
-                               required
-                               name="files"
-                               type="file"
-                               multiple
-                               class="form-control-file custom-file-input">
-                        <span class="file-upload-text">Choose File(s)</span>
-                    </label>
-                    <div class="mt-3" id="selected-file-names"></div>
-                </div>
-                <div class="mb-5">
-                    <h2 class="text-left">Prompt</h2>
-                    <hr>
-                    {{ form.prompt }}
+                    <div class="row">
+                        <div class="col-6">{{ form.prompt }}</div>
+                        <div class="col-6">
+                            <label class="custom-file-upload">
+                                <input id="transform-file-upload"
+                                       required
+                                       name="files"
+                                       type="file"
+                                       multiple
+                                       class="form-control-file custom-file-input">
+                                <span class="file-upload-text">Choose File(s)</span>
+                            </label>
+                            <div class="mt-3" id="selected-file-names"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="mb-5">
                     <h2 class="text-left">Options</h2>

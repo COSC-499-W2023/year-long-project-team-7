@@ -13,9 +13,10 @@ class TransformerForm(forms.Form):
         label="Prompt",
         widget=Textarea(
             attrs={
-                "rows": 4,
+                "rows": 10,
                 "cols": 40,
                 "placeholder": "Enter your prompt here (optional)",
+                "class": "form-control rounded",
             }
         ),
     )
@@ -82,6 +83,6 @@ class TransformerForm(forms.Form):
 
     template = forms.ChoiceField(
         label="Templates",
-        choices=[(1, "Template 1"), (2, "Template 2")],
+        choices=[(1, "Template 1"), (2, "Template 2"), (3, "Template 3")],
         widget=RadioSelect(),
     )
