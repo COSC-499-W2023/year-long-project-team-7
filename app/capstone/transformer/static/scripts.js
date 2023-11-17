@@ -27,7 +27,7 @@ $(document).ready(function(){
         $('#complexity_value').text(text);
     });
 
-    $('#id_number_of_images').on('input change', function() {
+    $('#id_num_images').on('input change', function() {
         var value = $(this).val();
         var text = 'Default';
         if(value == 0) text = 'None';
@@ -37,12 +37,12 @@ $(document).ready(function(){
         else if(value == 4) text = 'Many';
         else if(value == 5) text = 'Numerous';
         else if(value == 6) text = 'Lots';
-        $('#number_of_images_value').text(text);
+        $('#num_images_value').text(text);
     });
 
-    $('#id_length').on('input change', function() {
+    $('#id_num_slides').on('input change', function() {
         var value = $(this).val();
-        $('#length_value').text(value);
+        $('#num_slides_value').text(value);
     });
 
     $('.template-choice').click(function() {
