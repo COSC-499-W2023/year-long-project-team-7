@@ -19,7 +19,7 @@ GPT_4_1106_PREVIEW = "gpt-4-1106-preview"
 
 class PresentationGenerator:
     def __init__(self, input_file_paths: list[str], conversion: Conversion):
-        with open("app/capstone/prompts.json", "r") as file:
+        with open(os.path.join(settings.BASE_DIR, "prompts.json"), "r") as file:
             self.prompts = json.load(file)
 
         self.conversion = conversion
