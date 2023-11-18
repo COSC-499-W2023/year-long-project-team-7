@@ -1,7 +1,6 @@
 from pptx import Presentation  # type: ignore
 from pptx.util import Inches  # type: ignore
 from .models import Conversion
-from typing import List, Dict
 from django.conf import settings
 import json
 import openai
@@ -9,60 +8,107 @@ import os
 from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
 from io import BytesIO
-from capstone.settings import BASE_DIR
+import tiktoken
+import re
+import random
+from openai import OpenAI
+
+GPT_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
+GPT_4_1106_PREVIEW = "gpt-4-1106-preview"
 
 
 class PresentationGenerator:
-    def __init__(
-        self,
-        chosen_model: str,
-        texts: Dict[str, str],
-        conversion: Conversion,
-        temperature: int,
-    ):
-        available_models = {"gpt-3.5-turbo": 4096, "gpt-4": 8191}
-
-        openai.api_key = settings.OPENAI_API_KEY
-
-        self.temperature = temperature
-        self.conversion = conversion
-        self.texts = texts
-        self.chosen_model = chosen_model
-        self.max_tokens = available_models[chosen_model]
-        self.user_prompt = json.loads(conversion.user_parameters).get("text_input", "")
-        self.language = json.loads(conversion.user_parameters).get("language", "")
-
-        prompt_path = os.path.join(BASE_DIR, "prompts.json")
-
-        with open(prompt_path, "r") as file:
+    def __init__(self, input_file_paths: list[str], conversion: Conversion):
+        with open(os.path.join(settings.BASE_DIR, "prompts.json"), "r") as file:
             self.prompts = json.load(file)
 
-    def build_presentation(self) -> str:
-        prs = Presentation()
-        slide_layout = prs.slide_layouts[1]
-        layouts = prs.slide_layouts
+        self.conversion = conversion
+        self.language = json.loads(conversion.user_parameters).get("language", "")
+        self.num_slides = json.loads(conversion.user_parameters).get("length", 3)
+        self.complexity = json.loads(conversion.user_parameters).get("complexity", 50)
+        self.user_prompt = json.loads(conversion.user_parameters).get("text_input", "")
+
+        openai.api_key = settings.OPENAI_API_KEY
+        self.client = OpenAI()
+
+        openai_files = []
+        for path in input_file_paths:
+            openai_files.append(
+                self.client.files.create(file=open(path, "rb"), purpose="assistants")
+            )
+
+        self.assistant = self.client.beta.assistants.create(
+            instructions=f"{self.prompts['reader']} Only respond in {self.language}",
+            tools=[{"type": "retrieval"}],
+            model=GPT_4_1106_PREVIEW,
+            file_ids=[file.id for file in openai_files],
+        )
+
+    def add_message_to_thread(self, thread_id: str, content: str) -> None:
+        self.client.beta.threads.messages.create(
+            thread_id=thread_id, role="user", content=content
+        )
+
+    def prompt_assistant(self, proompt: str) -> str:
+        thread = self.client.beta.threads.create()
+        self.add_message_to_thread(thread.id, proompt)
+
+        run = self.client.beta.threads.runs.create(
+            thread_id=thread.id, assistant_id=self.assistant.id
+        )
+
+        while run.status != "completed":
+            run = self.client.beta.threads.runs.retrieve(
+                thread_id=thread.id, run_id=run.id
+            )
+            if run.status == "failed":
+                if run.last_error:
+                    print(run.last_error.message)
+                    return run.last_error.message
 
         messages = []
 
-        # messages.append(self.user_message(self.prompts['markdown']))
-        # messages.append(self.user_message(self.prompts['summary']))
-        # messages.append(self.user_message(self.user_prompt))
-        messages.append(self.user_message(self.prompts["slides"]))
-        messages.append(self.user_message(f"Respond in {self.language}"))
+        for msg in self.client.beta.threads.messages.list(thread_id=thread.id):
+            if msg.role == "assistant":
+                content = msg.content[0]
+                if hasattr(content, "text"):
+                    messages.append(
+                        re.sub(r"【.*】", "", content.text.value)
+                    )  # Remove source links
 
-        responses = self.prompt_with_text(messages)
+        return "\n".join(messages)
 
-        for response in responses:
-            split_for_slides = response.split("\n\n")
-            for new_slide_content in split_for_slides:
-                title_text = new_slide_content.split("\n")[0]
-                new_slide_content = new_slide_content.replace(title_text, "")
-                slide = prs.slides.add_slide(slide_layout)
-                title = slide.shapes.title
-                content = slide.placeholders[1]
-                title.text = title_text
-                content.text = new_slide_content
-                title.top = 0
+    def build_presentation(self) -> str:
+        file_system = FileSystemStorage()
+
+        template = Presentation(
+            file_system.path("template_01.pptx")
+        )  # make variable later
+
+        title_slide_layout = template.slide_layouts[0]
+        # paragraph_slide_layout = template.slide_layouts[1]
+        points_slide_layout = template.slide_layouts[3]
+        # image_slide_layout = template.slide_layouts[3]
+        # final_slide_layout = template.slide_layouts[4]
+        prs = Presentation()
+
+        title = self.prompt_assistant(self.prompts["title"])
+        sub_title = self.prompt_assistant(self.prompts["sub-title"])
+
+        title_slide = prs.slides.add_slide(title_slide_layout)
+        title_slide.shapes.title.text = title
+        title_slide.shapes[1].text = sub_title
+
+        section_titles = self.prompt_assistant(self.prompts["section-title"]).split(
+            "\n"
+        )
+
+        for section_title in section_titles:
+            content_slide = prs.slides.add_slide(points_slide_layout)
+            content_slide.shapes.title.text = section_title
+            content_slide.shapes[1].text = self.prompt_assistant(
+                f"{self.prompts['points']}{section_title}"
+            )
 
         buffer = BytesIO()
         prs.save(buffer)
@@ -71,93 +117,45 @@ class PresentationGenerator:
 
         rel_path = f"conversion_output_{self.conversion.id}.pptx"
 
-        fs = FileSystemStorage()
-        fs.save(rel_path, file_content)
+        file_system.save(rel_path, file_content)
 
         return rel_path
 
-    def count_tokens(self, text: str) -> int:
-        return len(text) // 4 + int(
-            len(text) * 0.05
-        )  # this is temporary we need to find a better way to limit tokens
+    # def count_tokens(self, text: str) -> int:
+    #     try:
+    #         encoding = tiktoken.encoding_for_model("gpt-3.5-turbo-0613")
+    #     except KeyError:
+    #         encoding = tiktoken.get_encoding("cl100k_base")
+    #     return len(encoding.encode(text))
 
-    def user_message(self, text: str) -> dict[str, str]:
-        return {"role": "user", "content": text}
+    # def count_message_tokens(self, messages: list[dict[str, str]]) -> int:
+    #     num_tokens = 0
+    #     for message in messages:
+    #         num_tokens += 4
+    #         for key, value in message.items():
+    #             num_tokens += self.count_tokens(value)
+    #             if key == "name":
+    #                 num_tokens += -1
+    #     num_tokens += 2
+    #     return num_tokens
 
-    def get_chunks(self, text: str, prompt_tokens: int) -> list[str]:
-        chunks = []
-        max_chunk_tokens = int(self.max_tokens * 0.75) - prompt_tokens
+    # def user_message(self, text: str) -> dict[str, str]:
+    #     return {"role": "user", "content": text}
 
-        words = text.split()
-        current_chunk = ""
+    # def system_message(self, text: str) -> dict[str, str]:
+    #     return {"role": "system", "content": text}
 
-        for word in words:
-            word_tokens = self.count_tokens(word)
-            if self.count_tokens(current_chunk) + word_tokens <= max_chunk_tokens:
-                current_chunk += word + " "
-            else:
-                chunks.append(current_chunk.strip())
-                current_chunk = word + " "
+    # def prompt(self, messages: list[dict[str, str]]) -> str:
+    #     tokens = self.max_tokens - self.count_message_tokens(messages)
 
-        if current_chunk:
-            chunks.append(current_chunk.strip())
+    #     response = openai.ChatCompletion.create(
+    #         model=self.chosen_model,
+    #         messages=messages,
+    #         temperature=self.temperature,
+    #         max_tokens=tokens,
+    #         top_p=1,
+    #         frequency_penalty=0,
+    #         presence_penalty=0,
+    #     )
 
-        return chunks
-
-    # messages + completion =< max tokens
-    # prompts + file content =< messages
-    # prompts + file + completion = max tokens
-    def prompt_with_text(self, messages: List[dict[str, str]]) -> List[str]:
-        responses = []
-
-        prompt_tokens = self.count_tokens(
-            " ".join([msg["content"] for msg in messages])
-        )
-
-        if prompt_tokens > self.max_tokens // 4:
-            responses.append("Error: Prompt too long")
-            return responses
-
-        for path, text in self.texts.items():
-            text_tokens = self.count_tokens(text)
-
-            total_input_tokens = prompt_tokens + text_tokens
-
-            if total_input_tokens > self.max_tokens * 0.75:
-                chunks = self.get_chunks(text, prompt_tokens)
-
-                for chunk in chunks:
-                    available_tokens = (
-                        self.max_tokens - prompt_tokens - self.count_tokens(chunk)
-                    )
-                    messages.append(self.user_message(chunk))
-
-                    chunk_response = self.prompt(messages, available_tokens)
-
-                    messages.pop()
-                    responses.append(chunk_response)
-
-            else:
-                messages.append(self.user_message(text))
-
-                text_response = self.prompt(
-                    messages, self.max_tokens - prompt_tokens - text_tokens
-                )
-
-                messages.pop()
-                responses.append(text_response)
-
-        return responses
-
-    def prompt(self, messages: list[dict[str, str]], tokens: int) -> str:
-        response = openai.ChatCompletion.create(  # type: ignore
-            model=self.chosen_model,
-            messages=messages,
-            temperature=self.temperature,
-            max_tokens=tokens,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0,
-        )
-
-        return str(response["choices"][0]["message"]["content"])
+    #     return str(response["choices"][0]["message"]["content"])

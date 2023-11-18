@@ -15,6 +15,6 @@ class TransformerForm(forms.Form):
     )
     length = forms.IntegerField(
         widget=forms.NumberInput(
-            attrs={"type": "range", "min": 0, "max": 100, "class": "custom-slider"}
+            attrs={"type": "range", "min": 3, "max": 20, "class": "custom-slider"}
         )
     )
