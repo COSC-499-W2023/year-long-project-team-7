@@ -23,10 +23,13 @@ class TransformViewTestCase(TestCase):
         with patch("transformer.views.generate_output") as mock_generate_output:
             file = SimpleUploadedFile("file.txt", b"file_content")
             data = {
-                "text_input": "sample_text",
+                "prompt": "sample_text",
                 "language": "English",
+                "tone": "Fun",
                 "complexity": 1,
-                "length": 1,
+                "num_slides": 1,
+                "num_images": 0,
+                "template": 1,
                 "files": file,
             }
             response = self.client.post(self.url, data, format="multipart")
@@ -37,10 +40,13 @@ class TransformViewTestCase(TestCase):
             conversion = Conversion.objects.first()
 
             expected_user_params_dict = {
-                "text_input": "sample_text",
+                "prompt": "sample_text",
                 "language": "English",
+                "tone": "Fun",
                 "complexity": 1,
-                "length": 1,
+                "num_slides": 1,
+                "num_images": 0,
+                "template": 1,
             }
             saved_files = list(File.objects.filter(conversion=conversion))
 
@@ -54,9 +60,13 @@ class TransformViewTestCase(TestCase):
         data = {
             "text_input": "",
             "language": "invalid_language",
+            "tone": "invalid_tone",
             "complexity": 200,
             "length": -10,
+            "num_slides": 1,
+            "num_images": 0,
         }
+
         response = self.client.post(self.url, data)
 
         self.assertEqual(response.status_code, 200)
