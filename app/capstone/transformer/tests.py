@@ -75,50 +75,79 @@ class RegisterTestCase(TestCase):
         self.assertTemplateUsed(response, "signup.html")
 
     def test_user_registration(self):
-        registration_data = {
-            "username": "testuser",
-            "fname": "John",
-            "lname": "Doe",
-            "email": "testuser@example.com",
-            "pass1": "testpassword",
-            "pass2": "testpassword",
-        }
-
-        response = self.client.post(self.url, data=registration_data, follow=True)
-        self.assertEqual(response.status_code, 200)
-        # Check for user created in the database
-        self.assertTrue(User.objects.filter(username="testuser").exists())
-        self.assertContains(response, "Account successfully created.")
+        # Make a POST request to the sign-up view with valid data
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "username": "testuser",
+                "email": "testuser@example.com",
+                "password1": "testpassword123",
+                "password2": "testpassword123",
+            },
+        )
+        # Check if the user was created and logged in successfully
+        self.assertEqual(
+            response.status_code, 302
+        )  # HTTP status code for a successful redirect
         self.assertRedirects(response, reverse("signin"))
+        self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(User.objects.first().username, "testuser")
+
+    def test_invalid_user_registration(self):
+        # Make a POST request to the sign-up view with invalid data
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "username": "",
+                "email": "invalidemail",
+                "password1": "testpassword123",
+                "password2": "differentpassword",
+            },
+        )
+        # Check if the form is not valid and no user was created
+        self.assertEqual(
+            response.status_code, 200
+        )  # 200 is the HTTP status code for a successful GET request
+        self.assertContains(response, "Error in the form submission.")
+        self.assertEqual(User.objects.count(), 0)
 
 
 class UserSignInTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.signin_url = reverse("signin")
-
-        self.test_user = User.objects.create_user(
-            username="testuser", password="testpassword"
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword123"
         )
 
     def test_user_signin_valid_credentials(self):
-        signin_data = {
-            "username": "testuser",
-            "pass1": "testpassword",
-        }
-
-        response = self.client.post(self.signin_url, data=signin_data, follow=True)
-        self.assertEqual(response.status_code, 200)
+        # Make a POST request to the sign-in view with valid credentials
+        response = self.client.post(
+            reverse("signin"),
+            {
+                "username": "testuser",
+                "password": "testpassword123",
+            },
+        )
+        # Check if the user was authenticated and redirected to the index page
+        self.assertEqual(
+            response.status_code, 302
+        )  # HTTP status code for a successful redirect
         self.assertRedirects(response, reverse("index"))
+        self.assertTrue(response.wsgi_request.user.is_authenticated)
 
     def test_user_signin_invalid_credentials(self):
-        # Data with invalid credentials
-        signin_data = {
-            "username": "testuser",
-            "pass1": "wrongpassword",
-        }
-
-        response = self.client.post(self.signin_url, data=signin_data, follow=True)
-        self.assertEqual(response.status_code, 200)
+        # Make a POST request to the sign-in view with invalid credentials
+        response = self.client.post(
+            reverse("signin"),
+            {
+                "username": "testuser",
+                "password": "wrongpassword",
+            },
+        )
+        # Check if the user was not authenticated and an error message is present
+        self.assertEqual(
+            response.status_code, 200
+        )  # 200 is the HTTP status code for a successful GET request
         self.assertContains(response, "Incorrect Credentials.")
-        self.assertRedirects(response, reverse("signin"))
+        self.assertFalse(response.wsgi_request.user.is_authenticated)

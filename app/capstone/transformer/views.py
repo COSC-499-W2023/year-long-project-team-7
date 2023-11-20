@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
@@ -82,17 +81,14 @@ def signup(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            login(request, user)
             messages.success(request, "Account successfully created.")
             return redirect("signin")
         else:
-            messages.error(
-                request,
-                "Error in the form submission. Please correct the errors below.",
-            )
+            messages.error(request, "Error in the form submission.")
     else:
         form = SignUpForm()
-
     return render(request, "signup.html", {"form": form})
 
 
@@ -102,23 +98,14 @@ def signin(request: HttpRequest) -> HttpResponse:
         if form.is_valid():
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
-
             user = authenticate(request, username=username, password=password)
-
-            if user is not None:
+            if user:
                 login(request, user)
                 return redirect("index")
             else:
                 messages.error(request, "Incorrect Credentials.")
-                return redirect("signin")
-        else:
-            messages.error(
-                request,
-                "Error in the form submission. Please correct the errors below.",
-            )
     else:
         form = SignInForm()
-
     return render(request, "signin.html", {"form": form})
 
 
