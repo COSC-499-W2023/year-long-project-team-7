@@ -9,7 +9,7 @@ from reportlab.lib.styles import getSampleStyleSheet  # type: ignore
 from reportlab.platypus import SimpleDocTemplate, Paragraph  # type: ignore
 from reportlab.pdfgen import canvas  # type: ignore
 from django.core.exceptions import ObjectDoesNotExist
-from docx2pdf import convert # type: ignore
+from docx import Document # type: ignore
 from striprtf.striprtf import rtf_to_text # type: ignore
 import os
 
@@ -79,7 +79,20 @@ def pptx_to_pdf(pptx_filename: str, pdf_filename: str) -> None:
     c.save()
 
 def docx_to_pdf(docx_filename: str, pdf_filename: str) -> None:
-    convert(docx_filename, pdf_filename)
+    #convert(docx_filename, pdf_filename)
+    doc = Document(docx_filename)
+    c = canvas.Canvas(pdf_filename, pagesize=letter)
+    i = 750
+    for paragraph in doc.paragraphs:
+        for run in paragraph.runs:
+            text = run.text
+            c.drawString(15, i, text)
+            i = i - 12
+            if(i < 100):
+                i = 750
+                c.showPage()
+    c.showPage()
+    c.save()
 
 def txt_to_pdf(txt_filename: str, pdf_filename: str) -> None:
     lines = open(txt_filename, 'r').read().splitlines()
