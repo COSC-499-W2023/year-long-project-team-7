@@ -91,6 +91,7 @@ a:hover {
         font-size: 50px;
     }
 }
+/* -----------LANDING------------ */
 
 /* ----------NAVBAR CSS---------- */
 /* body {
@@ -137,27 +138,8 @@ a:hover {
     padding-left: 2em;
     padding-right: 2em;
 }
+/* ----------NAVBAR CSS---------- */
 
-/*----------Button CSS-----------*/
-.custom-button {
-    background-color: mediumslateblue;
-}
-
-.custom-button:hover {
-    background-color: royalblue;
-}
-
-.file-link {
-    color: white;
-}
-
-.file-item {
-    list-style: none;
-}
-
-.file-download-button {
-    margin-left: 10px;
-}
 
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
 @media (max-width: 1000px) {
@@ -175,9 +157,7 @@ a:hover {
 }
 
 /*-----------TRANSFORM------------*/
-
 /* Sliders */
-
 input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
@@ -254,9 +234,32 @@ input[type="range"]::-moz-range-thumb {
 
 .btn-primary:hover,
 .btn-primary:active {
-    background-color: #fff;
-    border-color: #fff;
+    background-color: rgb(83, 68, 167) !important;
+    border-color: rgb(83, 68, 167) !important;
 }
+
+.template-choice {
+    display: inline-block;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.template-choice img {
+    width: 200px;
+    height: auto; 
+    border-radius: 10px; 
+    border: 2px solid transparent; 
+}
+
+.template-choice input[type="radio"]:checked + img {
+    border: 2px solid mediumslateblue;
+}
+
+.template-choice input[type="radio"]:checked + img + .checkmark {
+    display: block;
+}
+/*-----------TRANSFORM------------*/
+
 
 /*-----------Sign In/Sign Up------------*/
 .custom-signin{
@@ -278,4 +281,5 @@ input[type="range"]::-moz-range-thumb {
     border: 1px solid rgb(178, 187, 197);
     margin: 1px;
     display:inline-block;
-  }
+}
+/*-----------Sign In/Sign Up------------*/

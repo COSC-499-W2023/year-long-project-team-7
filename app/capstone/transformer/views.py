@@ -21,12 +21,15 @@ def transform(request: HttpRequest) -> HttpResponse:
         form = TransformerForm(request.POST)
 
         if form.is_valid():
-            conversion: Conversion = Conversion()
+            conversion = Conversion()
             user_params = {
-                "text_input": form.cleaned_data["text_input"],
+                "prompt": form.cleaned_data["prompt"],
                 "language": form.cleaned_data["language"],
+                "tone": form.cleaned_data["tone"],
                 "complexity": form.cleaned_data["complexity"],
-                "length": form.cleaned_data["length"],
+                "num_slides": form.cleaned_data["num_slides"],
+                "num_images": form.cleaned_data["num_images"],
+                "template": int(form.cleaned_data["template"]),
             }
             conversion.user_parameters = json.dumps(user_params)
             conversion.save()

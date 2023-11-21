@@ -10,21 +10,20 @@
                 <h6 class="card-subtitle mt-3 text-light">File Preview:</h6>
                 <div class="d-flex justify-content-center align-items-center">
                     {% if output_files %}
-                        <ul>
-                            {% for file in output_files %}
-                                <li class="file-item">
-                                    <span class="file-name">{{ file.file.name }}</span>
-                                    <button class="btn custom-button file-download-button"
-                                            data-fileurl="{{ file.file.url }}">Download</button>
-                                </li>
-                            {% endfor %}
-                        </ul>
+                        {% for file in output_files %}
+                            <p class="file-item">
+                                <span class="file-name">{{ file.file.name }}</span>
+                                <button id="file-download-button"
+                                        class="btn btn-primary"
+                                        data-fileurl="{{ file.file.url }}">Download</button>
+                            </p>
+                        {% endfor %}
                     {% else %}
                         <p>No output files available.</p>
                     {% endif %}
                 </div>
                 <div class="d-flex justify-content-center align-items-center">
-                    <button class="w-25 btn mt-3 custom-button">Back to Transform</button>
+                    <a class="w-25 btn mt-3 btn-primary" href="{% url 'transform' %}">Back to Transform</a>
                 </div>
             </div>
         </div>
