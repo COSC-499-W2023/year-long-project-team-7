@@ -122,9 +122,7 @@ def rtf_to_pdf(rtf_filename: str, pdf_filename: str) -> None:
     c.save()
 
 def generate_output(files: List[File], conversion: Conversion) -> None:
-    file_paths = detect_file_type([f.file.path for f in files])
-
-    texts = multiple_pdf_to_text(file_paths)
+    texts = multiple_pdf_to_text([f.file.path for f in files])
 
     pres_manager = PresentationGenerator(
         "gpt-3.5-turbo", texts, conversion, temperature=1
