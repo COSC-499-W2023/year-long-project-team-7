@@ -48,8 +48,9 @@ $(document).ready(function () {
         $(this).find('input[type="radio"]').prop("checked", true);
     });
 
+    $(".loading-overlay").hide();
+
     $("#generator-form").on("submit", function (event) {
-        // event.preventDefault();
         $(".loading-overlay").show();
 
         // $.ajax({
