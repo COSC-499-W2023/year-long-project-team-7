@@ -187,3 +187,24 @@ _Team Evaluation Screenshot_
 My goals for this week were simply to improve the styling for the transformer page of the application and work on some bugs.
 
 Most of our attention this week went towards building up the app ahead of the presentation, so we wanted to be sure that everything that we currently had was working. For this reason, we didn't stretch ourselves with new features and instead focused on refining our current product.
+
+## Nov 06 2023 -> Nov 12 2023
+
+![evaluation-screenshot](../../img/esteban-eval-9.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-10.png)
+
+### Goals
+
+-   Implement loading screen for transformations
+-   Navbar conditional links
+
+### Self Reflection and Learning
+
+I enjoyed finding an interesting way to style the loading animation and exploring AJAX and jQuery.

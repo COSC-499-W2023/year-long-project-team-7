@@ -91,13 +91,8 @@ a:hover {
         font-size: 50px;
     }
 }
-/* -----------LANDING------------ */
 
-/* ----------NAVBAR CSS---------- */
-/* body {
-    padding-top: 56px; 
-    Compensate for navbar
-} */
+/* ----------NAVBAR--------- */
 
 .logo {
     width: 50px;
@@ -285,22 +280,35 @@ input[type="range"]::-moz-range-thumb {
 /*-----------Loading Screen------------*/
 .loading-overlay {
     display: none; /* Hidden by default */
-    position: fixed; /* Fixed position */
-    z-index: 999; /* Sit on top */
+    position: fixed;
+    z-index: 999;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
     text-align: center;
 }
 
 .loading-overlay h1 {
     position: absolute;
-    top: 70%;
-    left: 43%;
-    /* transform: translate(-50%, -50%); */
-    color: #fff;
+    top: 80%;
+    left: 32%;
+    font-family: "Noto Serif Display";
+}
+
+.loading-overlay-textbox {
+    text-align: center;
+    position: absolute;
+    height: 25em;
+    width: 50em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px; /* Adjust the padding as needed */
+    background-color: rgba(0, 0, 0, 0); /* White background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0); /* Optional: Add a subtle shadow */
 }
 
 /* .waveTextAnimated span {
@@ -318,14 +326,13 @@ input[type="range"]::-moz-range-thumb {
     content: "";
     box-sizing: border-box;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 90px;
-    height: 90px;
-    margin-top: -10px;
-    margin-left: -10px;
+    top: 22%;
+    left: 39%;
+    width: 12rem;
+    height: 12rem;
     border-radius: 50%;
-    border: 2px solid #ccc;
-    border-top-color: #000;
-    animation: spinner 1s linear infinite;
+    border: 10px outset transparent;
+    border-top-color: mediumslateblue;
+    border-bottom-color: mediumslateblue;
+    animation: spinner 1s ease infinite;
 }
