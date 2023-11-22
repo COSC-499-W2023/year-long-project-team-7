@@ -48,7 +48,24 @@ $(document).ready(function () {
         $(this).find('input[type="radio"]').prop("checked", true);
     });
 
-    $(".loading-overlay").show();
+    $("#generator-form").on("submit", function (event) {
+        // event.preventDefault();
+        $(".loading-overlay").show();
 
-    // $(".loading-overlay").hide();
+        // $.ajax({
+        //     url: $(this).attr("action"),
+        //     type: $(this).attr("method"),
+        //     data: $(this).serialize(),
+        //     success: function (response) {
+        //         if (response.success) {
+        //             $(".loading-overlay").hide();
+        //         } else {
+        //             $(".loading-overlay").hide();
+        //             alert(
+        //                 "Something went wrong with form submission, please try again."
+        //             );
+        //         }
+        //     },
+        // });
+    });
 });

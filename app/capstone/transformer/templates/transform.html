@@ -6,7 +6,7 @@
          style="padding-top: 100px">
         <div class="col-8">
             <h1 class="text-center title bigger-h1">Transform</h1>
-            <form method="post" enctype="multipart/form-data">
+            <form id="generator-form" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-5">
                     <h2 class="text-left">Input</h2>
@@ -91,5 +91,4 @@
             </h1>    {% endcomment %}
             <div class="spinner"></div>
         </div>
-        
     {% endblock %}
