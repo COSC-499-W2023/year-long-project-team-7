@@ -85,7 +85,6 @@ def signup(request: HttpRequest) -> HttpResponse:
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
             messages.success(request, "Account successfully created.")
             return redirect("signin")
         else:
