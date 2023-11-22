@@ -1,5 +1,7 @@
 from django import forms
-from django.forms import Textarea, NumberInput, RadioSelect
+from django.forms import Textarea, NumberInput, RadioSelect, TextInput, Select
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 
 class TransformerForm(forms.Form):
@@ -87,3 +89,16 @@ class TransformerForm(forms.Form):
         choices=[(1, "Template 1"), (2, "Template 2"), (3, "Template 3")],
         widget=RadioSelect(),
     )
+
+
+class SignUpForm(UserCreationForm):  # type: ignore
+    email = forms.EmailField(max_length=200, help_text="Required")
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+
+class SignInForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)

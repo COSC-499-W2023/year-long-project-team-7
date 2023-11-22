@@ -19,21 +19,10 @@
                  alt
                  width="90"
                  height="90">
-            <h1 class="h3 mb-3 mt-3 font-weight-normal">Please Sign In</h1>
+            <h1 class="h3 mb-3 mt-3 font-weight-normal">Sign In</h1>
             <form class="text-center" action="/signin" method="post">
                 {% csrf_token %}
-                <input type="text"
-                       id="username"
-                       name="username"
-                       class="form-control mb-3"
-                       placeholder="Username"
-                       required>
-                <input type="password"
-                       id="pass1"
-                       name="pass1"
-                       class="form-control"
-                       placeholder="Password"
-                       required>
+                {{ form.as_p }}
                 <button class="btn btn-primary mt-3" style="width:100%" type="submit">Sign In</button>
             </form>
             <div class="line mb-3"></div>
