@@ -47,4 +47,8 @@ $(document).ready(function () {
     $(".template-choice").click(function () {
         $(this).find('input[type="radio"]').prop("checked", true);
     });
+
+    $(".loading-overlay").show();
+
+    // $(".loading-overlay").hide();
 });

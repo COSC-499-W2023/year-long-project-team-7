@@ -140,7 +140,6 @@ a:hover {
 }
 /* ----------NAVBAR CSS---------- */
 
-
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
 @media (max-width: 1000px) {
     .navbar {
@@ -246,9 +245,9 @@ input[type="range"]::-moz-range-thumb {
 
 .template-choice img {
     width: 200px;
-    height: auto; 
-    border-radius: 10px; 
-    border: 2px solid transparent; 
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid transparent;
 }
 
 .template-choice input[type="radio"]:checked + img {
@@ -260,9 +259,8 @@ input[type="range"]::-moz-range-thumb {
 }
 /*-----------TRANSFORM------------*/
 
-
 /*-----------Sign In/Sign Up------------*/
-.custom-signin{
+.custom-signin {
     display: inline-block;
     color: #7b68ee;
     text-decoration: none;
@@ -270,7 +268,7 @@ input[type="range"]::-moz-range-thumb {
     transition: transform 0s;
 }
 
-.custom-signin:hover{
+.custom-signin:hover {
     color: #7b68ee;
     transform: translateY(0px);
 }
@@ -280,6 +278,54 @@ input[type="range"]::-moz-range-thumb {
     width: 55%;
     border: 1px solid rgb(178, 187, 197);
     margin: 1px;
-    display:inline-block;
+    display: inline-block;
 }
 /*-----------Sign In/Sign Up------------*/
+
+/*-----------Loading Screen------------*/
+.loading-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed position */
+    z-index: 999; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
+    text-align: center;
+}
+
+.loading-overlay h1 {
+    position: absolute;
+    top: 70%;
+    left: 43%;
+    /* transform: translate(-50%, -50%); */
+    color: #fff;
+}
+
+/* .waveTextAnimated span {
+    -webkit-animation: wave-text 1s ease-in-out infinite;
+    animation: wave-text 1s ease-in-out infinite;
+} */
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner:before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90px;
+    height: 90px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    border-top-color: #000;
+    animation: spinner 1s linear infinite;
+}
