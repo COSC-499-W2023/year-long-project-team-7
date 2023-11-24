@@ -52,21 +52,5 @@ $(document).ready(function () {
 
     $("#generator-form").on("submit", function (event) {
         $(".loading-overlay").show();
-
-        // $.ajax({
-        //     url: $(this).attr("action"),
-        //     type: $(this).attr("method"),
-        //     data: $(this).serialize(),
-        //     success: function (response) {
-        //         if (response.success) {
-        //             $(".loading-overlay").hide();
-        //         } else {
-        //             $(".loading-overlay").hide();
-        //             alert(
-        //                 "Something went wrong with form submission, please try again."
-        //             );
-        //         }
-        //     },
-        // });
     });
 });

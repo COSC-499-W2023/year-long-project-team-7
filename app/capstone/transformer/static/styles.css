@@ -297,6 +297,14 @@ input[type="range"]::-moz-range-thumb {
     font-family: "Noto Serif Display";
 }
 
+.loading-overlay h2 {
+    position: absolute;
+    top: 95%;
+    left: 37%;
+    font-size: 1em;
+    color: grey;
+}
+
 .loading-overlay-textbox {
     text-align: center;
     position: absolute;
