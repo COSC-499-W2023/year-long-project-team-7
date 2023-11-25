@@ -32,6 +32,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                 "template": int(form.cleaned_data["template"]),
             }
             conversion.user_parameters = json.dumps(user_params)
+            conversion.user = request.user
             conversion.save()
 
             files = []
@@ -115,3 +116,12 @@ def signout(request: HttpRequest) -> HttpResponse:
     logout(request)
     messages.success(request, "Logged Out Successfully.")
     return redirect("index")
+
+def history(request: HttpRequest) -> HttpResponse:
+    if request.user.is_authenticated:
+        files = File.objects.filter(user=request.user, is_output=False)
+    else:
+        return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+        )
+    return render(request, "history.html", {"files": files})
