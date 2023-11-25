@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'navbar.html' %}
+<div class="col d-flex justify-content-center mt-3">
+    <div class="card w-75 bg-secondary mt-5">
+        <div class="card-body">
+            <h5 class="card-title fw-bold mt-3 mb-3">Transformation History</h5>
+            <table class="table table-striped table-dark">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Input File</th>
+                    <th scope="col">Conversion Type</th>
+                    <!-- next two columns will be empty until implemented on backend-->
+                    <th scope="col">User Parameters</th>
+                    <th scope="col">Token Amount</th>
+                </tr>
+                {% for c in files %}
+                <tbody>
+                    <tr>
+                        <th scope="row">{{ c.conversion }}</th>
+                        <td>{{ c.date }}</td>
+                        <td>{{ c.file }}</td>
+                        <td>{{ c.type }}</td>
+                        <td> {{c.user_parameters }}</td>
+                        <td> {{ c.user.amount }} </td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+                </thead>
+            </table>
+        </div>
+    </div>        
+</div>
+{% endblock %}
