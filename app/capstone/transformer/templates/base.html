@@ -1,5 +1,7 @@
 {% include 'head.html' with page_title='Platonix' %}
+{% include 'navbar.html' %}
 <body class='bg-dark text-light'>
-    {% include 'navbar.html' %}
-    {% block content %}{% endblock %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 </body>
