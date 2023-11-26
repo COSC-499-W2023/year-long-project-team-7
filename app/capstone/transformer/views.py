@@ -32,7 +32,6 @@ def transform(request: HttpRequest) -> HttpResponse:
                 "template": int(form.cleaned_data["template"]),
             }
             conversion.user_parameters = json.dumps(user_params)
-            conversion.user = request.user
             conversion.save()
 
             files = []
