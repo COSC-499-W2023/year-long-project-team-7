@@ -118,7 +118,7 @@ def signout(request: HttpRequest) -> HttpResponse:
 
 def history(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
-        files = File.objects.filter(user=request.user, is_output=False)
+        files = File.objects.filter(user=request.user)
     else:
         return HttpResponseForbidden(
                 "You do not have permission to access this resource."
