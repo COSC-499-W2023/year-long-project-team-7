@@ -132,3 +132,40 @@ _Tasks Screenshot_
 3. Complete feedback for other teams mini presentation
 
 [10]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=assignee%3Akmalott+milestone%3A%22Week+9%22+
+
+## Nov 06 -> Nov 12
+
+![evaluation screenshot](../../img/keiran-eval-10.png)
+_Team evaluation Screenshot_
+
+![w10 taks screenshot](../../img/keiran-w10-tasks.png)
+_Tasks Screenshot_
+
+[Individual W10 Tasks][11]
+
+### Goals this week
+1. Add conversion to pdf for documents inputted to the transformer
+
+[11]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=assignee%3Akmalott+milestone%3A%22Week+10%22+
+
+## Nov 13 -> Nov 26
+
+![evaluation screenshot](../../img/keiran-eval-11&12.png)
+_Team evaluation Screenshot_
+
+![w10 taks screenshot](../../img/keiran-w11&12-tasks.png)
+_Tasks Screenshot_
+
+[Individual W12 Tasks][12]
+
+### Goals this week
+1. Create testing for document conversion
+2. Basic My Transformations Page (history of users previous transformations)
+
+Note that 2. is not in master branch at the moment. See my-transformations branch for my commmits this week
+
+### Self Reflection and Learning
+
+For this week my main goals were to create testing for the work I completed last week and create a basic version of the my transformations page. Unfortunately, creating testing for the document conversion functions was unexpectedly challenging and I at this time I don't have any tests written for this. However, I believe that by the end of next week I should have testing implemented for this feature. Despite this setback throughout the week I have learned a lot about django testing in general which will be very useful as I continue to work on this project. Fortunately, my second goal this week went a lot better than the first and I was able to make very good progress in creating the my transformations page. I am hopeful that by the end of next week I will have a more polished version to add to the master branch with the necessary testing required for it. 
+
+[12]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=milestone%3A%22Week+12%22+assignee%3Akmalott

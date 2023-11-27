@@ -187,3 +187,46 @@ _Team Evaluation Screenshot_
 My goals for this week were simply to improve the styling for the transformer page of the application and work on some bugs.
 
 Most of our attention this week went towards building up the app ahead of the presentation, so we wanted to be sure that everything that we currently had was working. For this reason, we didn't stretch ourselves with new features and instead focused on refining our current product.
+
+## Nov 06 2023 -> Nov 12 2023
+
+![evaluation-screenshot](../../img/esteban-eval-9.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-10.png)
+
+### Goals
+
+-   Implement loading screen for transformations
+-   Navbar conditional links
+
+### Self Reflection and Learning
+
+I enjoyed finding an interesting way to style the loading animation and exploring AJAX and jQuery.
+
+## Nov 13 2023 -> Nov 26 2023
+
+![evaluation-screenshot](../../img/esteban-eval-12.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-12.png)
+
+### Goals
+
+-   Create a PDF preview after conversion so the user can see it before downloading
+-   Change scrollbar (closed as won't fix)
+-   Small streamling to base.html templating
+
+### Self Reflection and Learning
+
+This week was an interesting challenge as I had never worked with embedded content in HTML like PDFs. I found that the challenge of converting a `.pptx` file to a `.pdf` is actually a lot more complicated that it might have seemed at first, and the solutions I have researched so far have no yielded the results I am after. For this reason, I will continue to work on this problem and hopefully come to a better solution for displaying the preview coming into next week.

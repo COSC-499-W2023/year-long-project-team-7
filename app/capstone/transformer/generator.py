@@ -1,7 +1,6 @@
 import pdfplumber
 from pptx import Presentation  # type: ignore
 from .models import Conversion, File, User
-from typing import List, Dict
 from .presentationGenerator import PresentationGenerator
 from reportlab.lib.pagesizes import letter  # type: ignore
 from reportlab.lib import colors  # type: ignore
@@ -14,52 +13,7 @@ from striprtf.striprtf import rtf_to_text # type: ignore
 import os
 
 
-def detect_file_type(paths: List[str]) -> List[str]:
-    type_str = []
-    path_str = []
-
-    for path in paths:
-        file_name, file_extension = os.path.splitext(path)
-        type_str.append(file_extension)
-        path_str.append(file_name)
-
-    for i in range(len(type_str)):
-        if(type_str[i] == '.pptx'):
-            newpath = path_str[i] + '.pdf'
-            pptx_to_pdf(paths[i], newpath)
-            paths[i] = newpath
-        elif(type_str[i] == '.docx' or type_str[i] == '.doc'):
-            newpath = path_str[i] + '.pdf'
-            docx_to_pdf(paths[i], newpath)
-            paths[i] = newpath
-        elif(type_str[i] == '.txt'):
-            newpath = path_str[i] + '.pdf'
-            txt_to_pdf(paths[i], newpath)
-            paths[i] = newpath
-        elif(type_str[i] == '.rtf'):
-            newpath = path_str[i] + '.pdf'
-            rtf_to_pdf(paths[i], newpath)
-            paths[i] = newpath
-        elif(type_str[i] == '.pdf'):
-            paths[i] = paths[i]
-    
-    return paths
-
-def pdf_to_text(pdf_path: str) -> str:
-    text = ""
-    with pdfplumber.open(pdf_path) as pdf:
-        for page in pdf.pages:
-            text += page.extract_text()
-    return text
-
-
-def multiple_pdf_to_text(paths: List[str]) -> dict[str, str]:
-    result = {}
-    for path in paths:
-        result[path] = pdf_to_text(path)
-    return result
-
-
+#we will need these later  
 def pptx_to_pdf(pptx_filename: str, pdf_filename: str) -> None:
     prs = Presentation(pptx_filename)
     c = canvas.Canvas(pdf_filename, pagesize=letter)
@@ -121,12 +75,8 @@ def rtf_to_pdf(rtf_filename: str, pdf_filename: str) -> None:
     c.showPage()
     c.save()
 
-def generate_output(files: List[File], conversion: Conversion) -> None:
-    texts = multiple_pdf_to_text([f.file.path for f in files])
-
-    pres_manager = PresentationGenerator(
-        "gpt-3.5-turbo", texts, conversion, temperature=1
-    )
+def generate_output(files: list[File], conversion: Conversion) -> None:
+    pres_manager = PresentationGenerator([f.file.path for f in files], conversion)
 
     output_file_path = pres_manager.build_presentation()
     file_name, file_extension = os.path.splitext(output_file_path)
