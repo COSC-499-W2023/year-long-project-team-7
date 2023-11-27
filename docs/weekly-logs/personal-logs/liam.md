@@ -165,3 +165,22 @@ TODO: Switching to django forms broke all the original signin/signup tests this 
 
 <br>
 
+
+## Nov 12 2023 -> Nov 26 2023
+
+![evaluation-screenshot](../../img/liam-eval-12.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w12-tasks.png)
+<br>
+TODO: Still have to create tests for email verification before merging with master
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras)
+
+<br>
+
