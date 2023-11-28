@@ -1,5 +1,59 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    
+    <div class="container" style="padding-top: 90px">
+        <div class="justify-content-center">
+            <h1 class="text-center title h1 mt-3">Choose your subscription:</h1>
+        </div>
+        <div class="row justify-content-around">
+            <div class="col-4">
+                <div class="card bg-secondary align-items-center mt-5">
+                    <div class="card-title text-white fw-bold mt-3 h3">Daily Subscription</div>
+                    <div class="card-subtitle text-white fw-bold mt-4">Get unlimited access to Platonix for 1 week</div>
+                    <div class="text-white h3 mt-5">
+                        $5.00 per day
+                    </div>
+                    <div class="card-subtitle mb-5 text-white">
+                        Most Flexible!
+                    </div>
+                    <div class="card-subtitle mb-5 fw-bold text-white">
+                        Cancel at any time
+                    </div>
+                    <button type="submit" class="btn btn-primary w-75 mb-3">Subcribe</button>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card bg-secondary align-items-center mt-5">
+                    <div class="card-title text-white fw-bold mt-3 h3">Monthly Subscription</div>
+                    <div class="card-subtitle text-white fw-bold mt-4">Get unlimited access to Platonix for 1 month</div>
+                    <div class="text-white h3 mt-5">
+                        $15.00 per month
+                    </div>
+                    <div class="card-subtitle mb-5 text-white">
+                        Most Popular!
+                    </div>
+                    <div class="card-subtitle mb-5 fw-bold text-white">
+                        Cancel at any time
+                    </div>
+                    <button type="submit" class="btn btn-primary w-75 mb-3">Subscribe</button>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card bg-secondary align-items-center mt-5">
+                    <div class="card-title text-white fw-bold mt-3 h3">Yearly Subscription</div>
+                    <div class="card-subtitle text-white fw-bold mt-4">Get unlimited access to Platonix for 1 year</div>
+                    <div class="text-white h3 mt-5">
+                        $120.00 per year
+                    </div>
+                    <div class="card-subtitle mb-5 text-white">
+                        Best Value!
+                    </div>
+                    <div class="card-subtitle mb-5 fw-bold text-white">
+                        Committing to 1 Year
+                    </div>
+                    <button type="submit" class="btn btn-primary w-75 mb-3">Subcribe</button>
+                </div>
+            </div>
+        </div>
+    </div>    
 {% endblock %}
