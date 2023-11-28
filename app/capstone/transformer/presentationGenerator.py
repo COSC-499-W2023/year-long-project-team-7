@@ -12,6 +12,9 @@ import tiktoken
 import re
 import random
 from openai import OpenAI
+import requests
+from .models import File
+from django.utils import timezone
 
 GPT_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
 GPT_4_1106_PREVIEW = "gpt-4-1106-preview"
@@ -23,10 +26,17 @@ class PresentationGenerator:
             self.prompts = json.load(file)
 
         self.conversion = conversion
+        self.user_prompt = json.loads(conversion.user_parameters).get("prompt", "")
         self.language = json.loads(conversion.user_parameters).get("language", "")
-        self.num_slides = json.loads(conversion.user_parameters).get("length", 3)
-        self.complexity = json.loads(conversion.user_parameters).get("complexity", 50)
-        self.user_prompt = json.loads(conversion.user_parameters).get("text_input", "")
+        self.tone = json.loads(conversion.user_parameters).get("tone", "")
+        self.complexity = json.loads(conversion.user_parameters).get("complexity", 3)
+        self.num_slides = json.loads(conversion.user_parameters).get("num_slides", 10)
+        self.image_frequency = json.loads(conversion.user_parameters).get(
+            "image_frequency", 3
+        )
+        self.template = (
+            1  # json.loads(conversion.user_parameters).get("template", 1) Temporary
+        )
 
         openai.api_key = settings.OPENAI_API_KEY
         self.client = OpenAI()
@@ -37,8 +47,28 @@ class PresentationGenerator:
                 self.client.files.create(file=open(path, "rb"), purpose="assistants")
             )
 
+        instructions = f"{self.prompts['reader']}"
+
+        instructions = (
+            instructions
+            if self.language == "Auto"
+            else f"{instructions} Only respond in {self.language}"
+        )
+
+        instructions = (
+            instructions
+            if self.tone == "Auto"
+            else f"{instructions} {self.prompts['tone'].format(tone=self.tone)}"
+        )
+
+        instructions = (
+            instructions
+            if self.complexity == 3
+            else f"{instructions} {self.prompts['complexity'].format(complexity=self.complexity)}"
+        )
+
         self.assistant = self.client.beta.assistants.create(
-            instructions=f"{self.prompts['reader']} Only respond in {self.language}",
+            instructions=instructions,
             tools=[{"type": "retrieval"}],
             model=GPT_4_1106_PREVIEW,
             file_ids=[file.id for file in openai_files],
@@ -78,37 +108,98 @@ class PresentationGenerator:
 
         return "\n".join(messages)
 
-    def build_presentation(self) -> str:
+    def image_search(self, search_term: str) -> File:
+        api_url = "https://api.search.brave.com/res/v1/images/search"
+        params = {
+            "q": str(search_term),
+            "safesearch": "strict",
+            "count": str(20),
+            "search_lang": "en",
+            "country": "us",
+            "spellcheck": str(1),
+        }
+
+        headers = {
+            "Accept": "application/json",
+            "Accept-Encoding": "gzip",
+            "X-Subscription-Token": str(settings.BRAVE_SEARCH_API_KEY),
+        }
+
+        response = requests.get(api_url, params=params, headers=headers)
+
+        response.raise_for_status()
+
+        images = response.json().get("results", [])
+        images = [img.get("properties").get("url") for img in images]
+        image = random.choice(images)
+
         file_system = FileSystemStorage()
 
-        template = Presentation(
-            file_system.path("template_01.pptx")
-        )  # make variable later
+        image_response = requests.get(image)
+        image_response.raise_for_status()
 
-        title_slide_layout = template.slide_layouts[0]
-        # paragraph_slide_layout = template.slide_layouts[1]
-        points_slide_layout = template.slide_layouts[3]
-        # image_slide_layout = template.slide_layouts[3]
-        # final_slide_layout = template.slide_layouts[4]
-        prs = Presentation()
+        image_file = BytesIO(image_response.content)
+        image_file.name = f"{search_term}_{self.conversion.id}.jpg"
 
-        title = self.prompt_assistant(self.prompts["title"])
-        sub_title = self.prompt_assistant(self.prompts["sub-title"])
+        file_system.save(image_file.name, image_file)
 
-        title_slide = prs.slides.add_slide(title_slide_layout)
-        title_slide.shapes.title.text = title
-        title_slide.shapes[1].text = sub_title
-
-        section_titles = self.prompt_assistant(self.prompts["section-title"]).split(
-            "\n"
+        found_image = File.objects.create(
+            date=timezone.now(),
+            user=None,
+            conversion=self.conversion,
+            is_output=False,
+            type="image",
+            file=image_file.name,
         )
 
-        for section_title in section_titles:
-            content_slide = prs.slides.add_slide(points_slide_layout)
-            content_slide.shapes.title.text = section_title
-            content_slide.shapes[1].text = self.prompt_assistant(
-                f"{self.prompts['points']}{section_title}"
-            )
+        return found_image
+
+    def build_slide(
+        self, prs: Presentation, template: Presentation, slide_num: int
+    ) -> Presentation:
+        image_slide_likelihood = {0: 0, 1: 0.2, 2: 0.3, 3: 0.4, 4: 0.6, 5: 0.7, 6: 0.8}
+
+        if slide_num == 1:
+            layout = template.slide_layouts.get_by_name("TITLE")
+            title_slide = prs.slides.add_slide(layout)
+
+            title = self.prompt_assistant(self.prompts["title"])
+            sub_title = self.prompt_assistant(f"{self.prompts['sub-title']}{title}")
+
+            title_slide.shapes.title.text = title
+            title_slide.shapes[1].text = sub_title
+            return prs
+
+        if random.random() < image_slide_likelihood.get(self.image_frequency, 0.3):
+            layout = template.slide_layouts.get_by_name("IMAGE")
+            # TODO
+            # Search images and insert into slide
+
+            return prs
+
+        layout = template.slide_layouts.get_by_name("CONTENT")
+        content_slide = prs.slides.add_slide(layout)
+
+        slide_content = self.prompt_assistant(
+            f"{self.prompts['slide'].format(slide_num=slide_num, num_slides=self.num_slides)}"
+        )
+        slide_title = slide_content.split("\n")[0]
+        content_slide.shapes.title.text = slide_title
+        content_slide.shapes[1].text = slide_content
+
+        return prs
+
+    def build_presentation(self) -> str:
+        self.image_search("banana")
+
+        file_system = FileSystemStorage()
+
+        template = Presentation(file_system.path(f"template_{self.template}.pptx"))
+
+        prs = Presentation()
+
+        for slide_num in range(1, self.num_slides + 1):
+            prs = self.build_slide(prs, template, slide_num)
 
         buffer = BytesIO()
         prs.save(buffer)
@@ -120,42 +211,3 @@ class PresentationGenerator:
         file_system.save(rel_path, file_content)
 
         return rel_path
-
-    # def count_tokens(self, text: str) -> int:
-    #     try:
-    #         encoding = tiktoken.encoding_for_model("gpt-3.5-turbo-0613")
-    #     except KeyError:
-    #         encoding = tiktoken.get_encoding("cl100k_base")
-    #     return len(encoding.encode(text))
-
-    # def count_message_tokens(self, messages: list[dict[str, str]]) -> int:
-    #     num_tokens = 0
-    #     for message in messages:
-    #         num_tokens += 4
-    #         for key, value in message.items():
-    #             num_tokens += self.count_tokens(value)
-    #             if key == "name":
-    #                 num_tokens += -1
-    #     num_tokens += 2
-    #     return num_tokens
-
-    # def user_message(self, text: str) -> dict[str, str]:
-    #     return {"role": "user", "content": text}
-
-    # def system_message(self, text: str) -> dict[str, str]:
-    #     return {"role": "system", "content": text}
-
-    # def prompt(self, messages: list[dict[str, str]]) -> str:
-    #     tokens = self.max_tokens - self.count_message_tokens(messages)
-
-    #     response = openai.ChatCompletion.create(
-    #         model=self.chosen_model,
-    #         messages=messages,
-    #         temperature=self.temperature,
-    #         max_tokens=tokens,
-    #         top_p=1,
-    #         frequency_penalty=0,
-    #         presence_penalty=0,
-    #     )
-
-    #     return str(response["choices"][0]["message"]["content"])

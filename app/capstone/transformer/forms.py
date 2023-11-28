@@ -9,7 +9,7 @@ class TransformerForm(forms.Form):
         super(TransformerForm, self).__init__(*args, **kwargs)
         self.fields["complexity"].initial = 3
         self.fields["num_slides"].initial = 10
-        self.fields["num_images"].initial = 3
+        self.fields["image_frequency"].initial = 3
 
     prompt = forms.CharField(
         label="Prompt",
@@ -61,7 +61,7 @@ class TransformerForm(forms.Form):
     )
 
     num_slides = forms.IntegerField(
-        label="Length",
+        label="Number of Slides",
         widget=NumberInput(
             attrs={
                 "type": "range",
@@ -72,8 +72,8 @@ class TransformerForm(forms.Form):
         ),
     )
 
-    num_images = forms.IntegerField(
-        label="Number of Images",
+    image_frequency = forms.IntegerField(
+        label="Frequency of Images",
         widget=NumberInput(
             attrs={
                 "type": "range",

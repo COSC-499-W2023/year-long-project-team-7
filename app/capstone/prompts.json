@@ -1,10 +1,9 @@
 {
-    "reader": "You are a text analysis tool. You are very obedient and follow all user instructions exactly. You always read the input files before responding.",
-    "summary": "Summarize this text",
-    "point-form": "Respond only in point form.",
-    "translate": "Translate all input into ",
+    "reader": "You are a text analysis tool. You are very obedient and follow all user instructions exactly. You always read the input files before responding. Do not use markdown in output.",
     "title": "Come up with a title for the input file. Title should have a maximum length of 8 words. Only include the title in response.",
     "sub-title": "Come up with a sub-title for the given input file and title. Only include the sub-title in response. Title: ",
-    "points": "Come up with a maximum of 5 important points from the input file. Each point should be a maximum of 1 short sentence. Do not Number the points. Do not use point form. Only include points in response. Seperate the points with '\n'. Points should fall into this category:",
-    "section-title": "Find the most important topics within the input input file. Each topic can be a maximum of 4 words long. Seperate the topics with '\n'. Do not Number the topics. Do not use point form. Only include topics in response."
+    "section-title": "Find the most important topics within the input input files. Each topic can be a maximum of 4 words long. Seperate the topics with '\n'. Do not Number the topics. Do not use point form. Only include topics in response.",
+    "tone": "All responses should be {tone}. This is very important.",
+    "complexity" :"All responses should have a {complexity}/6 level of detail, where 1 is very basic and 6 is extremley detailed.",
+    "slide": "You are creating a slideshow based on the input text. Each slide is generated one at a time. Generate the title and content for slide {slide_num} of {num_slides}. Content should be less than 5 sentences. Do not include phrases like 'Slide 3', 'Content:', or 'Slide title:' in output. Content should be point form. Do not include '-' Character in output."
 }

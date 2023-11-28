@@ -28,7 +28,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                 "tone": form.cleaned_data["tone"],
                 "complexity": form.cleaned_data["complexity"],
                 "num_slides": form.cleaned_data["num_slides"],
-                "num_images": form.cleaned_data["num_images"],
+                "image_frequency": form.cleaned_data["image_frequency"],
                 "template": int(form.cleaned_data["template"]),
             }
             conversion.user_parameters = json.dumps(user_params)
@@ -49,8 +49,10 @@ def transform(request: HttpRequest) -> HttpResponse:
             generate_output(files, conversion)
 
             return redirect("results", conversion_id=conversion.id)
-
-    return render(request, "transform.html", {"form": TransformerForm()})
+        else:
+            return render(request, "transform.html", {"form": TransformerForm()})
+    else:
+        return render(request, "transform.html", {"form": TransformerForm()})
 
 
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
