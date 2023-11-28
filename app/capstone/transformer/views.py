@@ -115,3 +115,6 @@ def signout(request: HttpRequest) -> HttpResponse:
     logout(request)
     messages.success(request, "Logged Out Successfully.")
     return redirect("index")
+
+def store(request: HttpRequest) -> HttpResponse:
+    return render(request, "store.html")
