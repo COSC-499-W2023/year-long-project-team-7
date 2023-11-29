@@ -13,19 +13,20 @@
                     <th scope="col">Date</th>
                     <th scope="col">Input File</th>
                     <th scope="col">Conversion Type</th>
-                    <!-- next two columns will be empty until implemented on backend-->
+                    <!-- not showing next two columns until implemented on backend
                     <th scope="col">User Parameters</th>
-                    <th scope="col">Token Amount</th>
+                    <th scope="col">Token Amount</th> -->
                 </tr>
                 {% for c in files %}
                 <tbody>
                     <tr>
-                        <th scope="row">{{ c.conversion }}</th>
+                        <th scope="row">{{ c.id }}</th>
                         <td>{{ c.date }}</td>
                         <td>{{ c.file }}</td>
                         <td>{{ c.type }}</td>
-                        <td> {{c.user_parameters }}</td>
-                        <td> {{ c.user.amount }} </td>
+                        <!-- ot showing next two columns until implemented on backend 
+                        <td> {{ c.user.user_parameters }}</td>
+                        <td> {{ c.user.amount }} </td> -->
                     </tr>
                 </tbody>
                 {% endfor %}
