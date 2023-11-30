@@ -1,89 +1,86 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    {% include 'navbar.html' %}
-    <main>
-        <div class="container d-flex justify-content-center"
-             style="padding-top: 100px">
-            <div class="col-8">
-                <h1 class="text-center title bigger-h1">Transform</h1>
-                <form id="generator-form" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="mb-5">
-                        <h2 class="text-left">Input</h2>
-                        <hr>
-                        <div class="row">
-                            <div class="col-6">{{ form.prompt }}</div>
-                            <div class="col-6">
-                                <label class="custom-file-upload">
-                                    <input id="transform-file-upload"
-                                           name="files"
-                                           type="file"
-                                           multiple
-                                           class="form-control-file custom-file-input">
-                                    <span class="file-upload-text">Choose File(s)</span>
-                                </label>
-                                <div class="mt-3" id="selected-file-names"></div>
-                            </div>
+    <div class="container d-flex justify-content-center"
+         style="padding-top: 100px">
+        <div class="col-8">
+            <h1 class="text-center title bigger-h1">Transform</h1>
+            <form id="generator-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-5">
+                    <h2 class="text-left">Input</h2>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">{{ form.prompt }}</div>
+                        <div class="col-6">
+                            <label class="custom-file-upload">
+                                <input id="transform-file-upload"
+                                       name="files"
+                                       type="file"
+                                       multiple
+                                       class="form-control-file custom-file-input">
+                                <span class="file-upload-text">Choose File(s)</span>
+                            </label>
+                            <div class="mt-3" id="selected-file-names"></div>
                         </div>
                     </div>
-                    <div class="mb-5">
-                        <h2 class="text-left">Options</h2>
-                        <hr>
-                        <div class="row">
-                            <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
-                                <p>Language</p>
-                                {{ form.language }}
-                            </div>
-                            <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
-                                <p>Tone</p>
-                                {{ form.tone }}
-                            </div>
-                            <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
-                                <p>Complexity</p>
-                                {{ form.complexity }}
-                                <small id="complexity_value" class="mt-2">Default</small>
-                            </div>
+                </div>
+                <div class="mb-5">
+                    <h2 class="text-left">Options</h2>
+                    <hr>
+                    <div class="row">
+                        <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
+                            <p>Language</p>
+                            {{ form.language }}
                         </div>
-                        <div class="row">
-                            <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
-                                <p>Number of Images</p>
-                                {{ form.image_frequency }}
-                                <small id="image_frequency_value" class="mt-2">Default</small>
-                            </div>
-                            <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
-                                <p>Number of slides</p>
-                                {{ form.num_slides }}
-                                <small id="num_slides_value" class="mt-2">{{ form.num_slides.value }}</small>
-                            </div>
-                            <div class="col-4 mb-3 text-center d-flex flex-column align-items-center"></div>
+                        <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
+                            <p>Tone</p>
+                            {{ form.tone }}
+                        </div>
+                        <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
+                            <p>Complexity</p>
+                            {{ form.complexity }}
+                            <small id="complexity_value" class="mt-2">Default</small>
                         </div>
                     </div>
-                    <div class="mb-5">
-                        <h2 class="text-left">Layout</h2>
-                        <hr>
-                        <div class="col-12">
-                            {% for value, text in form.template.field.choices %}
-                                <label class="template-choice">
-                                    <input type="radio" name="template" value="{{ value }}" style="display:none">
-                                    <img src="{% static 'img/template_0' %}{{ value }}.png"
-                                         alt="{{ text }}"
-                                         class="template-image">
-                                </label>
-                            {% endfor %}
+                    <div class="row">
+                        <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
+                            <p>Number of Images</p>
+                            {{ form.image_frequency }}
+                            <small id="image_frequency_value" class="mt-2">Default</small>
                         </div>
+                        <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
+                            <p>Number of slides</p>
+                            {{ form.num_slides }}
+                            <small id="num_slides_value" class="mt-2">{{ form.num_slides.value }}</small>
+                        </div>
+                        <div class="col-4 mb-3 text-center d-flex flex-column align-items-center"></div>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Generate presentation</button>
-                </form>
-            </div>
+                </div>
+                <div class="mb-5">
+                    <h2 class="text-left">Layout</h2>
+                    <hr>
+                    <div class="col-12">
+                        {% for value, text in form.template.field.choices %}
+                            <label class="template-choice">
+                                <input type="radio" name="template" value="{{ value }}" style="display:none">
+                                <img src="{% static 'img/template_0' %}{{ value }}.png"
+                                     alt="{{ text }}"
+                                     class="template-image">
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Generate presentation</button>
+            </form>
         </div>
-        <!--Loading Overlay-->
-        <div class="loading-overlay text-light">
-            <div class="loading-overlay-textbox">
-                <div class="spinner"></div>
-                <h1>Building slides...</h1>
-                <h2>This could take a few minutes</h2>
-            </div>
+    </div>
+    <!--Loading Overlay-->
+    <div class="loading-overlay text-light">
+        <div class="loading-overlay-textbox">
+            <div class="spinner"></div>
+            <h1>Building slides...</h1>
+            <h2>This could take a few minutes</h2>
         </div>
-    </main>
+    </div>
 {% endblock %}
