@@ -5,7 +5,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from .forms import TransformerForm
 from .forms import SignUpForm
 from .forms import SignInForm
-from .models import Conversion, File
+from .models import Conversion, File, Products
 from typing import List, Dict
 import json
 from .generator import generate_output
@@ -117,4 +117,8 @@ def signout(request: HttpRequest) -> HttpResponse:
     return redirect("index")
 
 def store(request: HttpRequest) -> HttpResponse:
-    return render(request, "store.html")
+    #daily = Products.objects.create(name='Daily Subscription', get_display_number=1000, get_display_price=4.99, description='Get access to Platonix for 1 day', phrase='Most Flexible!')
+    #monthly = Products.objects.create(name='Monthly Subscription', get_display_number=30000, get_display_price=14.99, description='Get access to Platonix for 1 month', phrase='Most Popular!')
+    #yearly = Products.objects.create(name='Yearly Subscription', get_display_number=100000, get_display_price=114.99, description='Get access to Platonix for 1 year', phrase='Best Value!')
+    products = Products.objects.all()
+    return render(request, "store.html", {"products": products})
