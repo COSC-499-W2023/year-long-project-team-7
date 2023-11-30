@@ -161,3 +161,26 @@ class UserSignInTestCase(TestCase):
         )  # 200 is the HTTP status code for a successful GET request
         self.assertContains(response, "Incorrect Credentials.")
         self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+class HistoryTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse("history")
+        testuser = User.objects.create_user('temporary', 'temporary@gmail.com', 'temporary')
+        testconversion = Conversion.objects.create(date="9999-12-31", user=testuser)
+        file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=True, type=".pdf", file=None)
+    
+    def test_history_view_get_request_invalid_user(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_history_view_get_request_valid_user(self):
+        self.client.login(username='temporary', password='temporary')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        
+    def test_history_results(self):
+        self.client.login(username='temporary', password='temporary')
+        response = self.client.get(self.url)
+        self.assertContains(response, "Dec. 31, 9999")
+        self.assertContains(response, ".pdf")
