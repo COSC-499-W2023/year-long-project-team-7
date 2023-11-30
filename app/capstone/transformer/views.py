@@ -120,6 +120,9 @@ def history(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         files = File.objects.filter(user=request.user, is_output=True).order_by("id").all()
         input_files = File.objects.filter(user=request.user, is_output=False).all()
+        files = files.extra({'link': ''})
+        files = files.extra({'input': ''})
+        files = files.extra({'input_type': ''})
         for f in files:
             f.link = f.file.name.split('_')[2].split('.')[0]
             input_file= input_files.filter(conversion__id=f.conversion.id).values("file").get()["file"]
