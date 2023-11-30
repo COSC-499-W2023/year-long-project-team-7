@@ -12,6 +12,7 @@
                     <th scope="col">ID</th>
                     <th scope="col">Date</th>
                     <th scope="col">Input File</th>
+                    <th scope="col">Output File</th>
                     <th scope="col">Conversion Type</th>
                     <!-- not showing next two columns until implemented on backend
                     <th scope="col">User Parameters</th>
@@ -22,9 +23,10 @@
                     <tr>
                         <th scope="row">{{ c.id }}</th>
                         <td>{{ c.date }}</td>
-                        <td>{{ c.file }}</td>
-                        <td>{{ c.type }}</td>
-                        <!-- ot showing next two columns until implemented on backend 
+                        <td>{{c.input}}</td>
+                        <td><a href="{% url 'results' conversion_id=c.link %}">{{c.file}}</a></td>
+                        <td>{{c.input_type}}->{{ c.type }}</td>
+                        <!-- not showing next two columns until implemented on backend 
                         <td> {{ c.user.user_parameters }}</td>
                         <td> {{ c.user.amount }} </td> -->
                     </tr>

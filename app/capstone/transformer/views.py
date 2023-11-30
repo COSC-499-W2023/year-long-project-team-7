@@ -118,7 +118,13 @@ def signout(request: HttpRequest) -> HttpResponse:
 
 def history(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
-        files = File.objects.filter(user=request.user).order_by("id")
+        files = File.objects.filter(user=request.user, is_output=True).order_by("id").all()
+        input_files = File.objects.filter(user=request.user, is_output=False).all()
+        for f in files:
+            f.link = f.file.name.split('_')[2].split('.')[0]
+            input_file= input_files.filter(conversion__id=f.conversion.id).values("file").get()["file"]
+            f.input = input_file
+            f.input_type = input_files.filter(conversion__id=f.conversion.id).values("type").get()["type"]
     else:
         return HttpResponseForbidden(
                 "You do not have permission to access this resource."
