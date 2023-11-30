@@ -181,6 +181,8 @@ _Team Evaluation Screenshot_
 TODO: Still have to create tests for email verification before merging with master
 <br>
 [Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras)
+<br>
+[Current feature branch](https://github.com/COSC-499-W2023/year-long-project-team-7/tree/account-email-verification)
 
 <br>
 
