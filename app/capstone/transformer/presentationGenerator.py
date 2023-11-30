@@ -1,3 +1,4 @@
+from time import sleep
 from pptx import Presentation  # type: ignore
 from pptx.util import Inches  # type: ignore
 from .models import Conversion
@@ -15,6 +16,8 @@ from openai import OpenAI
 import requests
 from .models import File
 from django.utils import timezone
+from concurrent.futures import ThreadPoolExecutor
+
 
 GPT_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
 GPT_4_1106_PREVIEW = "gpt-4-1106-preview"
@@ -34,9 +37,7 @@ class PresentationGenerator:
         self.image_frequency = json.loads(conversion.user_parameters).get(
             "image_frequency", 3
         )
-        self.template = (
-            1  # json.loads(conversion.user_parameters).get("template", 1) Temporary
-        )
+        self.template = json.loads(conversion.user_parameters).get("template", 1)
 
         openai.api_key = settings.OPENAI_API_KEY
         self.client = OpenAI()
@@ -65,6 +66,12 @@ class PresentationGenerator:
             instructions
             if self.complexity == 3
             else f"{instructions} {self.prompts['complexity'].format(complexity=self.complexity)}"
+        )
+
+        instructions = (
+            instructions
+            if len(self.user_prompt) == 0 or self.user_prompt == ""
+            else f"{instructions} {self.prompts['prompt-input'].format(prompt=self.user_prompt)}"
         )
 
         self.assistant = self.client.beta.assistants.create(
@@ -108,51 +115,63 @@ class PresentationGenerator:
 
         return "\n".join(messages)
 
-    def image_search(self, search_term: str) -> File:
-        api_url = "https://api.search.brave.com/res/v1/images/search"
-        params = {
-            "q": str(search_term),
-            "safesearch": "strict",
-            "count": str(20),
-            "search_lang": "en",
-            "country": "us",
-            "spellcheck": str(1),
-        }
+    def image_search(self, search_term: str) -> File:  # This is currently broken
+        # api_url = "https://api.search.brave.com/res/v1/images/search"
+        # params = {
+        #     "q": str(search_term),
+        #     "safesearch": "strict",
+        #     "count": str(20),
+        #     "search_lang": "en",
+        #     "country": "us",
+        #     "spellcheck": str(1),
+        # }
 
-        headers = {
-            "Accept": "application/json",
-            "Accept-Encoding": "gzip",
-            "X-Subscription-Token": str(settings.BRAVE_SEARCH_API_KEY),
-        }
+        # headers = {
+        #     "Accept": "application/json",
+        #     "Accept-Encoding": "gzip",
+        #     "X-Subscription-Token": str(settings.BRAVE_SEARCH_API_KEY),
+        # }
 
-        response = requests.get(api_url, params=params, headers=headers)
+        # response = None
 
-        response.raise_for_status()
+        # while not response:
+        #     try:
+        #         response = requests.get(api_url, params=params, headers=headers)
+        #         response.raise_for_status()
+        #     except Exception as e:
+        #         sleep(10)
+        #         print(f"An error occurred: {e}. Retrying...")
 
-        images = response.json().get("results", [])
-        images = [img.get("properties").get("url") for img in images]
-        image = random.choice(images)
+        # images = response.json().get("results", [])
+        # images = [img.get("properties").get("url") for img in images]
+        # file_system = FileSystemStorage()
 
-        file_system = FileSystemStorage()
+        # image_response = None
+        # while not image_response:
+        #     try:
+        #         image = random.choice(images)
+        #         image_response = requests.get(image)
+        #         image_response.raise_for_status()
+        #     except Exception as e:
+        #         sleep(10)
+        #         print(f"An error occurred: {e}. Retrying...")
 
-        image_response = requests.get(image)
-        image_response.raise_for_status()
+        # image_file = BytesIO(image_response.content)
+        # image_file.name = f"{search_term}_{self.conversion.id}.jpg"
 
-        image_file = BytesIO(image_response.content)
-        image_file.name = f"{search_term}_{self.conversion.id}.jpg"
+        # file_system.save(image_file.name, image_file)
 
-        file_system.save(image_file.name, image_file)
+        # found_image = File.objects.create(
+        #     date=timezone.now(),
+        #     user=None,
+        #     conversion=self.conversion,
+        #     is_output=False,
+        #     type="image",
+        #     file=image_file.name,
+        # )
 
-        found_image = File.objects.create(
-            date=timezone.now(),
-            user=None,
-            conversion=self.conversion,
-            is_output=False,
-            type="image",
-            file=image_file.name,
-        )
-
-        return found_image
+        # return found_image
+        return File()
 
     def build_slide(
         self, prs: Presentation, template: Presentation, slide_num: int
@@ -170,28 +189,37 @@ class PresentationGenerator:
             title_slide.shapes[1].text = sub_title
             return prs
 
-        if random.random() < image_slide_likelihood.get(self.image_frequency, 0.3):
-            layout = template.slide_layouts.get_by_name("IMAGE")
-            # TODO
-            # Search images and insert into slide
+        # if random.random() < image_slide_likelihood.get(self.image_frequency, 0.3):
+        #     layout = template.slide_layouts.get_by_name("IMAGE")
+        #     image_slide = prs.slides.add_slide(layout)
 
-            return prs
+        #     slide_content = self.prompt_assistant(f"{self.prompts['slide'].format(slide_num=slide_num, num_slides=self.num_slides)}")
+        #     slide_title = slide_content.split("\n")[0]
+        #     image_slide.shapes.title.text = slide_title
+        #     image_slide.shapes[1].text = slide_content
 
-        layout = template.slide_layouts.get_by_name("CONTENT")
+        #     image = self.image_search(self.prompt_assistant(f"{self.prompts['image-search'].format(text=slide_content)}"))
+
+        #     file_system = FileSystemStorage()
+
+        #     image_slide.placeholders[1].insert_picture(file_system.path(image.file.name))
+
+        #     return prs
+        selected_content_slide = 1 if random.random() < 0.5 else 2
+        layout = template.slide_layouts.get_by_name(f"CONTENT{selected_content_slide}")
         content_slide = prs.slides.add_slide(layout)
 
         slide_content = self.prompt_assistant(
             f"{self.prompts['slide'].format(slide_num=slide_num, num_slides=self.num_slides)}"
         )
         slide_title = slide_content.split("\n")[0]
+        slide_content = slide_content.replace(slide_title, "")
         content_slide.shapes.title.text = slide_title
         content_slide.shapes[1].text = slide_content
 
         return prs
 
     def build_presentation(self) -> str:
-        self.image_search("banana")
-
         file_system = FileSystemStorage()
 
         template = Presentation(file_system.path(f"template_{self.template}.pptx"))
@@ -200,6 +228,13 @@ class PresentationGenerator:
 
         for slide_num in range(1, self.num_slides + 1):
             prs = self.build_slide(prs, template, slide_num)
+
+        # with ThreadPoolExecutor() as executor:
+        #     futures = [executor.submit(lambda slide: self.build_slide(prs, template, slide), slide_num)
+        #             for slide_num in range(1, self.num_slides + 1)]
+
+        #     for future in futures:
+        #         prs = future.result()
 
         buffer = BytesIO()
         prs.save(buffer)

@@ -36,6 +36,12 @@ def transform(request: HttpRequest) -> HttpResponse:
 
             files = []
 
+            has_prompt = len(user_params["prompt"]) > 0
+            has_file = len(request.FILES.getlist("files"))
+
+            if not has_prompt and not has_file:
+                return render(request, "transform.html", {"form": TransformerForm()})
+
             for uploaded_file in request.FILES.getlist("files"):
                 new_file = File()
                 new_file.user = request.user if request.user.is_authenticated else None
