@@ -55,7 +55,6 @@ def transform(request: HttpRequest) -> HttpResponse:
 
 
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
-    file_system = FileSystemStorage()
     conversion = get_object_or_404(Conversion, id=conversion_id)
 
     if request.user.is_authenticated:
@@ -70,10 +69,10 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
             )
 
     output_files = File.objects.filter(conversion=conversion, is_output=True)
-    pdf_previews = []
 
-    # pdf_previews.append("example.pdf") #! Remove later
-
+    #! Might need later
+    # pdf_previews = []
+    # pdf_previews.append("example.pdf")
     # for file in output_files:
     #     file_name = file.file.name
     #     base_name, extension = file_name.rsplit(".", 1)

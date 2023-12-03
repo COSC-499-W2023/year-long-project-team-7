@@ -116,7 +116,7 @@ def generate_output(files: list[File], conversion: Conversion) -> None:
         is_output=True,
     )
 
-    pdf_preview_path = pptx_to_pdf("example.pptx") #! Change to actual conversion later
+    pdf_preview_path = pptx_to_pdf(output_file_path)
 
     new_pdf = File(
         user=user,
