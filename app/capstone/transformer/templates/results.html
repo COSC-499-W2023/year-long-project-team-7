@@ -21,33 +21,8 @@
                             {% if file.type == "pdf" %}
                                 <div>
                                     <h3>PDF Preview: {{ file.file.name }}</h3>
-                                    <canvas id="pdf-view"></canvas>
-                                </div>
-                                <script type="module">
-                                    import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.min.mjs';
-                                
-                                    // Set the workerSrc property to the location of the worker script
-                                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/build/pdf.worker.min.js';
-                                
-                                    const pdfUrl = '{{ file.file.url }}';
-                                
-                                    const loadingTask = pdfjsLib.getDocument(pdfUrl);
-                                    loadingTask.promise.then((pdf) => {
-                                        return pdf.getPage(1);
-                                    }).then((page) => {
-                                        const canvas = document.getElementById('pdf-view');
-                                        const context = canvas.getContext('2d');
-                                        const viewport = page.getViewport({ scale: 1.5 });
-                                
-                                        canvas.width = viewport.width;
-                                        canvas.height = viewport.height;
-                                
-                                        const renderTask = page.render({ canvasContext: context, viewport });
-                                        return renderTask.promise;
-                                    }).catch((reason) => {
-                                        console.error('Error loading PDF:', reason);
-                                    });
-                                </script>                            
+                                    <iframe src="{{ file.file.url }}" id = "pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
+                                </div>                        
                             {% endif %}
                         {% endfor %}
                     {% else %}
