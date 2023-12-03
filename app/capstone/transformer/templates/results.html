@@ -17,49 +17,57 @@
                                         data-fileurl="{{ file.file.url }}">Download</button>
                             </p>
                         {% endfor %}
+                    {% else %}
+                        <p>No output files available.</p>
+                    {% endif %}
+                </div>
+                <div class="d-flex">
+                    {% if output_files %}
                         {% for file in output_files %}
-                            {% if file.type == "pdf" %}                            
+                            {% if file.type == "pdf" %}
                                 <div>
                                     <h3>PDF Preview: {{ file.file.name }}</h3>
-                                    <div id = "pdf-viewer" style="height:100vh;"></div>
+                                    <div id = "pdf-container" style="width:800px;height:600px;">
+                                        <canvas style="width:800px;height:600px;" id="pdf-canvas"></canvas>
+                                    </div>
                                 </div>
-
-                                <script src="{% static "pdfjs/build/pdf.js" %}"></script>
-                                <script src="{% static "pdfjs/build/pdf.worker.js" %}"></script>
-
-                                <script>
-                                    const pdfContainer = document.getElementById("pdf-viewer");
-                                    const pdfUrl = "{{ file.file.url }}";
-
-                                    const pdfjsLib = window["pdfjs-dist/build/pdf"];
-                                    pdfjsLib.GlobalWorkerOptions.workerSrc = "{% static "pdfjs/build/pdf.worker.js" %}";
-
-                                    pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
-                                        return pdfDoc.getPage(1);
-                                    }).then(page => {
-                                        const scale = 1.5;
-                                        const viewport = page.getViewport({ scale });
-
-                                        const canvas = document.createElement("canvas");
-                                        const context = canvas.getContext("2d");
-                                        canvas.height = viewport.height;
-                                        canvas.width = viewport.width;
-                                        pdfContainer.appendChild(canvas);
-
-                                        const renderContext = {
-                                            canvasContext: context,
-                                            viewport: viewport
-                                        };
-                                        const renderTask = page.render(renderContext);
-                                        return renderTask.promise;
-                                    }).catch(error => {
-                                        console.error("Error loading PDF:", error);
+                                <!-- PDF Rendering -->
+                                <script type="module">
+                                    // Set pdfjs library path dynamically
+                                    const pdfjsLibPath = "{% static 'pdfjs/build/pdf.mjs' %}";
+                        
+                                    // Import library
+                                    import(pdfjsLibPath).then(pdfjsLib => {
+                                        pdfjsLib.GlobalWorkerOptions.workerSrc = '{% static "pdfjs/build/pdf.worker.mjs" %}';
+                        
+                                        const pdfContainer = document.getElementById("pdf-container");
+                                        const pdfUrl = "{{ file.file.url }}";
+                        
+                                        pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
+                                            return pdfDoc.getPage(1);
+                                        }).then(page => {
+                                            const scale = 1;
+                                            const viewport = page.getViewport({ scale });
+                        
+                                            const canvas = document.getElementById("pdf-canvas");
+                                            const context = canvas.getContext("2d");
+                                            canvas.height = viewport.height;
+                                            canvas.width = viewport.width;
+                                            pdfContainer.appendChild(canvas);
+                        
+                                            const renderContext = {
+                                                canvasContext: context,
+                                                viewport: viewport
+                                            };
+                                            const renderTask = page.render(renderContext);
+                                            return renderTask.promise;
+                                        }).catch(error => {
+                                            console.error("Error loading PDF:", error);
+                                        });
                                     });
                                 </script>
                             {% endif %}
                         {% endfor %}
-                    {% else %}
-                        <p>No output files available.</p>
                     {% endif %}
                 </div>
                 <div class="d-flex justify-content-center align-items-center">
