@@ -17,10 +17,13 @@
                                         data-fileurl="{{ file.file.url }}">Download</button>
                             </p>
                         {% endfor %}
-                        {% for filepath in pdf_previews %}
-                            <p class="file-item">
-                                <span class="file-name">{{ filepath }}</span>
-                            </p>
+                        {% for file in output_files %}
+                            {% if file.type == "pdf" %}
+                                <div>
+                                    <h3>PDF Preview: {{ file.file.name }}</h3>
+                                    <iframe src="{% static file.file.url %}" width="100%" height="600px"></iframe>
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     {% else %}
                         <p>No output files available.</p>

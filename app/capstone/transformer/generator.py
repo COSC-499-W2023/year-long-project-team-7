@@ -34,15 +34,18 @@ import subprocess
 #     c.save()
 
 
-def pptx_to_pdf(pptx_filename: str) -> None:
+def pptx_to_pdf(pptx_filename: str) -> str:
     file_system = FileSystemStorage()
     file_path = file_system.path(pptx_filename)
     files_location = file_system.base_location
+    base_name, extension = pptx_filename.rsplit(".", 1)
 
     command = (
         f"soffice --headless --convert-to pdf --outdir {files_location} {file_path}"
     )
     subprocess.run(command, shell=True, check=True)
+
+    return f"{base_name}.pdf"
 
 
 def docx_to_pdf(docx_filename: str, pdf_filename: str) -> None:
@@ -105,7 +108,7 @@ def generate_output(files: list[File], conversion: Conversion) -> None:
         except ObjectDoesNotExist:
             user = None
 
-    new_file = File(
+    new_pptx = File(
         user=user,
         conversion=conversion,
         type=file_extension,
@@ -113,6 +116,15 @@ def generate_output(files: list[File], conversion: Conversion) -> None:
         is_output=True,
     )
 
-    pptx_to_pdf("example.pptx")
+    pdf_preview_path = pptx_to_pdf("example.pptx") #! Change to actual conversion later
 
-    new_file.save()
+    new_pdf = File(
+        user=user,
+        conversion=conversion,
+        type="pdf",
+        file=pdf_preview_path,
+        is_output=True,
+    )
+
+    new_pptx.save()
+    new_pdf.save()

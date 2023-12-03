@@ -9,7 +9,6 @@ from .forms import SignInForm
 from .models import Conversion, File
 from typing import List, Dict
 import json
-import os
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -73,12 +72,19 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     output_files = File.objects.filter(conversion=conversion, is_output=True)
     pdf_previews = []
 
-    for file in output_files:
-        file_name, file_extension = os.path.splitext(file.file)
-        if file_system.exists(f'{file_name}.pdf'):
-            pdf_previews.append(f'{file_name}.pdf')
-            
-    return render(request, "results.html", {"output_files": output_files, "pdf_previews": pdf_previews})
+    # pdf_previews.append("example.pdf") #! Remove later
+
+    # for file in output_files:
+    #     file_name = file.file.name
+    #     base_name, extension = file_name.rsplit(".", 1)
+    #     if file_system.exists(f"{base_name}.pdf"):
+    #         pdf_previews.append(f"{base_name}.pdf")
+
+    return render(
+        request,
+        "results.html",
+        {"output_files": output_files},
+    )
 
 
 def home(request: HttpRequest) -> HttpResponse:
