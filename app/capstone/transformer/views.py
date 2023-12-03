@@ -2,12 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.core.files.storage import FileSystemStorage
 from .forms import TransformerForm
 from .forms import SignUpForm
 from .forms import SignInForm
 from .models import Conversion, File
 from typing import List, Dict
 import json
+import os
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -54,6 +56,7 @@ def transform(request: HttpRequest) -> HttpResponse:
 
 
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
+    file_system = FileSystemStorage()
     conversion = get_object_or_404(Conversion, id=conversion_id)
 
     if request.user.is_authenticated:
@@ -68,8 +71,14 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
             )
 
     output_files = File.objects.filter(conversion=conversion, is_output=True)
+    pdf_previews = []
 
-    return render(request, "results.html", {"output_files": output_files})
+    for file in output_files:
+        file_name, file_extension = os.path.splitext(file.file)
+        if file_system.exists(f'{file_name}.pdf'):
+            pdf_previews.append(f'{file_name}.pdf')
+            
+    return render(request, "results.html", {"output_files": output_files, "pdf_previews": pdf_previews})
 
 
 def home(request: HttpRequest) -> HttpResponse:

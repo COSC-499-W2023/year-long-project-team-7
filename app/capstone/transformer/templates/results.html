@@ -17,6 +17,11 @@
                                         data-fileurl="{{ file.file.url }}">Download</button>
                             </p>
                         {% endfor %}
+                        {% for filepath in pdf_previews %}
+                            <p class="file-item">
+                                <span class="file-name">{{ filepath }}</span>
+                            </p>
+                        {% endfor %}
                     {% else %}
                         <p>No output files available.</p>
                     {% endif %}

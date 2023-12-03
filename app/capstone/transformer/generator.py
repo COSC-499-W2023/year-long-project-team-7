@@ -97,8 +97,6 @@ def generate_output(files: list[File], conversion: Conversion) -> None:
     output_file_path = pres_manager.build_presentation()
     file_name, file_extension = os.path.splitext(output_file_path)
 
-    pptx_to_pdf("example.pptx")
-
     user = None
 
     if conversion.user_id is not None:
@@ -114,4 +112,7 @@ def generate_output(files: list[File], conversion: Conversion) -> None:
         file=output_file_path,
         is_output=True,
     )
+
+    pptx_to_pdf("example.pptx")
+
     new_file.save()
