@@ -9,28 +9,27 @@
             <table class="table table-striped table-dark">
                 <thead>
                 <tr>
-                    <th scope="col">ID</th>
+                    <th scope="col"></th>
                     <th scope="col">Date</th>
                     <th scope="col">Input File</th>
                     <th scope="col">Output File</th>
-                    <th scope="col">Conversion Type</th>
                     <!-- not showing next two columns until implemented on backend
                     <th scope="col">User Parameters</th>
                     <th scope="col">Token Amount</th> -->
                 </tr>
-                {% for c in files %}
-                <tbody>
-                    <tr>
-                        <th scope="row">{{ c.id }}</th>
-                        <td>{{ c.date }}</td>
-                        <td>{{c.input}}</td>
-                        <td><a href="{% url 'results' conversion_id=c.link %}">{{c.file}}</a></td>
-                        <td>{{c.input_type}}->{{ c.type }}</td>
-                        <!-- not showing next two columns until implemented on backend 
-                        <td> {{ c.user.user_parameters }}</td>
-                        <td> {{ c.user.amount }} </td> -->
-                    </tr>
-                </tbody>
+                {% for d in data %}
+                    <tbody>
+                        <tr>
+                            <th scope="row"></th>
+                            <td>{{d.0}}</td>
+                            <td>{{d.1}}</td>
+                            <td><a href="{% url 'results' conversion_id=d.3 %}">{{d.2}}</a></td>
+                            <td>{{d.4}}</td>
+                            <!-- not showing next two columns until implemented on backend 
+                            <td> {{ d.5 }}</td>
+                            <td> {{ d.6 }} </td> -->
+                        </tr>
+                    </tbody>
                 {% endfor %}
                 </thead>
             </table>
