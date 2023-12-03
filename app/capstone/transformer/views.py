@@ -120,16 +120,16 @@ def history(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         files = File.objects.filter(user=request.user, is_output=True).order_by("id").all()
         input_files = File.objects.filter(user=request.user, is_output=False).all()
-        files = files.extra({'link': ''})
-        files = files.extra({'input': ''})
-        files = files.extra({'input_type': ''})
+        history = []
         for f in files:
-            f.link = f.file.name.split('_')[2].split('.')[0]
-            input_file= input_files.filter(conversion__id=f.conversion.id).values("file").get()["file"]
-            f.input = input_file
-            f.input_type = input_files.filter(conversion__id=f.conversion.id).values("type").get()["type"]
+            row = []
+            row.append(f.date.strftime("%m/%d/%Y"))
+            row.append(input_files.filter(conversion__id=f.conversion.id).values("file").get()["file"])
+            row.append(f.file.name)
+            row.append(f.file.name.split('_')[2].split('.')[0])
+            history.append(row)
     else:
         return HttpResponseForbidden(
                 "You do not have permission to access this resource."
         )
-    return render(request, "history.html", {"files": files})
+    return render(request, "history.html", {"data": history})
