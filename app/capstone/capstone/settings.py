@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "transformer.apps.TransformerConfig",
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
@@ -55,9 +56,15 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware"
 ]
 
 ROOT_URLCONF = "capstone.urls"
+
+CORS_ALLOWED_ORIGINS = [
+    "https://cdn.jsdelivr.net",
+    "https://cdnjs.cloudflare.com"
+]
 
 TEMPLATES = [
     {
