@@ -17,10 +17,28 @@ import requests
 from .models import File
 from django.utils import timezone
 from concurrent.futures import ThreadPoolExecutor
-
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 GPT_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
 GPT_4_1106_PREVIEW = "gpt-4-1106-preview"
+
+
+class SlideContent:
+    def __init__(
+        self,
+        slide_num: int,
+        slide_type: str,
+        title: str,
+        sub_title: str,
+        image: File,
+        points: str,
+    ):
+        self.slide_type = slide_type
+        self.title = title
+        self.sub_title = sub_title
+        self.image = image
+        self.points = points
+        self.slide_num = slide_num
 
 
 class PresentationGenerator:
@@ -42,9 +60,9 @@ class PresentationGenerator:
         openai.api_key = settings.OPENAI_API_KEY
         self.client = OpenAI()
 
-        openai_files = []
+        self.openai_files = []
         for path in input_file_paths:
-            openai_files.append(
+            self.openai_files.append(
                 self.client.files.create(file=open(path, "rb"), purpose="assistants")
             )
 
@@ -78,34 +96,24 @@ class PresentationGenerator:
             instructions=instructions,
             tools=[{"type": "retrieval"}],
             model=GPT_4_1106_PREVIEW,
-            file_ids=[file.id for file in openai_files],
-        )
-
-    def add_message_to_thread(self, thread_id: str, content: str) -> None:
-        self.client.beta.threads.messages.create(
-            thread_id=thread_id, role="user", content=content
+            file_ids=[file.id for file in self.openai_files],
         )
 
     def prompt_assistant(self, proompt: str) -> str:
-        thread = self.client.beta.threads.create()
+        thread = self.create_thread()
         self.add_message_to_thread(thread.id, proompt)
-
-        run = self.client.beta.threads.runs.create(
-            thread_id=thread.id, assistant_id=self.assistant.id
-        )
+        run = self.create_run(thread.id)
 
         while run.status != "completed":
-            run = self.client.beta.threads.runs.retrieve(
-                thread_id=thread.id, run_id=run.id
-            )
+            run = self.retrieve_run(thread.id, run.id)
             if run.status == "failed":
                 if run.last_error:
                     print(run.last_error.message)
-                    return run.last_error.message
+                    return str(run.last_error.message)
 
         messages = []
 
-        for msg in self.client.beta.threads.messages.list(thread_id=thread.id):
+        for msg in self.list_messages(thread.id):
             if msg.role == "assistant":
                 content = msg.content[0]
                 if hasattr(content, "text"):
@@ -113,111 +121,48 @@ class PresentationGenerator:
                         re.sub(r"【.*】", "", content.text.value)
                     )  # Remove source links
 
+        self.delete_thread(thread.id)
         return "\n".join(messages)
 
-    def image_search(self, search_term: str) -> File:  # This is currently broken
-        # api_url = "https://api.search.brave.com/res/v1/images/search"
-        # params = {
-        #     "q": str(search_term),
-        #     "safesearch": "strict",
-        #     "count": str(20),
-        #     "search_lang": "en",
-        #     "country": "us",
-        #     "spellcheck": str(1),
-        # }
-
-        # headers = {
-        #     "Accept": "application/json",
-        #     "Accept-Encoding": "gzip",
-        #     "X-Subscription-Token": str(settings.BRAVE_SEARCH_API_KEY),
-        # }
-
-        # response = None
-
-        # while not response:
-        #     try:
-        #         response = requests.get(api_url, params=params, headers=headers)
-        #         response.raise_for_status()
-        #     except Exception as e:
-        #         sleep(10)
-        #         print(f"An error occurred: {e}. Retrying...")
-
-        # images = response.json().get("results", [])
-        # images = [img.get("properties").get("url") for img in images]
-        # file_system = FileSystemStorage()
-
-        # image_response = None
-        # while not image_response:
-        #     try:
-        #         image = random.choice(images)
-        #         image_response = requests.get(image)
-        #         image_response.raise_for_status()
-        #     except Exception as e:
-        #         sleep(10)
-        #         print(f"An error occurred: {e}. Retrying...")
-
-        # image_file = BytesIO(image_response.content)
-        # image_file.name = f"{search_term}_{self.conversion.id}.jpg"
-
-        # file_system.save(image_file.name, image_file)
-
-        # found_image = File.objects.create(
-        #     date=timezone.now(),
-        #     user=None,
-        #     conversion=self.conversion,
-        #     is_output=False,
-        #     type="image",
-        #     file=image_file.name,
-        # )
-
-        # return found_image
-        return File()
-
-    def build_slide(
-        self, prs: Presentation, template: Presentation, slide_num: int
-    ) -> Presentation:
+    def build_slide(self, slide_num: int) -> SlideContent:
         image_slide_likelihood = {0: 0, 1: 0.2, 2: 0.3, 3: 0.4, 4: 0.6, 5: 0.7, 6: 0.8}
 
         if slide_num == 1:
-            layout = template.slide_layouts.get_by_name("TITLE")
-            title_slide = prs.slides.add_slide(layout)
-
             title = self.prompt_assistant(self.prompts["title"])
             sub_title = self.prompt_assistant(f"{self.prompts['sub-title']}{title}")
 
-            title_slide.shapes.title.text = title
-            title_slide.shapes[1].text = sub_title
-            return prs
-
-        # if random.random() < image_slide_likelihood.get(self.image_frequency, 0.3):
-        #     layout = template.slide_layouts.get_by_name("IMAGE")
-        #     image_slide = prs.slides.add_slide(layout)
-
-        #     slide_content = self.prompt_assistant(f"{self.prompts['slide'].format(slide_num=slide_num, num_slides=self.num_slides)}")
-        #     slide_title = slide_content.split("\n")[0]
-        #     image_slide.shapes.title.text = slide_title
-        #     image_slide.shapes[1].text = slide_content
-
-        #     image = self.image_search(self.prompt_assistant(f"{self.prompts['image-search'].format(text=slide_content)}"))
-
-        #     file_system = FileSystemStorage()
-
-        #     image_slide.placeholders[1].insert_picture(file_system.path(image.file.name))
-
-        #     return prs
-        selected_content_slide = 1 if random.random() < 0.5 else 2
-        layout = template.slide_layouts.get_by_name(f"CONTENT{selected_content_slide}")
-        content_slide = prs.slides.add_slide(layout)
+            return SlideContent(slide_num, "TITLE", title, sub_title, File(), "None")
 
         slide_content = self.prompt_assistant(
             f"{self.prompts['slide'].format(slide_num=slide_num, num_slides=self.num_slides)}"
         )
-        slide_title = slide_content.split("\n")[0]
-        slide_content = slide_content.replace(slide_title, "")
-        content_slide.shapes.title.text = slide_title
-        content_slide.shapes[1].text = slide_content
 
-        return prs
+        slide_title = slide_content.split("\n")[0]
+        slide_points = slide_content.replace(slide_title, "")
+
+        return SlideContent(
+            slide_num, "CONTENT", slide_title, "None", File(), slide_points
+        )
+
+    def add_slide_to_presentation(
+        self, content: SlideContent, prs: Presentation, template: Presentation
+    ) -> Presentation:
+        if content.slide_type == "TITLE":
+            layout = template.slide_layouts.get_by_name("TITLE")
+            title_slide = prs.slides.add_slide(layout)
+            title_slide.shapes.title.text = content.title
+            title_slide.shapes[1].text = content.sub_title
+            return prs
+
+        if content.slide_type == "CONTENT":
+            selected_content_slide = 1 if random.random() < 0.5 else 2
+            layout = template.slide_layouts.get_by_name(
+                f"CONTENT{selected_content_slide}"
+            )
+            content_slide = prs.slides.add_slide(layout)
+            content_slide.shapes.title.text = content.title
+            content_slide.shapes[1].text = content.points
+            return prs
 
     def build_presentation(self) -> str:
         file_system = FileSystemStorage()
@@ -226,15 +171,21 @@ class PresentationGenerator:
 
         prs = Presentation()
 
-        for slide_num in range(1, self.num_slides + 1):
-            prs = self.build_slide(prs, template, slide_num)
+        slide_contents = []
 
-        # with ThreadPoolExecutor() as executor:
-        #     futures = [executor.submit(lambda slide: self.build_slide(prs, template, slide), slide_num)
-        #             for slide_num in range(1, self.num_slides + 1)]
+        # Fetch slide content in parallel for speed
+        with ThreadPoolExecutor() as executor:
+            future_slides = executor.map(
+                self.build_slide, range(1, self.num_slides + 1)
+            )
+            slide_contents = list(future_slides)
 
-        #     for future in futures:
-        #         prs = future.result()
+        # Sort and add slides to presentation
+        sorted_slide_contents = sorted(
+            slide_contents, key=lambda slide: slide.slide_num
+        )
+        for content in sorted_slide_contents:
+            prs = self.add_slide_to_presentation(content, prs, template)
 
         buffer = BytesIO()
         prs.save(buffer)
@@ -246,3 +197,61 @@ class PresentationGenerator:
         file_system.save(rel_path, file_content)
 
         return rel_path
+
+    # delete all files and assistants when PresentationGenerator object is deleted
+    def __del__(self) -> None:
+        files = self.list_files()
+        for file in files:
+            self.delete_file(file.id)
+
+        assistants = self.list_assistants()
+        for ass in assistants:
+            self.delete_assistant(ass.id)
+
+    # REQUESTS WITH EXPONENTIAL BACKOFF
+    # All requests need to be done like this to deal with rate-limiting
+    @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(100))
+    def add_message_to_thread(self, thread_id: str, content: str) -> None:
+        self.client.beta.threads.messages.create(
+            thread_id=thread_id, role="user", content=content
+        )
+
+    @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(100))
+    def create_thread(self):  # type: ignore
+        return self.client.beta.threads.create()
+
+    @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(100))
+    def create_run(self, thread_id: str):  # type: ignore
+        return self.client.beta.threads.runs.create(
+            thread_id=thread_id, assistant_id=self.assistant.id
+        )
+
+    @retry(wait=wait_random_exponential(min=1, max=300), stop=stop_after_attempt(100))
+    def retrieve_run(self, thread_id: str, run_id: str):  # type: ignore
+        return self.client.beta.threads.runs.retrieve(
+            thread_id=thread_id, run_id=run_id
+        )
+
+    @retry(wait=wait_random_exponential(min=1, max=300), stop=stop_after_attempt(100))
+    def list_messages(self, thread_id: str):  # type: ignore
+        return self.client.beta.threads.messages.list(thread_id=thread_id)
+
+    @retry(wait=wait_random_exponential(min=1, max=300), stop=stop_after_attempt(100))
+    def delete_thread(self, thread_id: str) -> None:
+        self.client.beta.threads.delete(thread_id=thread_id)
+
+    @retry(wait=wait_random_exponential(min=1, max=300), stop=stop_after_attempt(100))
+    def list_files(self):  # type: ignore
+        return self.client.files.list()
+
+    @retry(wait=wait_random_exponential(min=1, max=300), stop=stop_after_attempt(100))
+    def delete_file(self, file_id: str) -> None:
+        self.client.files.delete(file_id)
+
+    @retry(wait=wait_random_exponential(min=1, max=300), stop=stop_after_attempt(100))
+    def list_assistants(self):  # type: ignore
+        return self.client.beta.assistants.list(limit=100).data
+
+    @retry(wait=wait_random_exponential(min=1, max=300), stop=stop_after_attempt(100))
+    def delete_assistant(self, assistant_id: str) -> None:
+        self.client.beta.assistants.delete(assistant_id)
