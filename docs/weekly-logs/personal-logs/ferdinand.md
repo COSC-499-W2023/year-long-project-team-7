@@ -153,3 +153,15 @@ _Team Evaluation Screenshot Week 12_
 <br>
 _Tasks Screenshot_
 
+
+## Nov 26 2023 -> Dec 3 2023
+
+![evaluation-screenshot](../../img/ferdinand-eval-13.png)
+_Team Evaluation Screenshot Week 13_
+
+<br>
+
+![tasks-screenshot](../../img/ferdinand-tasks-13.png)
+<br>
+_Tasks Screenshot_
+
