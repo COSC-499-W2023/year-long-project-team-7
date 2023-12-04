@@ -200,13 +200,10 @@ class PresentationGenerator:
 
     # delete all files and assistants when PresentationGenerator object is deleted
     def __del__(self) -> None:
-        files = self.list_files()
-        for file in files:
+        for file in self.openai_files:
             self.delete_file(file.id)
 
-        assistants = self.list_assistants()
-        for ass in assistants:
-            self.delete_assistant(ass.id)
+        self.delete_assistant(self.assistant.id)
 
     # REQUESTS WITH EXPONENTIAL BACKOFF
     # All requests need to be done like this to deal with rate-limiting
