@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container" style="padding-top: 90px">
+        <div class="justify-content-center">
+            <h1 class="text-center title h1 mt-3">Choose your subscription:</h1>
+        </div>
+        <div class="row justify-content-around">
+            {% for p in products %}
+                <div class="col-4">
+                    <div class="card bg-secondary align-items-center mt-5">
+                        <div class="card-title text-white fw-bold mt-3 h3">{{ p.name }}</div>
+                        <div class="card-subtitle text-white fw-bold mt-4">{{ p.description }}</div>
+                        <div class="text-white h3 mt-5">
+                            {{ p.get_display_price }}
+                        </div>
+                        <div class="card-subtitle mb-5 text-white">
+                            {{ p.phrase }}
+                        </div>
+                        <div class="card-subtitle mb-5 fw-bold text-white">
+                            {{ p.get_display_number }} Total Credit Limit
+                        </div>
+                        <form action="/payments" method="POST">  
+                            {% csrf_token %}  
+                            <button type="submit" class="btn btn-primary mb-3">Subcribe</button>
+                        </form> 
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>    
+{% endblock %}
