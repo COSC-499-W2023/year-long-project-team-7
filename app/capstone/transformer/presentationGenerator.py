@@ -210,17 +210,17 @@ class PresentationGenerator:
 
     # REQUESTS WITH EXPONENTIAL BACKOFF
     # All requests need to be done like this to deal with rate-limiting
-    @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(100))
+    @retry(wait=wait_random_exponential(min=1, max=300), stop=stop_after_attempt(100))
     def add_message_to_thread(self, thread_id: str, content: str) -> None:
         self.client.beta.threads.messages.create(
             thread_id=thread_id, role="user", content=content
         )
 
-    @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(100))
+    @retry(wait=wait_random_exponential(min=1, max=300), stop=stop_after_attempt(100))
     def create_thread(self):  # type: ignore
         return self.client.beta.threads.create()
 
-    @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(100))
+    @retry(wait=wait_random_exponential(min=1, max=300), stop=stop_after_attempt(100))
     def create_run(self, thread_id: str):  # type: ignore
         return self.client.beta.threads.runs.create(
             thread_id=thread_id, assistant_id=self.assistant.id
