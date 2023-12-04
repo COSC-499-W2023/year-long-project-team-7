@@ -199,6 +199,7 @@ _Team Evaluation Screenshot_
 ![tasks-screenshot](../../img/liam-w13-tasks.png)
 <br>
 TODO: Still have to create tests for email verification before merging with master
+<br>
 Note: This week was spent working on the design document / video with my team. I did not focus on features this week.
 <br>
 [Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras)
