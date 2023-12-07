@@ -162,6 +162,7 @@ class UserSignInTestCase(TestCase):
         self.assertContains(response, "Incorrect Credentials.")
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
+
 class StoreTestCase(TestCase):
     def setUp(self):
         self.client = Client()
@@ -170,5 +171,4 @@ class StoreTestCase(TestCase):
     def test_store_view_get_request(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "store.html")    
-    
+        self.assertTemplateUsed(response, "store.html")

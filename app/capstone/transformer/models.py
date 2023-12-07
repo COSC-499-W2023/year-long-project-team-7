@@ -24,6 +24,7 @@ class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.IntegerField()
 
+
 class Products(models.Model):
     name = models.TextField()
     get_display_number = models.IntegerField()

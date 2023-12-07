@@ -116,9 +116,11 @@ def signout(request: HttpRequest) -> HttpResponse:
     messages.success(request, "Logged Out Successfully.")
     return redirect("index")
 
+
 def store(request: HttpRequest) -> HttpResponse:
     products = Products.objects.all()
     return render(request, "store.html", {"products": products})
+
 
 def payments(request: HttpRequest) -> HttpResponse:
     return render(request, "payments.html")

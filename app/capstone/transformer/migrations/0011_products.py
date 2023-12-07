@@ -4,22 +4,29 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('transformer', '0010_alter_file_file'),
+        ("transformer", "0010_alter_file_file"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Products',
+            name="Products",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField()),
-                ('get_display_number', models.IntegerField()),
-                ('get_display_price', models.FloatField()),
-                ('title', models.TextField()),
-                ('description', models.TextField()),
-                ('phrase', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField()),
+                ("get_display_number", models.IntegerField()),
+                ("get_display_price", models.FloatField()),
+                ("title", models.TextField()),
+                ("description", models.TextField()),
+                ("phrase", models.TextField()),
             ],
         ),
     ]
