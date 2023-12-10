@@ -40,7 +40,7 @@ class PresentationGenerator:
         self.assistant = self.client.beta.assistants.create(
             instructions=f"{self.prompts['reader']} Only respond in {self.language}",
             tools=[{"type": "retrieval"}],
-            model=GPT_4_1106_PREVIEW,
+            model=GPT_3_5_TURBO_1106,
             file_ids=[file.id for file in openai_files],
         )
 
