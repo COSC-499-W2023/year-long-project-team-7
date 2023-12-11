@@ -5,7 +5,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from .forms import TransformerForm
 from .forms import SignUpForm
 from .forms import SignInForm
-from .models import Conversion, File
+from .models import Conversion, File, Products
 from typing import List, Dict
 import json
 from .generator import generate_output
@@ -123,3 +123,12 @@ def signout(request: HttpRequest) -> HttpResponse:
     logout(request)
     messages.success(request, "Logged Out Successfully.")
     return redirect("index")
+
+
+def store(request: HttpRequest) -> HttpResponse:
+    products = Products.objects.all()
+    return render(request, "store.html", {"products": products})
+
+
+def payments(request: HttpRequest) -> HttpResponse:
+    return render(request, "payments.html")
