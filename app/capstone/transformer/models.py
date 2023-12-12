@@ -23,3 +23,11 @@ class Transaction(models.Model):
     date = models.DateField(default=timezone.now)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.IntegerField()
+
+
+class Products(models.Model):
+    name = models.TextField()
+    get_display_number = models.IntegerField()
+    get_display_price = models.FloatField()
+    description = models.TextField()
+    phrase = models.TextField()
