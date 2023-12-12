@@ -28,7 +28,7 @@ class TransformViewTestCase(TestCase):
                 "tone": "Fun",
                 "complexity": 1,
                 "num_slides": 1,
-                "num_images": 0,
+                "image_frequency": 0,
                 "template": 1,
                 "files": file,
             }
@@ -45,7 +45,7 @@ class TransformViewTestCase(TestCase):
                 "tone": "Fun",
                 "complexity": 1,
                 "num_slides": 1,
-                "num_images": 0,
+                "image_frequency": 0,
                 "template": 1,
             }
             saved_files = list(File.objects.filter(conversion=conversion))
@@ -58,13 +58,14 @@ class TransformViewTestCase(TestCase):
 
     def test_transform_view_post_request_invalid_form(self):
         data = {
-            "text_input": "",
+            "prompt": "",
             "language": "invalid_language",
             "tone": "invalid_tone",
             "complexity": 200,
             "length": -10,
             "num_slides": 1,
-            "num_images": 0,
+            "image_frequency": 0,
+            "template": 1,
         }
 
         response = self.client.post(self.url, data)

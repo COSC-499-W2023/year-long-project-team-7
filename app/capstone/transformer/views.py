@@ -28,13 +28,19 @@ def transform(request: HttpRequest) -> HttpResponse:
                 "tone": form.cleaned_data["tone"],
                 "complexity": form.cleaned_data["complexity"],
                 "num_slides": form.cleaned_data["num_slides"],
-                "num_images": form.cleaned_data["num_images"],
+                "image_frequency": form.cleaned_data["image_frequency"],
                 "template": int(form.cleaned_data["template"]),
             }
             conversion.user_parameters = json.dumps(user_params)
             conversion.save()
 
             files = []
+
+            has_prompt = len(user_params["prompt"]) > 0
+            has_file = len(request.FILES.getlist("files"))
+
+            if not has_prompt and not has_file:
+                return render(request, "transform.html", {"form": TransformerForm()})
 
             for uploaded_file in request.FILES.getlist("files"):
                 new_file = File()
@@ -49,8 +55,10 @@ def transform(request: HttpRequest) -> HttpResponse:
             generate_output(files, conversion)
 
             return redirect("results", conversion_id=conversion.id)
-
-    return render(request, "transform.html", {"form": TransformerForm()})
+        else:
+            return render(request, "transform.html", {"form": TransformerForm()})
+    else:
+        return render(request, "transform.html", {"form": TransformerForm()})
 
 
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
