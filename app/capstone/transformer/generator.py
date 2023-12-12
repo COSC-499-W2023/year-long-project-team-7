@@ -50,7 +50,6 @@ def pptx_to_pdf(pptx_filename: str) -> str:
     return f"{base_name}.pdf"
 
 
-
 def docx_to_pdf(docx_filename: str, pdf_filename: str) -> None:
     # convert(docx_filename, pdf_filename)
     # convert(docx_filename, pdf_filename)
@@ -63,12 +62,11 @@ def docx_to_pdf(docx_filename: str, pdf_filename: str) -> None:
             c.drawString(15, i, text)
             i = i - 12
             if i < 100:
-            if i < 100:
-                i = 750
-                c.showPage()
+                if i < 100:
+                    i = 750
+                    c.showPage()
     c.showPage()
     c.save()
-
 
 
 def txt_to_pdf(txt_filename: str, pdf_filename: str) -> None:
@@ -80,11 +78,10 @@ def txt_to_pdf(txt_filename: str, pdf_filename: str) -> None:
         c.drawString(15, i, lines[j])
         i = i - 12
         if j % 20 == 0 & j != 0:
-        if j % 20 == 0 & j != 0:
-            c.showPage()
+            if j % 20 == 0 & j != 0:
+                c.showPage()
     c.showPage()
     c.save()
-
 
 
 def rtf_to_pdf(rtf_filename: str, pdf_filename: str) -> None:
@@ -98,11 +95,10 @@ def rtf_to_pdf(rtf_filename: str, pdf_filename: str) -> None:
         c.drawString(15, i, lines[j])
         i = i - 12
         if j % 20 == 0 & j != 0:
-        if j % 20 == 0 & j != 0:
-            c.showPage()
+            if j % 20 == 0 & j != 0:
+                c.showPage()
     c.showPage()
     c.save()
-
 
 
 def generate_output(files: list[File], conversion: Conversion) -> None:
