@@ -1,21 +1,25 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from .forms import TransformerForm
-from .forms import SignUpForm
-from .forms import SignInForm
+from .forms import RegisterForm
+from .forms import LoginForm
 from .models import Conversion, File, Products
 from typing import List, Dict
 import json
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 
 
 def index(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html")
 
 
+@login_required(login_url="login")
 def transform(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = TransformerForm(request.POST)
@@ -88,39 +92,39 @@ def about(request: HttpRequest) -> HttpResponse:
     return render(request, "about.html")
 
 
-def signup(request: HttpRequest) -> HttpResponse:
+def register(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        form = SignUpForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
             messages.success(request, "Account successfully created.")
-            return redirect("signin")
+            return redirect("login")
         else:
             messages.error(request, "Error in the form submission.")
     else:
-        form = SignUpForm()
-    return render(request, "signup.html", {"form": form})
+        form = RegisterForm()
+    return render(request, "register.html", {"form": form})
 
 
-def signin(request: HttpRequest) -> HttpResponse:
+def login(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        form = SignInForm(request.POST)
+        form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data["username"]
+            username = form.cleaned_data["email"]
             password = form.cleaned_data["password"]
             user = authenticate(request, username=username, password=password)
             if user:
-                login(request, user)
-                return redirect("index")
+                auth_login(request, user)
+                return redirect("transform")
             else:
                 messages.error(request, "Incorrect Credentials.")
     else:
-        form = SignInForm()
-    return render(request, "signin.html", {"form": form})
+        form = LoginForm()
+    return render(request, "login.html", {"form": form})
 
 
-def signout(request: HttpRequest) -> HttpResponse:
-    logout(request)
+def logout(request: HttpRequest) -> HttpResponse:
+    auth_logout(request)
     messages.success(request, "Logged Out Successfully.")
     return redirect("index")
 

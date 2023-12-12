@@ -2,8 +2,7 @@
 {% load static %}
 {% block content %}
     <div class="vh-100 d-flex justify-content-center align-items-center">
-        <div class="card d-flex w-25 bg-secondary mt-5 justify-content-center align-items-center">
-            <!-- ISSUE: Messages do not close. Gotta figure out why in the future -->
+        <div class="login-register-form card d-flex w-25 bg-black text-light mt-5 justify-content-center align-items-center">
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
                      role="alert">
@@ -18,15 +17,25 @@
                  alt
                  width="90"
                  height="90">
-            <h1 class="h3 mb-3 mt-3 font-weight-normal">Sign In</h1>
-            <form class="text-center" action="/signin" method="post">
+            <h1 class="h3 mb-3 mt-3 font-weight-normal">Login</h1>
+            <form action="/login" method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn btn-primary mt-3" style="width:100%" type="submit">Sign In</button>
+                <div class="form-group">
+                    <strong>{{ form.email.label }}</strong>
+                    {{ form.email }}
+                    {% if form.email.errors %}<div style="color:darkred" class="error">{{ form.email.errors }}</div>{% endif %}
+                </div>
+                <br>
+                <div class="form-group">
+                    <strong>{{ form.password.label }}</strong>
+                    {{ form.password }}
+                    {% if form.password.errors %}<div style="color:darkred" class="error">{{ form.password.errors }}</div>{% endif %}
+                </div>
+                <button class="btn btn-primary mt-3" style="width:100%" type="submit">Login</button>
             </form>
             <div class="line mb-3"></div>
             <!-- ISSUE: Create a new account button width inconsistent. Will fix later-->
-            <a class="custom-signin" href="/signup">
+            <a class="custom-signin" href="/register">
                 <button class="btn btn-primary mb-3" type="submit">Create a new account</button>
             </a>
         </div>
