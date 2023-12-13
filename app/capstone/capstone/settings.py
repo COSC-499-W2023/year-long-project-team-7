@@ -84,7 +84,7 @@ WSGI_APPLICATION = "capstone.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "dev",
+        "NAME": "platonix",
         "USER": "postgres",
         "PASSWORD": "password",
         "HOST": "localhost",
