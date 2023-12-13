@@ -6,3 +6,4 @@ files/
 .vscode/
 .mypy_cache/
 ssl-cert/
+logs/
