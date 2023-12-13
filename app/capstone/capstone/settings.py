@@ -32,7 +32,7 @@ SECRET_KEY = "django-insecure-dyb_8=*dg&-81#5leycizjybho@5un+4#4k2_ui+&tr)2-r(s$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["platonix.app", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["platonix.app", "www.platonix.app", "localhost", "127.0.0.1"]
 
 
 # Application definition
