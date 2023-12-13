@@ -65,6 +65,7 @@ def transform(request: HttpRequest) -> HttpResponse:
         return render(request, "transform.html", {"form": TransformerForm()})
 
 
+@login_required(login_url="login")
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     conversion = get_object_or_404(Conversion, id=conversion_id)
 
@@ -123,6 +124,7 @@ def login(request: HttpRequest) -> HttpResponse:
     return render(request, "login.html", {"form": form})
 
 
+@login_required(login_url="login")
 def logout(request: HttpRequest) -> HttpResponse:
     auth_logout(request)
     messages.success(request, "Logged Out Successfully.")

@@ -5,3 +5,4 @@ __pycache__/
 files/
 .vscode/
 .mypy_cache/
+ssl-cert/

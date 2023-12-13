@@ -137,7 +137,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "files")
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-BRAVE_SEARCH_API_KEY = os.getenv("BRAVE_SEARCH_API_KEY")
