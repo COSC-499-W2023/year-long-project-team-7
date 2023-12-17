@@ -113,7 +113,7 @@ class RegisterForm(forms.Form):
         return email
 
     def save(self, commit=True):  # type: ignore
-        user = super(RegisterForm, self).save(commit=False)
+        user = User()
         user.username = self.cleaned_data["email"]
         user.set_password(self.cleaned_data["password"])
         if commit:

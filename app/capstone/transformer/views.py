@@ -97,7 +97,7 @@ def register(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            form.save()
             messages.success(request, "Account successfully created.")
             return redirect("login")
         else:
