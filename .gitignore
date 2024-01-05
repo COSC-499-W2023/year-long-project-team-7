@@ -7,3 +7,4 @@ files/
 .mypy_cache/
 ssl-cert/
 logs/
+settings_env.py

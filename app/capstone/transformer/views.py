@@ -36,6 +36,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                 "template": int(form.cleaned_data["template"]),
             }
             conversion.user_parameters = json.dumps(user_params)
+            conversion.user = request.user  # type: ignore
             conversion.save()
 
             files = []
@@ -75,10 +76,9 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
                 "You do not have permission to access this resource."
             )
     else:
-        if conversion.user is not None:
-            return HttpResponseForbidden(
-                "You do not have permission to access this resource."
-            )
+        return HttpResponseForbidden(
+            "You do not have permission to access this resource."
+        )
 
     output_files = File.objects.filter(conversion=conversion, is_output=True)
 

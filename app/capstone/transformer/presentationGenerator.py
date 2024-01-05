@@ -57,8 +57,7 @@ class PresentationGenerator:
         )
         self.template = json.loads(conversion.user_parameters).get("template", 1)
 
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-        self.client = OpenAI()
+        self.client = OpenAI(api_key=settings.OPENAI_API_KEY)  # type: ignore
 
         self.openai_files = []
         for path in input_file_paths:
