@@ -9,10 +9,9 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph  # type: ignore
 from reportlab.pdfgen import canvas  # type: ignore
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
-from docx import Document  # type: ignore
 from striprtf.striprtf import rtf_to_text  # type: ignore
 from docx import Document  # type: ignore
-from striprtf.striprtf import rtf_to_text  # type: ignore
+from striprtf.striprtf import rtf_to_text
 import os
 import subprocess
 
