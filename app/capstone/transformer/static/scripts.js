@@ -53,4 +53,23 @@ $(document).ready(function () {
     $("#generator-form").on("submit", function (event) {
         $(".loading-overlay").show();
     });
+
+    // $("#next-button").click(function () {
+    //     window.alert("Hello World");
+    // });
+
+    // Reference the showPage function from the template
+    const pdfPreviewScript = document.getElementById("pdf-preview-script");
+    if (pdfPreviewScript) {
+        eval(pdfPreviewScript.text);
+    }
+
+    // Add event listeners for next and prev buttons
+    $("#next-button").on("click", function () {
+        showPage(currentPage + 1);
+    });
+
+    $("#prev-button").on("click", function () {
+        showPage(currentPage - 1);
+    });
 });
