@@ -32,44 +32,54 @@
                                     </div>
                                 </div>
                                 <!-- PDF Rendering -->
-                                <script type="module">
-                                    // Set pdfjs library path dynamically
-                                    const pdfjsLibPath = "{% static 'pdfjs/build/pdf.mjs' %}";
-                        
-                                    // Import library
-                                    import(pdfjsLibPath).then(pdfjsLib => {
-                                        pdfjsLib.GlobalWorkerOptions.workerSrc = '{% static "pdfjs/build/pdf.worker.mjs" %}';
-                        
-                                        const pdfContainer = document.getElementById("pdf-container");
-                                        const pdfUrl = "{{ file.file.url }}";
-                        
-                                        pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
-                                            return pdfDoc.getPage(1);
-                                        }).then(page => {
-                                            const scale = 1;
-                                            const viewport = page.getViewport({ scale });
-                        
-                                            const canvas = document.getElementById("pdf-canvas");
-                                            const context = canvas.getContext("2d");
-                                            canvas.height = viewport.height;
-                                            canvas.width = viewport.width;
-                                            pdfContainer.appendChild(canvas);
-                        
-                                            const renderContext = {
-                                                canvasContext: context,
-                                                viewport: viewport
-                                            };
-                                            const renderTask = page.render(renderContext);
-                                            return renderTask.promise;
-                                        }).catch(error => {
-                                            console.error("Error loading PDF:", error);
-                                        });
-                                    });
+                                <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.7.570/build/pdf.min.js"></script>
+                                <script>
+                                    // Set workerSrc
+                                    pdfjsLib.GlobalWorkerOptions.workerSrc =  "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.7.570/build/pdf.worker.min.js";
+                                    
+                                    const pdfContainer = document.getElementById("pdf-container");
+                                    const pdfUrl = "{{ file.file.url }}";
+                    
+                                    let currentPage = 1;
+
+                                    const showPage = function (pageNum) {
+                                        pdfjsLib
+                                            .getDocument(pdfUrl)
+                                            .promise.then((pdfDoc) => {
+                                                return pdfDoc.getPage(pageNum);
+                                            })
+                                            .then((page) => {
+                                                const scale = 1;
+                                                const viewport = page.getViewport({ scale });
+                                    
+                                                const canvas = document.getElementById("pdf-canvas");
+                                                const context = canvas.getContext("2d");
+                                                canvas.height = viewport.height;
+                                                canvas.width = viewport.width;
+                                                pdfContainer.appendChild(canvas);
+                                    
+                                                const renderContext = {
+                                                    canvasContext: context,
+                                                    viewport: viewport,
+                                                };
+                                                const renderTask = page.render(renderContext);
+                                                return renderTask.promise;
+                                            })
+                                            .catch((error) => {
+                                                console.error("Error loading PDF:", error);
+                                            });
+                                    
+                                        currentPage = pageNum;
+                                    };
+
+                                    showPage(currentPage);
                                 </script>
                             {% endif %}
                         {% endfor %}
                     {% endif %}
                 </div>
+                <a id="prev-button" class="w-25 btn mt-3 btn-primary">Prev</a>
+                <a id="next-button" class="w-25 btn mt-3 btn-primary">Next</a>
                 <div class="d-flex justify-content-center align-items-center">
                     <a class="w-25 btn mt-3 btn-primary" href="{% url "transform" %}">Back to Transform</a>
                 </div>
