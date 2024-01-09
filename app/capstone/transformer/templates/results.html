@@ -12,8 +12,7 @@
                         {% for file in output_files %}
                             <p class="file-item">
                                 <span class="file-name">{{ file.file.name }}</span>
-                                <button id="file-download-button"
-                                        class="btn btn-primary"
+                                <button class="file-download-button btn btn-primary"
                                         data-fileurl="{{ file.file.url }}">Download</button>
                             </p>
                         {% endfor %}
