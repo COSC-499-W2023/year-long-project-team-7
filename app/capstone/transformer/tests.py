@@ -13,12 +13,16 @@ class TransformViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.url = reverse("transform")
+        self.user = User.objects.create_user(
+            email="testuser@email.com", password="testpassword123", username="test"
+        )
 
     def test_transform_view_get_request(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)  # redirect to login
 
     def test_transform_view_post_request_valid_form(self):
+        self.client.login(username="test", password="testpassword123")
         with patch("transformer.views.generate_output") as mock_generate_output:
             file = SimpleUploadedFile("file.txt", b"file_content")
             data = {
@@ -56,6 +60,7 @@ class TransformViewTestCase(TestCase):
             mock_generate_output.assert_called_once_with(saved_files, conversion)
 
     def test_transform_view_post_request_invalid_form(self):
+        self.client.login(username="test", password="testpassword123")
         data = {
             "prompt": "",
             "language": "invalid_language",
@@ -123,7 +128,9 @@ class UserSignInTestCase(TestCase):
         self.client = Client()
         self.signin_url = reverse("login")
         self.user = User.objects.create_user(
-            email="testuser@email.com", password="testpassword123", username="test"
+            email="testuser@email.com",
+            password="testpassword123",
+            username="testuser@email.com",
         )
 
     def test_user_signin_valid_credentials(self):
@@ -139,7 +146,7 @@ class UserSignInTestCase(TestCase):
         self.assertEqual(
             response.status_code, 302
         )  # HTTP status code for a successful redirect
-        self.assertRedirects(response, reverse("index"))
+        self.assertRedirects(response, reverse("transform"))
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
     def test_user_signin_invalid_credentials(self):
