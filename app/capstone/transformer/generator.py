@@ -15,25 +15,6 @@ from striprtf.striprtf import rtf_to_text
 import os
 import subprocess
 
-#! This implementation does not work
-# def pptx_to_pdf(pptx_filename: str, pdf_filename: str) -> None:
-#     prs = Presentation(pptx_filename)
-#     c = canvas.Canvas(pdf_filename, pagesize=letter)
-#     for slide in prs.slides:
-#         i = 750
-#         for shape in slide.shapes:
-#             if shape.has_text_frame:
-#                 for paragraph in shape.text_frame.paragraphs:
-#                     for run in paragraph.runs:
-#                         text = run.text
-#                         c.drawString(15, i, text)
-#                         i = i - 12
-#                         if(i < 100):
-#                             i = 750
-#                             c.showPage()
-#         c.showPage()
-#     c.save()
-
 
 def pptx_to_pdf(pptx_filename: str) -> str:
     file_system = FileSystemStorage()
