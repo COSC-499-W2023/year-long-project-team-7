@@ -54,7 +54,7 @@ $(document).ready(function () {
         $(".loading-overlay").show();
     });
 
-    // Reference the showPage function from transform.html
+    // Reference the showPage function from results.html
     const pdfPreviewScript = document.getElementById("pdf-preview-script");
     if (pdfPreviewScript) {
         eval(pdfPreviewScript.text);
@@ -62,7 +62,7 @@ $(document).ready(function () {
 
     // Event listener
     $("#next-button").on("click", function () {
-        // This function is defined in transform.html
+        // This function is defined in results.html
         showPage(currentPage + 1);
     });
 
