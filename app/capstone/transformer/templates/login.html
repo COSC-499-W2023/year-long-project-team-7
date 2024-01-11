@@ -10,7 +10,10 @@
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
                      role="alert">
                     <strong>Message:</strong> {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <button type="button"
+                            class="close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -19,22 +22,22 @@
                  src="../static/img/favicon-purple.png"
                  alt
                  width="90"
-                 height="90">
+                 height="90" />
             <h1 class="h3 mb-3 mt-3 font-weight-normal">Login</h1>
             <form action="/login" method="post">
                 {% csrf_token %}
                 <div class="form-group">
                     <strong>{{ form.email.label }}</strong>
                     {{ form.email }}
-                    {% if form.email.errors %}<div style="color:darkred" class="error">{{ form.email.errors }}</div>{% endif %}
+                    {% if form.email.errors %}<div style="color: darkred" class="error">{{ form.email.errors }}</div>{% endif %}
                 </div>
-                <br>
+                <br />
                 <div class="form-group">
                     <strong>{{ form.password.label }}</strong>
                     {{ form.password }}
-                    {% if form.password.errors %}<div style="color:darkred" class="error">{{ form.password.errors }}</div>{% endif %}
+                    {% if form.password.errors %}<div style="color: darkred" class="error">{{ form.password.errors }}</div>{% endif %}
                 </div>
-                <button class="btn btn-primary mt-3" style="width:100%" type="submit">Login</button>
+                <button class="btn btn-primary mt-3" style="width: 100%" type="submit">Login</button>
             </form>
             <div class="line mb-3"></div>
             <a class="custom-signin" href="/register">
