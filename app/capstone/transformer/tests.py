@@ -179,7 +179,7 @@ class StoreTestCase(TestCase):
         self.assertTemplateUsed(response, "store.html")
 
 
-class ResultsTestCase(TestCase):
+class PDFTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.url = reverse("transform")
