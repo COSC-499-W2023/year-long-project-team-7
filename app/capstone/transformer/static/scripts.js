@@ -54,18 +54,15 @@ $(document).ready(function () {
         $(".loading-overlay").show();
     });
 
-    // $("#next-button").click(function () {
-    //     window.alert("Hello World");
-    // });
-
-    // Reference the showPage function from the template
+    // Reference the showPage function from transform.html
     const pdfPreviewScript = document.getElementById("pdf-preview-script");
     if (pdfPreviewScript) {
         eval(pdfPreviewScript.text);
     }
 
-    // Add event listeners for next and prev buttons
+    // Event listener
     $("#next-button").on("click", function () {
+        // This function is defined in transform.html
         showPage(currentPage + 1);
     });
 
