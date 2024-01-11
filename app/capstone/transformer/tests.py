@@ -13,13 +13,16 @@ class TransformViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.url = reverse("transform")
+        self.user = User.objects.create_user(
+            email="testuser@email.com", password="testpassword123", username="test"
+        )
 
     def test_transform_view_get_request(self):
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "transform.html")
+        self.assertEqual(response.status_code, 302)  # redirect to login
 
     def test_transform_view_post_request_valid_form(self):
+        self.client.login(username="test", password="testpassword123")
         with patch("transformer.views.generate_output") as mock_generate_output:
             file = SimpleUploadedFile("file.txt", b"file_content")
             data = {
@@ -57,6 +60,7 @@ class TransformViewTestCase(TestCase):
             mock_generate_output.assert_called_once_with(saved_files, conversion)
 
     def test_transform_view_post_request_invalid_form(self):
+        self.client.login(username="test", password="testpassword123")
         data = {
             "prompt": "",
             "language": "invalid_language",
@@ -78,41 +82,37 @@ class TransformViewTestCase(TestCase):
 class RegisterTestCase(TestCase):
     def setUp(self):
         self.client = Client()
-        self.url = reverse("signup")
+        self.url = reverse("register")
 
     def test_register_view_get_request(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "signup.html")
+        self.assertTemplateUsed(response, "register.html")
 
     def test_user_registration(self):
         # Make a POST request to the sign-up view with valid data
         response = self.client.post(
-            reverse("signup"),
+            reverse("register"),
             {
-                "username": "testuser",
                 "email": "testuser@example.com",
-                "password1": "testpassword123",
-                "password2": "testpassword123",
+                "password": "testpassword123",
             },
         )
         # Check if the user was created and logged in successfully
         self.assertEqual(
             response.status_code, 302
         )  # HTTP status code for a successful redirect
-        self.assertRedirects(response, reverse("signin"))
+        self.assertRedirects(response, reverse("login"))
         self.assertEqual(User.objects.count(), 1)
-        self.assertEqual(User.objects.first().username, "testuser")
+        self.assertEqual(User.objects.first().email, "testuser@example.com")
 
     def test_invalid_user_registration(self):
         # Make a POST request to the sign-up view with invalid data
         response = self.client.post(
-            reverse("signup"),
+            reverse("register"),
             {
-                "username": "",
                 "email": "invalidemail",
-                "password1": "testpassword123",
-                "password2": "differentpassword",
+                "password": "testpassword123",
             },
         )
         # Check if the form is not valid and no user was created
@@ -126,17 +126,19 @@ class RegisterTestCase(TestCase):
 class UserSignInTestCase(TestCase):
     def setUp(self):
         self.client = Client()
-        self.signin_url = reverse("signin")
+        self.signin_url = reverse("login")
         self.user = User.objects.create_user(
-            username="testuser", password="testpassword123"
+            email="testuser@email.com",
+            password="testpassword123",
+            username="testuser@email.com",
         )
 
     def test_user_signin_valid_credentials(self):
         # Make a POST request to the sign-in view with valid credentials
         response = self.client.post(
-            reverse("signin"),
+            reverse("login"),
             {
-                "username": "testuser",
+                "email": "testuser@email.com",
                 "password": "testpassword123",
             },
         )
@@ -144,15 +146,15 @@ class UserSignInTestCase(TestCase):
         self.assertEqual(
             response.status_code, 302
         )  # HTTP status code for a successful redirect
-        self.assertRedirects(response, reverse("index"))
+        self.assertRedirects(response, reverse("transform"))
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
     def test_user_signin_invalid_credentials(self):
         # Make a POST request to the sign-in view with invalid credentials
         response = self.client.post(
-            reverse("signin"),
+            reverse("login"),
             {
-                "username": "testuser",
+                "email": "testuser@email.com",
                 "password": "wrongpassword",
             },
         )
