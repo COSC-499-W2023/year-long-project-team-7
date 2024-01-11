@@ -1,3 +1,4 @@
+
 /* ----------UNIVERSAL----------- */
 @import url("https://fonts.googleapis.com/css?family=GFS+Didot");
 @import url("https://fonts.googleapis.com/css?family=Noto+Serif+Display");
@@ -33,38 +34,38 @@ a:hover {
 
 .increase-size-fade {
     font-size: 36px;
-    animation: increaseTextSizeFade 3s ease;
-    -webkit-animation: increaseTextSizeFade 3s ease;
-    -moz-animation: increaseTextSizeFade 3s ease;
-    -o-animation: increaseTextSizeFade 3s ease;
-    -ms-animation: increaseTextSizeFade 3s ease;
+    animation: increaseTextSizeFade 1s ease;
+    -webkit-animation: increaseTextSizeFade 1s ease;
+    -moz-animation: increaseTextSizeFade 1s ease;
+    -o-animation: increaseTextSizeFade 1s ease;
+    -ms-animation: increaseTextSizeFade 1s ease;
     animation-fill-mode: forwards;
 }
 .fade-in-first {
-    animation: fadeIn 2.5s;
-    -webkit-animation: fadeIn 2.5s;
-    -moz-animation: fadeIn 2.5s;
-    -o-animation: fadeIn 2.5s;
-    -ms-animation: fadeIn 2.5s;
+    animation: fadeIn 0.5s;
+    -webkit-animation: fadeIn 0.5s;
+    -moz-animation: fadeIn 0.5s;
+    -o-animation: fadeIn 0.5s;
+    -ms-animation: fadeIn 0.5s;
 }
 .fade-in-second {
     opacity: 0;
-    animation: fadeIn 2.5s;
-    -webkit-animation: fadeIn 2.5s;
-    -moz-animation: fadeIn 2.5s;
-    -o-animation: fadeIn 2.5s;
-    -ms-animation: fadeIn 2.5s;
-    animation-delay: 1s;
+    animation: fadeIn 0.5s;
+    -webkit-animation: fadeIn 0.5s;
+    -moz-animation: fadeIn 0.5s;
+    -o-animation: fadeIn 0.5s;
+    -ms-animation: fadeIn 0.5s;
+    animation-delay: 0.5s;
     animation-fill-mode: forwards;
 }
 .fade-in-third {
     opacity: 0;
-    animation: fadeIn 2.5s;
-    -webkit-animation: fadeIn 2.5s;
-    -moz-animation: fadeIn 2.5s;
-    -o-animation: fadeIn 2.5s;
-    -ms-animation: fadeIn 2.5s;
-    animation-delay: 2s;
+    animation: fadeIn 0.5s;
+    -webkit-animation: fadeIn 0.5s;
+    -moz-animation: fadeIn 0.5s;
+    -o-animation: fadeIn 0.5s;
+    -ms-animation: fadeIn 0.5s;
+    animation-delay: 0.5s;
     animation-fill-mode: forwards;
 }
 .vertical-center-top {
@@ -343,4 +344,7 @@ input[type="range"]::-moz-range-thumb {
     border-top-color: mediumslateblue;
     border-bottom-color: mediumslateblue;
     animation: spinner 1s ease infinite;
+}
+.login-register-form {
+    border-color: mediumslateblue;
 }

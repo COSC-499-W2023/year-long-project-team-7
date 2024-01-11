@@ -104,6 +104,7 @@ def generate_output(files: list[File], conversion: Conversion) -> None:
     pres_manager = PresentationGenerator([f.file.path for f in files], conversion)
 
     output_file_path = pres_manager.build_presentation()
+    # output_file_path = "nothing.pptx"
     file_name, file_extension = os.path.splitext(output_file_path)
 
     user = None
