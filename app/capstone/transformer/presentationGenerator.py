@@ -19,9 +19,6 @@ from django.utils import timezone
 from concurrent.futures import ThreadPoolExecutor
 from tenacity import retry, stop_after_attempt, wait_random_exponential
 
-GPT_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
-GPT_4_1106_PREVIEW = "gpt-4-1106-preview"
-
 
 class SlideContent:
     def __init__(
@@ -57,8 +54,7 @@ class PresentationGenerator:
         )
         self.template = json.loads(conversion.user_parameters).get("template", 1)
 
-        openai.api_key = settings.OPENAI_API_KEY
-        self.client = OpenAI()
+        self.client = OpenAI(api_key=settings.OPENAI_API_KEY)  # type: ignore
 
         self.openai_files = []
         for path in input_file_paths:
@@ -95,7 +91,7 @@ class PresentationGenerator:
         self.assistant = self.client.beta.assistants.create(
             instructions=instructions,
             tools=[{"type": "retrieval"}],
-            model=GPT_4_1106_PREVIEW,
+            model=settings.OPENAI_MODEL,  # type: ignore
             file_ids=[file.id for file in self.openai_files],
         )
 

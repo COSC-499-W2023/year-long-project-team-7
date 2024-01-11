@@ -2,6 +2,7 @@ from django import forms
 from django.forms import Textarea, NumberInput, RadioSelect, TextInput, Select
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 
 class TransformerForm(forms.Form):
@@ -91,14 +92,42 @@ class TransformerForm(forms.Form):
     )
 
 
-class SignUpForm(UserCreationForm):  # type: ignore
-    email = forms.EmailField(max_length=200, help_text="Required")
+class RegisterForm(forms.Form):
+    email = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={"class": "form-control form-control-lg"}),
+    )
+    password = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={"class": "form-control form-control-lg"}),
+    )
 
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2")
+        fields = ("email", "password")
+
+    def clean_email(self):  # type: ignore
+        email = self.cleaned_data.get("email")
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Email already exists")
+        return email
+
+    def save(self, commit=True):  # type: ignore
+        user = User()
+        user.username = self.cleaned_data["email"]
+        user.email = self.cleaned_data["email"]
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
 
 
-class SignInForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+class LoginForm(forms.Form):
+    email = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={"class": "form-control form-control-lg"}),
+    )
+    password = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={"class": "form-control form-control-lg"}),
+    )
