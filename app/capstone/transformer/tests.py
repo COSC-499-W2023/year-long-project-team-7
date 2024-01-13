@@ -2,6 +2,9 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
+from django.db import models
+from django.conf import settings
+from os import path
 from .models import Conversion, File
 from .forms import TransformerForm
 import json
@@ -167,22 +170,30 @@ class HistoryTestCase(TestCase):
         self.client = Client()
         testuser = User.objects.create_user('temporary', 'temporary@gmail.com', 'temporary')
         testconversion = Conversion.objects.create(date="9999-12-31", user=testuser)
+        input_file_name = path.join(settings.BASE_DIR, "files/test.pdf")
+        output_file_name = path.join(settings.BASE_DIR, "files/conversion_output_1.pptx")
+        input_pdf = open(input_file_name, "w+")
+        output_pptx = open(output_file_name, "w+")
         input_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=False, type=".pdf", file=None)
         output_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=True, type=".application/pptx", file=None)
-        output_file.file.name = "conversion_output_34.pptx"
+        input_file.file.save(input_file_name, input_pdf)
+        output_file.file.save(output_file_name, output_pptx)
+        input_pdf.close()
+        output_pptx.close()
         self.url = reverse("history")
         
     def test_history_view_get_request_invalid_user(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 403)
 
-    # def test_history_view_get_request_valid_user(self):
-    #     self.client.login(username='temporary', password='temporary')
-    #     response = self.client.get(self.url)
-    #     self.assertEqual(response.status_code, 200)
+    def test_history_view_get_request_valid_user(self):
+        self.client.login(username='temporary', password='temporary')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
         
-    # def test_history_results(self):
-    #     self.client.login(username='temporary', password='temporary')
-    #     response = self.client.get(self.url)
-    #     self.assertContains(response, "Dec. 31, 9999")
-    #     self.assertContains(response, ".pdf")
+    def test_history_results(self):
+        self.client.login(username='temporary', password='temporary')
+        response = self.client.get(self.url)
+        self.assertContains(response, "31/12/9999")
+        self.assertContains(response, ".pdf")
+        self.assertContains(response, ".pptx")
