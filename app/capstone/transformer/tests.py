@@ -8,6 +8,7 @@ from .forms import TransformerForm
 import json
 from urllib.parse import urlencode
 from unittest.mock import patch
+from .generator import pptx_to_pdf
 
 
 class TransformViewTestCase(TestCase):
@@ -176,3 +177,24 @@ class StoreTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "store.html")
+
+
+class PDFTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse("transform")
+        self.user = User.objects.create_user(
+            email="testuser@email.com", password="testpassword123", username="test"
+        )
+
+    def test_simple_pdf_conversion(self):
+        test_pptx_path = "../files/template_01.pptx"
+        pptx_to_pdf(test_pptx_path)
+
+        pdf_path = os.path.join("files", "template_01.pdf")
+
+        self.assertIsNotNone(pdf_path)
+        self.assertTrue(os.path.exists(pdf_path))
+
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
