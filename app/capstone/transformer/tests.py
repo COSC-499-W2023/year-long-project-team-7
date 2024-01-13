@@ -9,6 +9,7 @@ import json
 from urllib.parse import urlencode
 from unittest.mock import patch
 from .generator import pptx_to_pdf
+import warnings
 
 
 class TransformViewTestCase(TestCase):
@@ -188,6 +189,16 @@ class PDFTestCase(TestCase):
         )
 
     def test_simple_pdf_conversion(self):
+        """Check for 'soffice' installation and path in server"""
+        from shutil import which
+
+        isInstalled = which("soffice") is not None
+
+        if isInstalled is False:
+            self.fail(
+                "Libre office conversion tool not available. Check LibreOffice command line tool is available in path.\n"
+            )
+
         test_pptx_path = "../files/template_01.pptx"
         pptx_to_pdf(test_pptx_path)
 
