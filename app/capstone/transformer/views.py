@@ -127,6 +127,7 @@ def history(request: HttpRequest) -> HttpResponse:
             row.append(input_files.filter(conversion__id=f.conversion.id).values("file").get()["file"])
             row.append(f.file.name)
             row.append(f.file.name.split('_')[2].split('.')[0])
+            row.append(f.file.url)
             history.append(row)
     else:
         return HttpResponseForbidden(
