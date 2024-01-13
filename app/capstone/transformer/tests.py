@@ -12,6 +12,7 @@ from .forms import TransformerForm
 import json
 from urllib.parse import urlencode
 from unittest.mock import patch
+import tempfile
 
 
 class TransformViewTestCase(TestCase):
@@ -176,29 +177,13 @@ class HistoryTestCase(TestCase):
         self.client = Client()
         testuser = User.objects.create_user('temporary', 'temporary@gmail.com', 'temporary')
         testconversion = Conversion.objects.create(date="9999-12-31", user=testuser)
-        #file path does not exist on github so create for testing then delete after test
-        if path.exists(path=path.join(settings.BASE_DIR, "files")) != True:
-            mkdir(path=path.join(settings.BASE_DIR, "files"))
-            input_file_name = path.join(settings.BASE_DIR, "files/test.pdf")
-            output_file_name = path.join(settings.BASE_DIR, "files/conversion_output_1.pptx")
-            input_pdf = open(input_file_name, "w+")
-            output_pptx = open(output_file_name, "w+")
+        with tempfile.TemporaryDirectory(dir=settings.BASE_DIR) as temp_dir:
+            input_pdf = open(path.join(temp_dir, "test.pdf"), 'w+')
+            output_pptx = open(path.join(temp_dir, "conversion_output_1.pptx"), 'w+')
             input_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=False, type=".pdf", file=None)
             output_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=True, type=".application/pptx", file=None)
-            input_file.file.save(input_file_name, input_pdf)
-            output_file.file.save(output_file_name, output_pptx)
-            input_pdf.close()
-            output_pptx.close()
-            rmtree(path=path.join(settings.BASE_DIR, "files"))
-        else:
-            input_file_name = path.join(settings.BASE_DIR, "files/test.pdf")
-            output_file_name = path.join(settings.BASE_DIR, "files/conversion_output_1.pptx")
-            input_pdf = open(input_file_name, "w+")
-            output_pptx = open(output_file_name, "w+")
-            input_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=False, type=".pdf", file=None)
-            output_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=True, type=".application/pptx", file=None)
-            input_file.file.save(input_file_name, input_pdf)
-            output_file.file.save(output_file_name, output_pptx)
+            input_file.file.save("test.pdf", input_pdf)
+            output_file.file.save("conversion_output_1.pptx", output_pptx)
             input_pdf.close()
             output_pptx.close()
         self.url = reverse("history")
