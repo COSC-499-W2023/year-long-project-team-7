@@ -4,7 +4,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from django.db import models
 from django.conf import settings
-from os import path
+from os import path, mkdir
+from shutil import rmtree
 from .models import Conversion, File
 from .models import Conversion, File, Products
 from .forms import TransformerForm
@@ -175,16 +176,31 @@ class HistoryTestCase(TestCase):
         self.client = Client()
         testuser = User.objects.create_user('temporary', 'temporary@gmail.com', 'temporary')
         testconversion = Conversion.objects.create(date="9999-12-31", user=testuser)
-        input_file_name = path.join(settings.BASE_DIR, "files/test.pdf")
-        output_file_name = path.join(settings.BASE_DIR, "files/conversion_output_1.pptx")
-        input_pdf = open(input_file_name, "w+")
-        output_pptx = open(output_file_name, "w+")
-        input_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=False, type=".pdf", file=None)
-        output_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=True, type=".application/pptx", file=None)
-        input_file.file.save(input_file_name, input_pdf)
-        output_file.file.save(output_file_name, output_pptx)
-        input_pdf.close()
-        output_pptx.close()
+        #file path does not exist on github so create for testing then delete after test
+        if path.exists(path=path.join(settings.BASE_DIR, "files")) != True:
+            mkdir(path=path.join(settings.BASE_DIR, "files"))
+            input_file_name = path.join(settings.BASE_DIR, "files/test.pdf")
+            output_file_name = path.join(settings.BASE_DIR, "files/conversion_output_1.pptx")
+            input_pdf = open(input_file_name, "w+")
+            output_pptx = open(output_file_name, "w+")
+            input_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=False, type=".pdf", file=None)
+            output_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=True, type=".application/pptx", file=None)
+            input_file.file.save(input_file_name, input_pdf)
+            output_file.file.save(output_file_name, output_pptx)
+            input_pdf.close()
+            output_pptx.close()
+            rmtree(path=path.join(settings.BASE_DIR, "files"))
+        else:
+            input_file_name = path.join(settings.BASE_DIR, "files/test.pdf")
+            output_file_name = path.join(settings.BASE_DIR, "files/conversion_output_1.pptx")
+            input_pdf = open(input_file_name, "w+")
+            output_pptx = open(output_file_name, "w+")
+            input_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=False, type=".pdf", file=None)
+            output_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=True, type=".application/pptx", file=None)
+            input_file.file.save(input_file_name, input_pdf)
+            output_file.file.save(output_file_name, output_pptx)
+            input_pdf.close()
+            output_pptx.close()
         self.url = reverse("history")
         
     def test_history_view_get_request_invalid_user(self):
