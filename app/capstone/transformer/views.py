@@ -125,6 +125,7 @@ def history(request: HttpRequest) -> HttpResponse:
             row = []
             row.append(f.date.strftime("%d/%m/%Y"))
             row.append(input_files.filter(conversion__id=f.conversion.id).values("file").get()["file"])
+            row.append(f.file.name)
             row.append(f.file.name.split('_')[2].split('.')[0])
             history.append(row)
     else:
