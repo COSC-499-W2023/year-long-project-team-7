@@ -208,3 +208,48 @@ _Team Evaluation Screenshot_
 ### Self Reflection and Learning
 
 I enjoyed finding an interesting way to style the loading animation and exploring AJAX and jQuery.
+
+## Nov 13 2023 -> Nov 26 2023
+
+![evaluation-screenshot](../../img/esteban-eval-12.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-12.png)
+
+### Goals
+
+-   Create a PDF preview after conversion so the user can see it before downloading
+-   Change scrollbar (closed as won't fix)
+-   Small streamling to base.html templating
+
+### Self Reflection and Learning
+
+This week was an interesting challenge as I had never worked with embedded content in HTML like PDFs. I found that the challenge of converting a `.pptx` file to a `.pdf` is actually a lot more complicated that it might have seemed at first, and the solutions I have researched so far have no yielded the results I am after. For this reason, I will continue to work on this problem and hopefully come to a better solution for displaying the preview coming into next week.
+
+## Nov 27 2023 -> Dec 03 2023
+
+![evaluation-screenshot](../../img/esteban-eval-13.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-13.png)
+
+### Goals
+
+-   Create a PDF preview after conversion using a subroutine
+-   Display the PDF with `PDF.js`
+
+### Self Reflection and Learning
+
+After extensive research between code-only solutions (which were imperfect and too complex) and using Windows COM services and subroutines, I finally settled on an approach for my conversion. I decided to launch a subroutine from code to LibreOffice's slides CLI services in headless mode. This allows us to convert any PowerPoint to a PDF easily, but requires that the server we run the website on have access to LibreOffice. This is fine for our purposes, since all Linux distributions include LibreOffice by default.
+
+Rendering the PDF was a different challenge, but I finally found a solution in using Mozilla's `PDF.js` library. This library allows us to render PDFs in the browser by defining a canvas, and we can fetch the files from the file system by using Django models. I was very happy with my solution and finally achieving my end result after all the work I put into it. At the moment my solution still needs work to allow the user to scroll through all the pages of the PDF, but I have laid the groundwork to make this possible and feel happy with my work.
