@@ -25,9 +25,9 @@ class Transaction(models.Model):
     amount = models.IntegerField()
 
 
-class Products(models.Model):
+class Product(models.Model):
     name = models.TextField()
     get_display_number = models.IntegerField()
-    get_display_price = models.FloatField()
+    get_display_price = models.IntegerField() #stored in cents
     description = models.TextField()
     phrase = models.TextField()

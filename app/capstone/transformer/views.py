@@ -7,7 +7,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
-from .models import Conversion, File, Products
+from .models import Conversion, File, Product
 from typing import List, Dict
 import json
 from .generator import generate_output
