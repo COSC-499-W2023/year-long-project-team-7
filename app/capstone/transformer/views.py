@@ -133,7 +133,7 @@ def logout(request: HttpRequest) -> HttpResponse:
 
 
 def store(request: HttpRequest) -> HttpResponse:
-    products = Products.objects.all()
+    products = Product.objects.all()
     return render(request, "store.html", {"products": products})
 
 
