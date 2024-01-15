@@ -1,9 +1,14 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core import mail
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 from .models import Conversion, File
 from .forms import TransformerForm
+from .tokens import account_activation_token
 import json
 from urllib.parse import urlencode
 from unittest.mock import patch
@@ -161,3 +166,48 @@ class UserSignInTestCase(TestCase):
         )  # 200 is the HTTP status code for a successful GET request
         self.assertContains(response, "Incorrect Credentials.")
         self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+class EmailVerificationTest(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username='testuser',
+            email='testuser@example.com',
+            password='testpassword'
+        )
+        self.user.is_active = False
+    
+    def test_email_verification_flow(self):
+        # create activation email
+        activation_url = reverse('activate', kwargs={'uidb64': urlsafe_base64_encode(force_bytes(self.user.pk)), 'token': account_activation_token.make_token(self.user)})
+        response = self.client.get(activation_url)
+        # Check that the email was sent
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, "Activate your Platonix account")
+        # Grab activation link from email
+        activation_link_start = 'http://127.0.0.1:8000'
+        activation_link_end = reverse('activate', kwargs={
+            'uidb64': urlsafe_base64_encode(force_bytes(self.user.pk)).decode(),
+            'token': account_activation_token.make_token(self.user)
+        })
+        activation_link = (
+            mail.outbox[0].body
+            .split(activation_link_start)[-1]
+            .split(activation_link_end)[0]
+        )
+        # Go to activation link
+        response = self.client.get(activation_link)
+        # Check that user is activated and redirected
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('signin'))
+        # Check for the active user
+        self.assertTrue(self.user.is_active)
+    
+    def test_invalid_activation_link(self):
+        # Visit invalid activation link
+        invalid_activation_url = reverse('activate', kwargs={'uidb64': 'invalid', 'token': 'invalid'})
+        response = self.client.get(invalid_activation_url)
+        # Check that user is redirected to index page
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('index'))
+        # Check that the user is not activated
+        self.assertFalse(self.user.is_active)
