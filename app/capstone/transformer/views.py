@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden, JsonResponse
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
@@ -13,6 +13,9 @@ import json
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+import stripe
+from django.conf import settings
+from django.views import View
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -139,3 +142,29 @@ def store(request: HttpRequest) -> HttpResponse:
 
 def payments(request: HttpRequest) -> HttpResponse:
     return render(request, "payments.html")
+
+class CreateCheckoutSessionView(View):
+    def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        YOUR_DOMAIN = "http://127.0.0.1:8000/"
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                        'price_data': {
+                            'currency': 'cad',
+                            'unit_amount': 1000,
+                            'product_data': {
+                                'name': 'Test Product'
+                            },
+                        },
+                        'quantity': 1
+                }
+            ],
+            mode='payment',
+            success_url=YOUR_DOMAIN + '/success',
+            cancel_url=YOUR_DOMAIN + '/cancel',
+            automatic_tax={'enabled': True},
+        )
+        return JsonResponse({
+            'id': checkout_session.id
+        })
