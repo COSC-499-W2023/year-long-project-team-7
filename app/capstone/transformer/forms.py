@@ -87,7 +87,14 @@ class TransformerForm(forms.Form):
 
     template = forms.ChoiceField(
         label="Templates",
-        choices=[(1, "Template 1"), (2, "Template 2"), (3, "Template 3")],
+        choices=[
+            (1, "Template 1"),
+            (2, "Template 2"),
+            (3, "Template 3"),
+            (4, "Template 4"),
+            (5, "Template 5"),
+            (6, "Template 6"),
+        ],
         widget=RadioSelect(),
     )
 
