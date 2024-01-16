@@ -208,3 +208,25 @@ Note: This week was spent working on the design document / video with my team. I
 
 <br>
 
+## Jan 8 2023 -> Jan 14 2024
+
+![evaluation-screenshot](../../img/liam-eval-15.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w15-tasks.png)
+<br>
+TODO: Tests are almost done. Have 1 issue left to fix before merging with master
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras)
+<br>
+[Current feature branch](https://github.com/COSC-499-W2023/year-long-project-team-7/tree/account-email-verification)
+<br>
+[Latest commit](https://github.com/COSC-499-W2023/year-long-project-team-7/commit/f78409f92e7378c05308dd571481c6d46280295c)
+
+<br>
+
