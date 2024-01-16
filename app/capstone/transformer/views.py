@@ -4,6 +4,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.core.files.storage import FileSystemStorage
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
@@ -83,7 +84,20 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
 
     output_files = File.objects.filter(conversion=conversion, is_output=True)
 
-    return render(request, "results.html", {"output_files": output_files})
+    #! Might need later
+    # pdf_previews = []
+    # pdf_previews.append("example.pdf")
+    # for file in output_files:
+    #     file_name = file.file.name
+    #     base_name, extension = file_name.rsplit(".", 1)
+    #     if file_system.exists(f"{base_name}.pdf"):
+    #         pdf_previews.append(f"{base_name}.pdf")
+
+    return render(
+        request,
+        "results.html",
+        {"output_files": output_files},
+    )
 
 
 def home(request: HttpRequest) -> HttpResponse:
