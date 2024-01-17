@@ -114,7 +114,6 @@ def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
         user = User.objects.get(pk=uid)
     except:
         user = None
-
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
