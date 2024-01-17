@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.template.loader import render_to_string
@@ -93,47 +94,63 @@ def signup(request: HttpRequest) -> HttpResponse:
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            activateEmail(request, user, form.cleaned_data.get('email'))
-            return redirect("signin")
+            email = form.cleaned_data.get("email")
+            if email:
+                activateEmail(request, user, email)
+                return redirect("signin")
+            else:
+                messages.error(request, "Email is required.")
         else:
             messages.error(request, "Error in the form submission.")
     else:
         form = SignUpForm()
     return render(request, "signup.html", {"form": form})
 
-def activate(request, uidb64, token):
+
+def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
     User = get_user_model()
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
     except:
         user = None
-    
+
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
         messages.success(request, "Email verified. You can now log into your account.")
-        return redirect('signin')
+        return redirect("signin")
     else:
         messages.error(request, "Activation link is invalid!")
-    return redirect('index')
+    return redirect("index")
 
-def activateEmail(request, user, to_email):
+
+def activateEmail(request: HttpRequest, user: User, to_email: str) -> None:
     mail_subject = "Activate your Platonix account"
-    message = render_to_string("template_activate_account.html", {
-        'user': user.username,
-        'domain': get_current_site(request).domain,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user),
-        "protocol": 'https' if request.is_secure() else 'http'
-    })
+    message = render_to_string(
+        "template_activate_account.html",
+        {
+            "user": user.username,
+            "domain": get_current_site(request).domain,
+            "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+            "token": account_activation_token.make_token(user),
+            "protocol": "https" if request.is_secure() else "http",
+        },
+    )
     email = EmailMessage(mail_subject, message, to=[to_email])
     if email.send():
-        messages.success(request, f'Hi {user}, please go to your inbox at {to_email} \
-                     and click on the activiation link to complete registration.')
+        messages.success(
+            request,
+            f"Hi {user}, please go to your inbox at {to_email} \
+                     and click on the activiation link to complete registration.",
+        )
     else:
-        messages.error(request, f'Problem sending email to {to_email}. Please verify \
-                       spelling.')
+        messages.error(
+            request,
+            f"Problem sending email to {to_email}. Please verify \
+                       spelling.",
+        )
+    return
 
 
 def signin(request: HttpRequest) -> HttpResponse:
