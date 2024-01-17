@@ -11,18 +11,25 @@ from django.core.mail import EmailMessage
 from .forms import TransformerForm
 from .forms import SignUpForm
 from .forms import SignInForm
-from .models import Conversion, File
 from .tokens import account_activation_token
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
+from django.core.files.storage import FileSystemStorage
+from .forms import RegisterForm
+from .forms import LoginForm
+from .models import Conversion, File, Products
 from typing import List, Dict
 import json
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 
 
 def index(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html")
 
 
+@login_required(login_url="login")
 def transform(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = TransformerForm(request.POST)
@@ -35,13 +42,21 @@ def transform(request: HttpRequest) -> HttpResponse:
                 "tone": form.cleaned_data["tone"],
                 "complexity": form.cleaned_data["complexity"],
                 "num_slides": form.cleaned_data["num_slides"],
-                "num_images": form.cleaned_data["num_images"],
+                "image_frequency": form.cleaned_data["image_frequency"],
                 "template": int(form.cleaned_data["template"]),
             }
             conversion.user_parameters = json.dumps(user_params)
+            conversion.user = request.user  # type: ignore
+
             conversion.save()
 
             files = []
+
+            has_prompt = len(user_params["prompt"]) > 0
+            has_file = len(request.FILES.getlist("files"))
+
+            if not has_prompt and not has_file:
+                return render(request, "transform.html", {"form": TransformerForm()})
 
             for uploaded_file in request.FILES.getlist("files"):
                 new_file = File()
@@ -56,10 +71,13 @@ def transform(request: HttpRequest) -> HttpResponse:
             generate_output(files, conversion)
 
             return redirect("results", conversion_id=conversion.id)
+        else:
+            return render(request, "transform.html", {"form": TransformerForm()})
+    else:
+        return render(request, "transform.html", {"form": TransformerForm()})
 
-    return render(request, "transform.html", {"form": TransformerForm()})
 
-
+@login_required(login_url="login")
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     conversion = get_object_or_404(Conversion, id=conversion_id)
 
@@ -69,14 +87,26 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
                 "You do not have permission to access this resource."
             )
     else:
-        if conversion.user is not None:
-            return HttpResponseForbidden(
-                "You do not have permission to access this resource."
-            )
+        return HttpResponseForbidden(
+            "You do not have permission to access this resource."
+        )
 
     output_files = File.objects.filter(conversion=conversion, is_output=True)
 
-    return render(request, "results.html", {"output_files": output_files})
+    #! Might need later
+    # pdf_previews = []
+    # pdf_previews.append("example.pdf")
+    # for file in output_files:
+    #     file_name = file.file.name
+    #     base_name, extension = file_name.rsplit(".", 1)
+    #     if file_system.exists(f"{base_name}.pdf"):
+    #         pdf_previews.append(f"{base_name}.pdf")
+
+    return render(
+        request,
+        "results.html",
+        {"output_files": output_files},
+    )
 
 
 def home(request: HttpRequest) -> HttpResponse:
@@ -87,9 +117,9 @@ def about(request: HttpRequest) -> HttpResponse:
     return render(request, "about.html")
 
 
-def signup(request: HttpRequest) -> HttpResponse:
+def register(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        form = SignUpForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
@@ -97,14 +127,15 @@ def signup(request: HttpRequest) -> HttpResponse:
             email = form.cleaned_data.get("email")
             if email:
                 activateEmail(request, user, email)
-                return redirect("signin")
+                messages.success(request, "Account successfully created.")
+                return redirect("login")
             else:
                 messages.error(request, "Email is required.")
         else:
             messages.error(request, "Error in the form submission.")
     else:
-        form = SignUpForm()
-    return render(request, "signup.html", {"form": form})
+        form = RegisterForm()
+    return render(request, "register.html", {"form": form})
 
 
 def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
@@ -118,7 +149,7 @@ def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
         user.is_active = True
         user.save()
         messages.success(request, "Email verified. You can now log into your account.")
-        return redirect("signin")
+        return redirect("login")
     else:
         messages.error(request, "Activation link is invalid!")
     return redirect("index")
@@ -152,24 +183,34 @@ def activateEmail(request: HttpRequest, user: User, to_email: str) -> None:
     return
 
 
-def signin(request: HttpRequest) -> HttpResponse:
+def login(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        form = SignInForm(request.POST)
+        form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data["username"]
+            username = form.cleaned_data["email"]
             password = form.cleaned_data["password"]
             user = authenticate(request, username=username, password=password)
             if user:
-                login(request, user)
-                return redirect("index")
+                auth_login(request, user)
+                return redirect("transform")
             else:
                 messages.error(request, "Incorrect Credentials.")
     else:
-        form = SignInForm()
-    return render(request, "signin.html", {"form": form})
+        form = LoginForm()
+    return render(request, "login.html", {"form": form})
 
 
-def signout(request: HttpRequest) -> HttpResponse:
-    logout(request)
+@login_required(login_url="login")
+def logout(request: HttpRequest) -> HttpResponse:
+    auth_logout(request)
     messages.success(request, "Logged Out Successfully.")
     return redirect("index")
+
+
+def store(request: HttpRequest) -> HttpResponse:
+    products = Products.objects.all()
+    return render(request, "store.html", {"products": products})
+
+
+def payments(request: HttpRequest) -> HttpResponse:
+    return render(request, "payments.html")

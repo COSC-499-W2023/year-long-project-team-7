@@ -208,3 +208,76 @@ _Team Evaluation Screenshot_
 ### Self Reflection and Learning
 
 I enjoyed finding an interesting way to style the loading animation and exploring AJAX and jQuery.
+
+## Nov 13 2023 -> Nov 26 2023
+
+![evaluation-screenshot](../../img/esteban-eval-12.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-12.png)
+
+### Goals
+
+-   Create a PDF preview after conversion so the user can see it before downloading
+-   Change scrollbar (closed as won't fix)
+-   Small streamling to base.html templating
+
+### Self Reflection and Learning
+
+This week was an interesting challenge as I had never worked with embedded content in HTML like PDFs. I found that the challenge of converting a `.pptx` file to a `.pdf` is actually a lot more complicated that it might have seemed at first, and the solutions I have researched so far have no yielded the results I am after. For this reason, I will continue to work on this problem and hopefully come to a better solution for displaying the preview coming into next week.
+
+## Nov 27 2023 -> Dec 03 2023
+
+![evaluation-screenshot](../../img/esteban-eval-13.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-13.png)
+
+### Goals
+
+-   Create a PDF preview after conversion using a subroutine
+-   Display the PDF with `PDF.js`
+
+### Self Reflection and Learning
+
+After extensive research between code-only solutions (which were imperfect and too complex) and using Windows COM services and subroutines, I finally settled on an approach for my conversion. I decided to launch a subroutine from code to LibreOffice's slides CLI services in headless mode. This allows us to convert any PowerPoint to a PDF easily, but requires that the server we run the website on have access to LibreOffice. This is fine for our purposes, since all Linux distributions include LibreOffice by default.
+
+Rendering the PDF was a different challenge, but I finally found a solution in using Mozilla's `PDF.js` library. This library allows us to render PDFs in the browser by defining a canvas, and we can fetch the files from the file system by using Django models. I was very happy with my solution and finally achieving my end result after all the work I put into it. At the moment my solution still needs work to allow the user to scroll through all the pages of the PDF, but I have laid the groundwork to make this possible and feel happy with my work.
+
+## Jan 09 2023 -> Jan 14 2023
+
+![evaluation-screenshot](../../img/esteban-eval-14.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-14.png)
+
+### Goals
+
+-   Make the PDF display be able to flip through pages
+-   PDF Download button not working (bug)
+-   Code Review
+-   Testing for PDF features
+    -   [x] Simple test for PDF conversions
+    -   [ ] Test for conversion of actual transformation
+    -   [ ] Test for downloads of both files
+
+### Self Reflection and Learning
+
+Moving forward I will be focusing on developing the social aspect of our app. The goal will be to make it so users can share presentations they have created and be able to share the specific style of their presentations for other users to build off from. To this end, this week I focused on giving the best feedback I could for the code review, so that everyone may merge their branches and get started on our new focus for the term.
+
+This week I worked more with the `PDF.js` library and jQuery to be able to flip through the pages of the PDF as we are able to preview it fully, which involved fixing a bug that would not let a user download the PDF file as well as the PPTX file. I also worked on some test which verify that the `soffice` tool is available to the system when hosting the app, and which does a trial of the conversion to verify the command works. I will need to complete some more rigorous tests, like properly mocking a generated file and checking for an accompanying PDF, as well as testing the download functionality in case another bug like the last one shows up in the future.

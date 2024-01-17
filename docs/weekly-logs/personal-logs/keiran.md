@@ -147,3 +147,49 @@ _Tasks Screenshot_
 1. Add conversion to pdf for documents inputted to the transformer
 
 [11]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=assignee%3Akmalott+milestone%3A%22Week+10%22+
+
+## Nov 13 -> Nov 26
+
+![evaluation screenshot](../../img/keiran-eval-11&12.png)
+_Team evaluation Screenshot_
+
+![w10 taks screenshot](../../img/keiran-w11&12-tasks.png)
+_Tasks Screenshot_
+
+[Individual W12 Tasks][12]
+
+### Goals this week
+1. Create testing for document conversion
+2. Basic My Transformations Page (history of users previous transformations)
+
+Note that 2. is not in master branch at the moment. See my-transformations branch for my commmits this week
+
+### Self Reflection and Learning
+
+For this week my main goals were to create testing for the work I completed last week and create a basic version of the my transformations page. Unfortunately, creating testing for the document conversion functions was unexpectedly challenging and I at this time I don't have any tests written for this. However, I believe that by the end of next week I should have testing implemented for this feature. Despite this setback throughout the week I have learned a lot about django testing in general which will be very useful as I continue to work on this project. Fortunately, my second goal this week went a lot better than the first and I was able to make very good progress in creating the my transformations page. I am hopeful that by the end of next week I will have a more polished version to add to the master branch with the necessary testing required for it. 
+
+[12]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=milestone%3A%22Week+12%22+assignee%3Akmalott
+
+## Nov 27 -> Dec 3
+
+![evaluation screenshot](../../img/keiran-eval-13.png)
+_Team evaluation Screenshot_
+
+![w10 taks screenshot](../../img/keiran-w13-tasks.png)
+_Tasks Screenshot_
+
+[Individual W13 Tasks][13]
+
+### Goals this week
+1. Complete Team Design Document
+2. Basic Store Page
+3. Improve My Transformations Page + Testing
+
+Note that 3. is still not in the master branch it can be found in my-transformations branch. 
+Also 2. is in store-page branch
+
+### Self Reflection and Learning
+
+For this week my main goal was to work with the rest of the team to complete our design document that is due at the end of the week. Fortunately, creating the design document was a relatively straightforward process as most of the design diagrams had already been completed near the beginning of the project. My next goal was to create a basic store page that lists all subscription products available. I was able to complete the store page and associated testing this week. My final goal was to continue improving the my transformations page started last week. Unfortunately, while improving the page I ran into a lot of issues with django databases that prevented me from having enough time to write complete testing for the page. While I was able to create some testing, I do not feel it is complete and therefore I won't be pushing the branch to master until I am able to complete the testing in a later milestone. 
+
+[13]: https://github.com/orgs/COSC-499-W2023/projects/1/views/1?filterQuery=-no%3Amilestone+assignee%3A%40me+milestone%3A%22Week+13%22+
