@@ -187,7 +187,7 @@ class EmailVerificationTest(TestCase):
     def test_email_verification_flow(self):
         # Make a POST request to the sign-up view with valid data
         response = self.client.post(
-            reverse("signup"),
+            reverse("register"),
             {
                 "username": "testuser",
                 "email": "testuser@example.com",
@@ -197,7 +197,7 @@ class EmailVerificationTest(TestCase):
         )
         # Check if the user was created and logged in successfully
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse("signin"))
+        self.assertRedirects(response, reverse("login"))
         self.assertEqual(get_user_model().objects.count(), 1)
         self.assertEqual(get_user_model().objects.first().username, "testuser")
         self.user = get_user_model().objects.first()
@@ -218,7 +218,7 @@ class EmailVerificationTest(TestCase):
         response = self.client.get(activation_link)
         # Check that user is activated and redirected
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse("signin"))
+        self.assertEqual(response.url, reverse("login"))
         # Check for the active user
         self.user.refresh_from_db()
         self.assertTrue(self.user.is_active)
@@ -226,7 +226,7 @@ class EmailVerificationTest(TestCase):
     def test_invalid_activation_link(self):
         # Make a POST request to the sign-up view with valid data
         response = self.client.post(
-            reverse("signup"),
+            reverse("register"),
             {
                 "username": "testuser",
                 "email": "testuser@example.com",
