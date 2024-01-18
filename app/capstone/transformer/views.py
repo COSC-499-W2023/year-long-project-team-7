@@ -147,7 +147,7 @@ def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
         user.is_active = True
         user.save()
         messages.success(request, "Email verified. You can now log into your account.")
-        return redirect("signin")
+        return redirect("login")
     else:
         messages.error(request, "Activation link is invalid!")
     return redirect("index")
