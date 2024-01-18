@@ -189,17 +189,15 @@ class EmailVerificationTest(TestCase):
         response = self.client.post(
             reverse("register"),
             {
-                "username": "testuser",
                 "email": "testuser@example.com",
-                "password1": "testpassword123",
-                "password2": "testpassword123",
+                "password": "testpassword123",
             },
         )
         # Check if the user was created and logged in successfully
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("login"))
         self.assertEqual(get_user_model().objects.count(), 1)
-        self.assertEqual(get_user_model().objects.first().username, "testuser")
+        self.assertEqual(get_user_model().objects.first().email, "testuser@example.com")
         self.user = get_user_model().objects.first()
         # Check if an activation email was sent
         self.assertEqual(len(mail.outbox), 1)
@@ -228,10 +226,8 @@ class EmailVerificationTest(TestCase):
         response = self.client.post(
             reverse("register"),
             {
-                "username": "testuser",
                 "email": "testuser@example.com",
-                "password1": "testpassword123",
-                "password2": "testpassword123",
+                "password": "testpassword123",
             },
         )
         self.user = get_user_model().objects.first()
