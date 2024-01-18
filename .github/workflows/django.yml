@@ -41,3 +41,4 @@ jobs:
           python manage.py test --verbosity=2
         env:
           DATABASE_URL: "postgres://postgres:password@localhost:5432/dev"
+          DJANGO_SETTINGS_MODULE: capstone.settings_env_example

@@ -1,7 +1,5 @@
 {% autoescape off %}
-Hello {{ user.username }},
-
-Please click the following link to register your Platonix account:
-
-http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+    Hello {{ user.username }},
+    Please click the following link to register your Platonix account:
+    http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
 {% endautoescape %}
