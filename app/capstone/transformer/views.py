@@ -205,6 +205,26 @@ def logout(request: HttpRequest) -> HttpResponse:
     return redirect("index")
 
 
+def history(request: HttpRequest) -> HttpResponse:
+    if request.user.is_authenticated:
+        files = File.objects.filter(user=request.user, is_output=True).order_by("id").all()
+        input_files = File.objects.filter(user=request.user, is_output=False).all()
+        history = []
+        for f in files:
+            row = []
+            row.append(f.date.strftime("%d/%m/%Y"))
+            row.append(input_files.filter(conversion__id=f.conversion.id).values("file").get()["file"])
+            row.append(f.file.name)
+            row.append(f.file.name.split('_')[2].split('.')[0])
+            row.append(f.file.url)
+            history.append(row)
+    else:
+        return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+        )
+    return render(request, "history.html", {"data": history})
+
+
 def store(request: HttpRequest) -> HttpResponse:
     products = Products.objects.all()
     return render(request, "store.html", {"products": products})
@@ -212,3 +232,4 @@ def store(request: HttpRequest) -> HttpResponse:
 
 def payments(request: HttpRequest) -> HttpResponse:
     return render(request, "payments.html")
+
