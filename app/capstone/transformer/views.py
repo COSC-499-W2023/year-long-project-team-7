@@ -170,3 +170,9 @@ class CreateCheckoutSessionView(View):
         return JsonResponse({
             'id': checkout_session.id
         })
+    
+def success(request: HttpRequest) -> HttpResponse:
+    return render(request, "success.html")
+
+def cancel(request: HttpRequest) -> HttpResponse:
+    return render(request, "cancel.html")

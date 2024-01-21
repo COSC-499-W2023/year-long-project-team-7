@@ -11,5 +11,7 @@ urlpatterns = [
     path("store", views.store, name="store"),
     path("payments", views.payments, name="payments"),
     path("results/<int:conversion_id>/", views.results, name="results"),
-    path("checkout/<int:pk>/", views.CreateCheckoutSessionView.as_view(), name="checkout")
+    path("checkout/<int:pk>/", views.CreateCheckoutSessionView.as_view(), name="checkout"),
+    path("success", views.success, name="success"),
+    path("cancel", views.cancel, name="cancel")
 ]
