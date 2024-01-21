@@ -145,8 +145,8 @@ def payments(request: HttpRequest) -> HttpResponse:
 
 class CreateCheckoutSessionView(View):
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        YOUR_DOMAIN = "http://127.0.0.1:8000/"
+        stripe.api_key = settings.STRIPE_SECRET_KEY # type: ignore
+        YOUR_DOMAIN = "http://127.0.0.1:8000"
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {

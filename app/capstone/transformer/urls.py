@@ -1,5 +1,4 @@
 from django.urls import path
-from Transformer.views import CreateCheckoutSessionView
 from . import views
 
 urlpatterns = [
@@ -12,5 +11,5 @@ urlpatterns = [
     path("store", views.store, name="store"),
     path("payments", views.payments, name="payments"),
     path("results/<int:conversion_id>/", views.results, name="results"),
-    path("checkout", CreateCheckoutSessionView.as_view(), name="checkout")
+    path("checkout", views.CreateCheckoutSessionView.as_view(), name="checkout")
 ]
