@@ -145,6 +145,18 @@ a:hover {
     padding-right: 2em;
 }
 
+.dark-mode-toggle {
+    color: var(--color-nav);
+    border: 2px solid currentColor;
+    background: transparent;
+    cursor: pointer;
+    padding-bottom: 30px;
+    margin-right: 1rem;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+}
+
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
 @media (max-width: 1000px) {
     .navbar {
