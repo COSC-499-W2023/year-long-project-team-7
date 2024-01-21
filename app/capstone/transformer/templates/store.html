@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+    <script src="https://js.stripe.com/v3/"></script>
     <div class="container" style="padding-top: 90px">
         <div class="justify-content-center">
             <h1 class="text-center title h1 mt-3">Choose your product:</h1>
@@ -14,9 +15,8 @@
                         <div class="text-white h3 mt-5">{{ p.get_display_price }}</div>
                         <div class="card-subtitle mb-5 text-white">{{ p.phrase }}</div>
                         <div class="card-subtitle mb-5 fw-bold text-white">{{ p.get_display_number }} Total Credit Limit</div>
-                        <form action="/payments" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary mb-3">=Checkout</button>
+                        <form action="/checkout" method="POST">
+                            <button type="submit" id="checkout-button">Checkout</button>
                         </form>
                     </div>
                 </div>
