@@ -1,6 +1,8 @@
 /* Font imports */
 @import url("https://fonts.googleapis.com/css?family=Noto+Serif+Display");
 
+/* Global */
+
 :root {
     --color-primary: #7b68ee;
     --color-primary-lighter: #a496ff;
