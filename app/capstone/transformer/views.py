@@ -144,7 +144,7 @@ def payments(request: HttpRequest) -> HttpResponse:
     return render(request, "payments.html")
 
 class CreateCheckoutSessionView(View):
-    def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         product_id = self.kwargs["pk"]
         product = Product.objects.get(id=product_id)
         stripe.api_key = settings.STRIPE_SECRET_KEY # type: ignore
@@ -167,9 +167,8 @@ class CreateCheckoutSessionView(View):
             cancel_url=YOUR_DOMAIN + '/cancel',
             automatic_tax={'enabled': True},
         )
-        return JsonResponse({
-            'id': checkout_session.id
-        })
+        response = redirect(checkout_session.url)
+        return response
     
 def success(request: HttpRequest) -> HttpResponse:
     return render(request, "success.html")
