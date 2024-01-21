@@ -15,7 +15,8 @@
                         <div class="text-white h3 mt-5">{{ p.get_display_price }}</div>
                         <div class="card-subtitle mb-5 text-white">{{ p.phrase }}</div>
                         <div class="card-subtitle mb-5 fw-bold text-white">{{ p.get_display_number }} Total Credit Limit</div>
-                        <form action="/checkout" method="POST">
+                        <form action="{% url 'checkout' p.id %}" method="POST">
+                            {% csrf_token %}
                             <button type="submit" id="checkout-button">Checkout</button>
                         </form>
                     </div>

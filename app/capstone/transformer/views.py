@@ -145,6 +145,8 @@ def payments(request: HttpRequest) -> HttpResponse:
 
 class CreateCheckoutSessionView(View):
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
+        product_id = self.kwargs["pk"]
+        product = Product.objects.get(id=product_id)
         stripe.api_key = settings.STRIPE_SECRET_KEY # type: ignore
         YOUR_DOMAIN = "http://127.0.0.1:8000"
         checkout_session = stripe.checkout.Session.create(
@@ -152,9 +154,9 @@ class CreateCheckoutSessionView(View):
                 {
                         'price_data': {
                             'currency': 'cad',
-                            'unit_amount': 1000,
+                            'unit_amount': product.get_display_price_cents,
                             'product_data': {
-                                'name': 'Test Product'
+                                'name': product.name
                             },
                         },
                         'quantity': 1
