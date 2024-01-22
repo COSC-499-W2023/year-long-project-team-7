@@ -32,9 +32,9 @@
     --clr-nav: #222222;
     --clr-deep: #2f89ca;
     --clr-warn: #bf4e30;
-    --clr-light: #faf0e6;
-    --clr-dark: #020202;
-    --clr-card: #ada69f;
+    --clr-light: #f7ebeb;
+    --clr-dark: #1c1c1c;
+    --clr-card: #a59be2;
 
     --background: var(--clr-light);
     --foreground: var(--clr-dark);
@@ -44,6 +44,10 @@ body {
     font-family: var(--font-family);
     background-color: var(--background);
     color: var(--foreground);
+}
+
+div {
+    transition: all 0.2s linear !important;
 }
 
 /* Links */
@@ -383,4 +387,6 @@ input[type="range"]::-moz-range-thumb {
 .card {
     background: var(--clr-card);
     color: var(--foreground);
+    padding: 2em;
+    border-radius: 2em;
 }

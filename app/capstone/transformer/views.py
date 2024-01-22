@@ -133,7 +133,7 @@ def login(request: HttpRequest) -> HttpResponse:
                 auth_login(request, user)
                 return redirect("transform")
             else:
-                messages.error(request, "Incorrect Credentials.")
+                messages.error(request, "Incorrect Credentials.", "danger")
     else:
         form = LoginForm()
     return render(request, "login.html", {"form": form})
@@ -143,7 +143,7 @@ def login(request: HttpRequest) -> HttpResponse:
 def logout(request: HttpRequest) -> HttpResponse:
     auth_logout(request)
     messages.success(request, "Logged Out Successfully.")
-    return redirect("index")
+    return redirect("login")
 
 
 def history(request: HttpRequest) -> HttpResponse:

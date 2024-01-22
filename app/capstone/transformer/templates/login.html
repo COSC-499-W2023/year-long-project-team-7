@@ -2,19 +2,20 @@
 {% load static %}
 {% block content %}
     <div class="vh-100 d-flex justify-content-center align-items-center">
-        <div class="card d-flex bg-black mt-5 justify-content-center align-items-center"
+        <div class="card d-flex mt-5 justify-content-center align-items-center"
              style="width: 90%;
                     max-width: 400px">
             <!-- Adjusted for responsiveness -->
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
                      role="alert">
-                    <strong>Message:</strong> {{ message }}
+                    {% comment %} <strong>Message:</strong> {% endcomment %}
+                    {{ message }}
                     <button type="button"
-                            class="close"
+                            class="btn-close"
                             data-bs-dismiss="alert"
                             aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        {% comment %} <span aria-hidden="true">&times;</span> {% endcomment %}
                     </button>
                 </div>
             {% endfor %}
