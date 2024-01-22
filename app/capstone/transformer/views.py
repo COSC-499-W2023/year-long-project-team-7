@@ -3,7 +3,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden, JsonResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.core.files.storage import FileSystemStorage
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
@@ -87,7 +88,20 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
 
     output_files = File.objects.filter(conversion=conversion, is_output=True)
 
-    return render(request, "results.html", {"output_files": output_files})
+    #! Might need later
+    # pdf_previews = []
+    # pdf_previews.append("example.pdf")
+    # for file in output_files:
+    #     file_name = file.file.name
+    #     base_name, extension = file_name.rsplit(".", 1)
+    #     if file_system.exists(f"{base_name}.pdf"):
+    #         pdf_previews.append(f"{base_name}.pdf")
+
+    return render(
+        request,
+        "results.html",
+        {"output_files": output_files},
+    )
 
 
 def home(request: HttpRequest) -> HttpResponse:
@@ -136,6 +150,26 @@ def logout(request: HttpRequest) -> HttpResponse:
     return redirect("index")
 
 
+def history(request: HttpRequest) -> HttpResponse:
+    if request.user.is_authenticated:
+        files = File.objects.filter(user=request.user, is_output=True).order_by("id").all()
+        input_files = File.objects.filter(user=request.user, is_output=False).all()
+        history = []
+        for f in files:
+            row = []
+            row.append(f.date.strftime("%d/%m/%Y"))
+            row.append(input_files.filter(conversion__id=f.conversion.id).values("file").get()["file"])
+            row.append(f.file.name)
+            row.append(f.file.name.split('_')[2].split('.')[0])
+            row.append(f.file.url)
+            history.append(row)
+    else:
+        return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+        )
+    return render(request, "history.html", {"data": history})
+
+
 def store(request: HttpRequest) -> HttpResponse:
     products = Product.objects.all()
     return render(request, "store.html", {"products": products})
@@ -168,14 +202,18 @@ class CreateCheckoutSessionView(View):
         response = redirect(checkout_session.url) #type: ignore
         return response
     
+    
 def success(request: HttpRequest) -> HttpResponse:
     return render(request, "success.html")
 
+  
 def cancel(request: HttpRequest) -> HttpResponse:
     return render(request, "cancel.html")
 
+  
 @csrf_exempt
 def stripe_webhook(request: HttpRequest) -> HttpResponse:   #this will be needed later to authenticate payments
   payload = request.body
   print(payload) 
   return HttpResponse(status=200)
+

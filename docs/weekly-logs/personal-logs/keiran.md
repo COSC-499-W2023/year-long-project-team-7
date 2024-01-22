@@ -193,3 +193,19 @@ Also 2. is in store-page branch
 For this week my main goal was to work with the rest of the team to complete our design document that is due at the end of the week. Fortunately, creating the design document was a relatively straightforward process as most of the design diagrams had already been completed near the beginning of the project. My next goal was to create a basic store page that lists all subscription products available. I was able to complete the store page and associated testing this week. My final goal was to continue improving the my transformations page started last week. Unfortunately, while improving the page I ran into a lot of issues with django databases that prevented me from having enough time to write complete testing for the page. While I was able to create some testing, I do not feel it is complete and therefore I won't be pushing the branch to master until I am able to complete the testing in a later milestone. 
 
 [13]: https://github.com/orgs/COSC-499-W2023/projects/1/views/1?filterQuery=-no%3Amilestone+assignee%3A%40me+milestone%3A%22Week+13%22+
+
+## Jan 9 -> Jan 14
+
+![evaluation screenshot](../../img/keiran-eval-15.png)
+_Team evaluation Screenshot_
+
+![w15 tasks screenshot](../../img/keiran-w15-tasks.png)
+_Tasks Screenshot_
+
+[Individual W15 Tasks][14]
+
+### Goals this week
+1. My Transformation page testing
+2. Stripe payment integration (subscription_checkout branch)
+
+[14]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=milestone%3A%22Week+15%22++assignee%3A%40me

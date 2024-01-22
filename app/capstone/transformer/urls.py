@@ -8,6 +8,7 @@ urlpatterns = [
     path("login", views.login, name="login"),
     path("logout", views.logout, name="logout"),
     path("about", views.about, name="about"),
+    path("history", views.history, name="history"),
     path("store", views.store, name="store"),
     path("results/<int:conversion_id>/", views.results, name="results"),
     path("create-checkout-session/<int:pk>/", views.CreateCheckoutSessionView.as_view(), name="create-checkout-session"),

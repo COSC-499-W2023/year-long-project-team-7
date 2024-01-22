@@ -1,12 +1,19 @@
+import os
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
+from django.db import models
+from django.conf import settings
+from os import path, mkdir
+from shutil import rmtree
+from .models import Conversion, File
 from .models import Conversion, File, Products
 from .forms import TransformerForm
 import json
 from urllib.parse import urlencode
 from unittest.mock import patch
+import tempfile
 
 
 class TransformViewTestCase(TestCase):
@@ -166,6 +173,39 @@ class UserSignInTestCase(TestCase):
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
 
+class HistoryTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        testuser = User.objects.create_user('temporary', 'temporary@gmail.com', 'temporary')
+        testconversion = Conversion.objects.create(date="9999-12-31", user=testuser)
+        with tempfile.TemporaryDirectory(dir=settings.BASE_DIR) as temp_dir:
+            input_pdf = open(path.join(temp_dir, "test.pdf"), 'w+')
+            output_pptx = open(path.join(temp_dir, "conversion_output_1.pptx"), 'w+')
+            input_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=False, type=".pdf", file=None)
+            output_file = File.objects.create(date="9999-12-31", user=testuser, conversion=testconversion, is_output=True, type=".application/pptx", file=None)
+            input_file.file.save("test.pdf", input_pdf)
+            output_file.file.save("conversion_output_1.pptx", output_pptx)
+            input_pdf.close()
+            output_pptx.close()
+        self.url = reverse("history")
+        
+    def test_history_view_get_request_invalid_user(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_history_view_get_request_valid_user(self):
+        self.client.login(username='temporary', password='temporary')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        
+    def test_history_results(self):
+        self.client.login(username='temporary', password='temporary')
+        response = self.client.get(self.url)
+        self.assertContains(response, "31/12/9999")
+        self.assertContains(response, ".pdf")
+        self.assertContains(response, ".pptx")
+
+        
 class StoreTestCase(TestCase):
     def setUp(self):
         self.client = Client()
@@ -175,6 +215,7 @@ class StoreTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "store.html")
+
 
 class SuccessTestCase(TestCase):
     def setUp(self):
@@ -186,6 +227,7 @@ class SuccessTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "success.html")
 
+        
 class CancelTestCase(TestCase):
     def setUp(self):
         self.client = Client()
@@ -195,3 +237,4 @@ class CancelTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "cancel.html")
+
