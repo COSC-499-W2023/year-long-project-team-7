@@ -1,39 +1,29 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<link rel="stylesheet" href="{% static 'grad-background.css' %}" />
-<div
-    class="container-fluid vertical-center-top flex-column justify-content-center gap-5"
-    style="margin-top: -3em"
->
-    <div
-        class="h-75 d-flex flex-column align-items-center justify-content-center gap-3"
-    >
-        <h1 class="title fade-in-first bigger-h1">Welcome to Platonix</h1>
-        <p class="fade-in-second bigger-p">
-            Your personal AI driven educational assistant
-        </p>
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <link rel="stylesheet" href="{% static 'grad-background.css' %}" />
+    <div class="container-fluid vertical-center-top flex-column justify-content-center gap-5"
+         style="margin-top: -3em">
+        <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3">
+            <h1 class="title fade-in-first bigger-h1">Welcome to Platonix</h1>
+            <p class="fade-in-second bigger-p">Your personal AI driven educational assistant</p>
+        </div>
+        <div class="d-flex flex-column align-items-center justify-content-center fade-in-second">
+            <p class="bigger-p">
+                Turn your texts into beautiful slide presentations, using
+                <a href="{% url 'transform' %}">the latest AI technology</a>.
+            </p>
+            <p class="bigger-p">
+                Learn what makes us <a href="{% url 'about' %}">tick</a>.
+            </p>
+            {% if not user.is_authenticated %}
+                <button class="btn btn-primary mt-3"
+                        style="width: 100%"
+                        onclick="window.location.href='/login'">Login to get started</button>
+            {% endif %}
+        </div>
     </div>
-    <div
-        class="d-flex flex-column align-items-center justify-content-center fade-in-second"
-    >
-        <p class="bigger-p">
-            Turn your texts into beautiful slide presentations, using
-            <a href="{% url 'transform' %}">the latest AI technology</a>.
-        </p>
-        <p class="bigger-p">
-            Learn what makes us <a href="{% url 'about' %}">tick</a>.
-        </p>
-        {% if not user.is_authenticated %}
-        <button
-            class="btn btn-primary mt-3"
-            style="width: 100%"
-            onclick="window.location.href='/login'"
-        >
-            Login to get started
-        </button>
-        {% endif %}
-    </div>
-</div>
-<div class="wave"></div>
-<div class="wave"></div>
-<div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
 {% endblock %}
