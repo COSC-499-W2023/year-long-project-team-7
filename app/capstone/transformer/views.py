@@ -141,9 +141,6 @@ def store(request: HttpRequest) -> HttpResponse:
     return render(request, "store.html", {"products": products})
 
 
-def payments(request: HttpRequest) -> HttpResponse:
-    return render(request, "payments.html")
-
 class CreateCheckoutSessionView(View):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         product_id = self.kwargs["pk"]

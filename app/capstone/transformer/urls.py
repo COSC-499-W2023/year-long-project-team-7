@@ -9,7 +9,6 @@ urlpatterns = [
     path("logout", views.logout, name="logout"),
     path("about", views.about, name="about"),
     path("store", views.store, name="store"),
-    path("payments", views.payments, name="payments"),
     path("results/<int:conversion_id>/", views.results, name="results"),
     path("create-checkout-session/<int:pk>/", views.CreateCheckoutSessionView.as_view(), name="create-checkout-session"),
     path("success", views.success, name="success"),
