@@ -1,1 +1,13 @@
-Cancel!
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container" style="padding-top: 90px">
+        <div class="justify-content-center align-items-center">
+            <h2 class="text-center title h2 mt-3">Payment Cancelled</h2>
+            <h2 class="text-center title h2 mt-3">Looking for a different product?</h2>
+            <div class="d-flex justify-content-center align-items-center">
+                <a class="w-25 btn mt-4 btn-primary" href="{% url 'store' %}">Store</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
