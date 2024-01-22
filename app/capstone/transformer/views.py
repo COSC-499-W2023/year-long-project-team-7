@@ -142,7 +142,7 @@ def store(request: HttpRequest) -> HttpResponse:
 
 
 class CreateCheckoutSessionView(View):
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse: # type: ignore
         product_id = self.kwargs["pk"]
         product = Product.objects.get(id=product_id)
         stripe.api_key = settings.STRIPE_SECRET_KEY # type: ignore
@@ -165,7 +165,7 @@ class CreateCheckoutSessionView(View):
             cancel_url=YOUR_DOMAIN + '/cancel',
             automatic_tax={'enabled': True},
         )
-        response = redirect(checkout_session.url)
+        response = redirect(checkout_session.url) #type: ignore
         return response
     
 def success(request: HttpRequest) -> HttpResponse:
@@ -175,7 +175,7 @@ def cancel(request: HttpRequest) -> HttpResponse:
     return render(request, "cancel.html")
 
 @csrf_exempt
-def stripe_webhook(request):   #this will be needed later to authenticate payments
+def stripe_webhook(request: HttpRequest) -> HttpResponse:   #this will be needed later to authenticate payments
   payload = request.body
   print(payload) 
   return HttpResponse(status=200)
