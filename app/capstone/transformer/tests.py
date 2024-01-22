@@ -175,3 +175,23 @@ class StoreTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "store.html")
+
+class SuccessTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse("success")
+
+    def test_store_view_get_request(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "success.html")
+
+class CancelTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse("cancel")
+
+    def test_store_view_get_request(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "cancel.html")
