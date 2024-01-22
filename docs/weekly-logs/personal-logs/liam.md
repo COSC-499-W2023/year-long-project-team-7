@@ -230,3 +230,23 @@ TODO: Tests are almost done. Have 1 issue left to fix before merging with master
 
 <br>
 
+## Jan 14 2023 -> Jan 21 2024
+
+![evaluation-screenshot](../../img/liam-eval-16.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w16-tasks.png)
+<br>
+Note: Account functionality has had it's merge conflicts resolved. This week they were a major issue
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras)
+<br>
+[Latest PR](https://github.com/COSC-499-W2023/year-long-project-team-7/pull/165)
+
+<br>
+
