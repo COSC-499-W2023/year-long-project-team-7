@@ -242,7 +242,7 @@ _Team Evaluation Screenshot_
 
 ![tasks-screenshot](../../img/liam-w16-tasks.png)
 <br>
-Note: Account functionality has had it's merge conflicts resolved. This week they were a major issue
+Note: Account functionality has had it's merge conflicts resolved. This week they were a major issue. I'm now starting to work on the forget password system
 <br>
 [Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras)
 <br>
