@@ -13,5 +13,6 @@ urlpatterns = [
     path("results/<int:conversion_id>/", views.results, name="results"),
     path("create-checkout-session/<int:pk>/", views.CreateCheckoutSessionView.as_view(), name="create-checkout-session"),
     path("success", views.success, name="success"),
-    path("cancel", views.cancel, name="cancel")
+    path("cancel", views.cancel, name="cancel"),
+    path("webhooks/stripe", views.stripe_webhook, name="stripe-webhook")
 ]

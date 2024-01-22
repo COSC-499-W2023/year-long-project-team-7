@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 import stripe
 from django.conf import settings
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -175,3 +176,9 @@ def success(request: HttpRequest) -> HttpResponse:
 
 def cancel(request: HttpRequest) -> HttpResponse:
     return render(request, "cancel.html")
+
+@csrf_exempt
+def stripe_webhook(request):   #this will be needed later to authenticate payments
+  payload = request.body
+  print(payload) 
+  return HttpResponse(status=200)
