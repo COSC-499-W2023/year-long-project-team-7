@@ -8,7 +8,7 @@ from django.conf import settings
 from os import path, mkdir
 from shutil import rmtree
 from .models import Conversion, File
-from .models import Conversion, File, Products
+from .models import Conversion, File, Product
 from .forms import TransformerForm
 import json
 from urllib.parse import urlencode
