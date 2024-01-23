@@ -272,12 +272,40 @@ _Team Evaluation Screenshot_
 -   PDF Download button not working (bug)
 -   Code Review
 -   Testing for PDF features
-    -   [x] Simple test for PDF conversions
-    -   [ ] Test for conversion of actual transformation
-    -   [ ] Test for downloads of both files
 
 ### Self Reflection and Learning
 
 Moving forward I will be focusing on developing the social aspect of our app. The goal will be to make it so users can share presentations they have created and be able to share the specific style of their presentations for other users to build off from. To this end, this week I focused on giving the best feedback I could for the code review, so that everyone may merge their branches and get started on our new focus for the term.
 
 This week I worked more with the `PDF.js` library and jQuery to be able to flip through the pages of the PDF as we are able to preview it fully, which involved fixing a bug that would not let a user download the PDF file as well as the PPTX file. I also worked on some test which verify that the `soffice` tool is available to the system when hosting the app, and which does a trial of the conversion to verify the command works. I will need to complete some more rigorous tests, like properly mocking a generated file and checking for an accompanying PDF, as well as testing the download functionality in case another bug like the last one shows up in the future.
+
+## Jan 15 2023 -> Jan 21 2023
+
+![evaluation-screenshot](../../img/esteban-eval-15.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-15.png)
+
+### Goals
+
+-   [x] Help Liam with Merge Problem
+-   [x] Code Review
+-   [x] Dark/Light mode Switch
+-   [ ] Change all units to relative
+-   [x] Figure out frontend approach
+    -   [x] Investigate common responsive techniques
+    -   [x] Investigate Bootstrap
+    -   [x] Start on responsive design
+-   [x] Define a system for stylesheets
+-   [x] Merge and Review PRs
+
+### Self Reflection and Learning
+
+This week saw some significant changes in the plan for the project. We were told that our MVP for the project was insufficient and did not meet the expecations of the client and our supervisor. This case as a surprise to us, and as such we are working on proposals about how to change our course. As such, I will no longer be working on the proposed social features since we have decided to drop them. Instead, I am working on making our site responsive so it can be used with mobiles, tablets, and desktop.
+
+This week I began to work on some of the aspects of responsive design, starting with the transformer page for the app. I have been investigating further into Bootstrap and the common responsive techniques of modern CSS. I reorganized our CSS files to use variables and predefined color palettes to make them easier to maintain. I also implemented a light/dark mode switch feature to make the UI more appealing to a wider number of users. I have begun the process of changing our units into relative ones which will better scale with the responsive layout, but have not yet finished this process.
