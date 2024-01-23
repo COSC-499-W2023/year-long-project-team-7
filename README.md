@@ -32,7 +32,7 @@
     To run the container after initial build, you can start it in docker desktop GUI or run:
 
     ```
-    docker run capstone-postgres
+    docker start capstone-postgres
     ```
 
 2. **Setup virtual environment**
@@ -79,7 +79,6 @@
 4. **Environment variables**
     - Create copy of `settings_env_example.py` and update the new file with your keys.
     - Rename your new file to `settings_env.py`.
-    
 5. **Django migrations**
 
     Django uses 'models' to interact with the database. Each model represents a table. These commands update the postgres database so that all models are correctly represented.
@@ -113,8 +112,8 @@
     python3 manage.py runserver
     ```
 
-8. **All done!** 
-    
+8. **All done!**
+
     You can now access the site through your browser.
 
     Site: http://127.0.0.1:8000/
