@@ -51,11 +51,12 @@ def transform(request: HttpRequest) -> HttpResponse:
 
             for uploaded_file in request.FILES.getlist("files"):
                 new_file = File()
-                new_file.user = request.user if request.user.is_authenticated else None
+                new_file.user = request.user  # type: ignore
                 new_file.conversion = conversion
                 if uploaded_file.content_type is not None:
                     new_file.type = uploaded_file.content_type
                 new_file.file = uploaded_file
+                new_file.is_input = True
                 new_file.save()
                 files.append(new_file)
 
@@ -146,30 +147,26 @@ def logout(request: HttpRequest) -> HttpResponse:
     return redirect("index")
 
 
+@login_required(login_url="login")
 def history(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
-        files = (
-            File.objects.filter(user=request.user, is_output=True).order_by("id").all()
-        )
-        input_files = File.objects.filter(user=request.user, is_output=False).all()
-        history = []
-        for f in files:
-            row = []
-            row.append(f.date.strftime("%d/%m/%Y"))
-            row.append(
-                input_files.filter(conversion__id=f.conversion.id)
-                .values("file")
-                .get()["file"]
-            )
-            row.append(f.file.name)
-            row.append(f.file.name.split("_")[2].split(".")[0])
-            row.append(f.file.url)
-            history.append(row)
+        user_conversions = Conversion.objects.filter(user=request.user).all()
+
+        history = {}
+
+        for conversion in user_conversions:
+            input_files = File.objects.filter(conversion=conversion, is_input=True)
+            output_files = File.objects.filter(conversion=conversion, is_output=True)
+            history[conversion] = {
+                "input_files": input_files,
+                "output_files": output_files,
+            }
+
     else:
         return HttpResponseForbidden(
             "You do not have permission to access this resource."
         )
-    return render(request, "history.html", {"data": history})
+    return render(request, "history.html", {"history": history})
 
 
 def store(request: HttpRequest) -> HttpResponse:

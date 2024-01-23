@@ -15,6 +15,7 @@ class File(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     conversion = models.ForeignKey(Conversion, on_delete=models.CASCADE)
     is_output = models.BooleanField(default=False)
+    is_input = models.BooleanField(default=False)
     type = models.TextField()
     file = models.FileField(upload_to="", max_length=500)
 
