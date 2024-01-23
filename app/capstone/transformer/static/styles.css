@@ -30,7 +30,7 @@
     --clr-secondary: #d496a7;
     --clr-nav-hover: #eed1ff;
     --clr-nav: #222222;
-    --clr-deep: #2f89ca;
+    --clr-deep: #2f89ca95;
     --clr-warn: #bf4e30;
     --clr-light: #f7ebeb;
     --clr-dark: #1c1c1c;
@@ -211,18 +211,31 @@ input[type="range"] {
     width: 15rem;
 }
 
-input[type="range"]::-webkit-slider-runnable-track,
+input[type="range"]::-webkit-slider-runnable-track {
+    border-radius: 0.5rem;
+    background: var(--clr-deep);
+    height: 0.5rem;
+}
+
 input[type="range"]::-moz-range-track {
     border-radius: 0.5rem;
     background: var(--clr-deep);
     height: 0.5rem;
 }
 
-input[type="range"]::-webkit-slider-thumb,
-input[type="range"]::-moz-range-thumb {
+input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    margin-top: -8px;
+    margin-top: -8px; /* Centers thumb on the track */
+    background-color: var(--clr-primary);
+    border-radius: 1rem;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+input[type="range"]::-moz-range-thumb {
+    border: none;
+    border-radius: 0;
     background-color: var(--clr-primary);
     border-radius: 1rem;
     height: 1.5rem;
