@@ -403,3 +403,9 @@ input[type="range"]::-moz-range-thumb {
     padding: 2em;
     border-radius: 2em;
 }
+
+/* History */
+.table {
+    --bs-table-bg: var(--background) !important;
+    --bs-table-color: var(--foreground) !important;
+}
