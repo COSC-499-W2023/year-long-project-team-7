@@ -25,11 +25,11 @@
 
     /* Font size for smallest screen first */
     --fs-400: 1rem;
-    --fs-500: 0.8rem;
+    --fs-500: 1.15rem;
     --fs-600: 1.5rem;
     --fs-700: 1.875rem;
     --fs-800: 2.125rem;
-    --fs-xl: 2rem;
+    --fs-xl: 3rem;
 }
 
 .lightmode {
@@ -63,6 +63,7 @@
 
 body {
     font-family: var(--ff-body);
+    line-height: 1.5;
     background-color: var(--background);
     color: var(--foreground);
 }
@@ -180,6 +181,7 @@ a:hover {
 /* Home Page */
 
 .homepage-container {
+    text-align: center;
     margin-top: 5em;
 }
 
@@ -191,7 +193,7 @@ a:hover {
 
 @media (max-width: 992px) {
     .homepage-container {
-        margin-top: 5rem;
+        margin-top: 8rem;
     }
 }
 
