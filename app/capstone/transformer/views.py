@@ -181,7 +181,7 @@ class CreateCheckoutSessionView(View):
             product_id = self.kwargs["pk"]
             product = Product.objects.get(id=product_id)
             stripe.api_key = settings.STRIPE_SECRET_KEY # type: ignore
-            YOUR_DOMAIN = settings.DOMAIN
+            YOUR_DOMAIN = settings.DOMAIN # type: ignore
             checkout_session = stripe.checkout.Session.create(
                 line_items=[
                     {
