@@ -408,7 +408,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* History */
-.table {
+/* .table {
     --bs-table-bg: var(--background) !important;
     --bs-table-color: var(--foreground) !important;
-}
+} */
