@@ -48,6 +48,14 @@ body {
     color: var(--foreground);
 }
 
+main {
+    margin-top: 100px;
+}
+
+footer {
+    align-self: flex-end;
+}
+
 div {
     transition: all 0.2s linear !important;
 }
@@ -128,11 +136,6 @@ a:hover {
     -ms-animation: fadeIn 0.5s;
     animation-delay: 0.5s;
     animation-fill-mode: forwards;
-}
-.vertical-center-top {
-    min-height: calc(100vh - 56px); /* Accounts for navbar */
-    display: flex;
-    align-items: center;
 }
 
 /* Navbar */

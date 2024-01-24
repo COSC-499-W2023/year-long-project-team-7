@@ -27,7 +27,7 @@
 body {
     background: var(--background);
     animation: gradient 20s ease infinite;
-    background-size: 400% 400%;
+    /* background-size: 400% 400%; */
     background-attachment: fixed;
 }
 
