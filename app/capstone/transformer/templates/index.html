@@ -2,12 +2,12 @@
 {% load static %}
 {% block content %}
     <link rel="stylesheet" href="{% static 'grad-background.css' %}" />
-    <div class="container d-flex flex-column align-items-center justify-content-center gap-5">
-        <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3">
+    <div class="homepage-container container-fluid d-flex flex-column justify-content-center align-items-center">
+        <div class="container-fluid d-flex flex-column justify-content-center align-items-center">
             <h1 class="title fade-in-first bigger-h1">Welcome to Platonix</h1>
             <p class="fade-in-second bigger-p">Your personal AI driven educational assistant</p>
         </div>
-        <div class="d-flex flex-column align-items-center justify-content-center fade-in-second">
+        <div class="container-fluid d-flex flex-column justify-content-center align-items-center fade-in-second">
             <p class="bigger-p">
                 Turn your texts into beautiful slide presentations, using
                 <a href="{% url 'transform' %}">the latest AI technology</a>.
