@@ -140,7 +140,24 @@ a:hover {
 .logo {
     width: 50px;
     height: auto;
-    margin-left: -22px;
+}
+
+.title-logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.navbar {
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+}
+
+.navbar-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
 }
 
 .navbar-custom {
@@ -155,6 +172,7 @@ a:hover {
 }
 .navbar-brand {
     font-family: var(--font-family-accent);
+    display: none;
 }
 
 .navbar-brand:hover {
@@ -172,9 +190,8 @@ a:hover {
     transform: scale(1.05);
 }
 
-.navbar {
-    padding-left: 2em;
-    padding-right: 2em;
+.homepage-nav:hover {
+    transform: none;
 }
 
 .light-mode-toggle {
@@ -183,14 +200,13 @@ a:hover {
     background: transparent;
     cursor: pointer;
     padding-bottom: 30px;
-    margin-right: 1rem;
     border-radius: 5px;
     width: 30px;
     height: 30px;
 }
 
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
-@media (max-width: 1000px) {
+@media (max-width: 992px) {
     .navbar {
         flex-direction: column;
     }
@@ -201,6 +217,27 @@ a:hover {
 
     .navbar-collapse {
         order: 2;
+    }
+
+    .logout-nav {
+        display: none;
+    }
+
+    .title-logo {
+        gap: 0.5rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
+    .navbar-brand {
+        display: inline;
     }
 }
 

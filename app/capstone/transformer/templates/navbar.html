@@ -1,21 +1,25 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-custom navbar-light fixed-top">
+<nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container-fluid">
-        <!-- Navbar toggler button -->
-        <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarLinks"
-                aria-controls="navbarLinks"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- Title/logo -->
-        <a class="navbar-brand" href="{% url 'index' %}"><b>PLATONIX</b></a>
-        <img class="logo"
-             src="{% static 'img/thinker-100-solid.png' %}"
-             alt="Logo" />
+        <div class="title-logo">
+            <!-- Navbar toggler button -->
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarLinks"
+                    aria-controls="navbarLinks"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Title/logo -->
+            <a class="navbar-brand" href="{% url 'index' %}"><b>PLATONIX</b></a>
+            <a href="{% url 'index' %}" class="homepage-nav" aria="homepage">
+                <img class="logo"
+                     src="{% static 'img/thinker-100-solid.png' %}"
+                     alt="Logo" />
+            </a>
+        </div>
         <!-- Links -->
         <div class="collapse navbar-collapse" id="navbarLinks">
             <ul class="navbar-nav ml-auto">
@@ -32,20 +36,25 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'history' %}">History</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>
-        <button id="light-mode-toggle" class="light-mode-toggle">
-            <svg width="100%" viewBox="0 0 496 496">
-                <path fill="var(--foreground)" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)" />
-            </svg>
-        </button>
-        <!-- Profile picture (Example source used) -->
-        {% if user.is_authenticated %}
-            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                 alt="Profile Picture"
-                 class="profile-picture" />
-            <a class="nav-link" style="margin-left: 10px" href="/logout"><b>Logout</b></a>
-        {% endif %}
+        <div class="navbar-right">
+            <button id="light-mode-toggle" class="light-mode-toggle">
+                <svg width="100%" viewBox="0 0 496 496">
+                    <path fill="var(--foreground)" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)" />
+                </svg>
+            </button>
+            <!-- Profile picture (Example source used) -->
+            {% if user.is_authenticated %}
+                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                     alt="Profile Picture"
+                     class="profile-picture" />
+                <a class="nav-link logout-nav" href="/logout"><b>Logout</b></a>
+            {% endif %}
+        </div>
     </div>
 </nav>
