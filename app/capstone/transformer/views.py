@@ -177,30 +177,34 @@ def store(request: HttpRequest) -> HttpResponse:
 
 class CreateCheckoutSessionView(View):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse: # type: ignore
-        product_id = self.kwargs["pk"]
-        product = Product.objects.get(id=product_id)
-        stripe.api_key = settings.STRIPE_SECRET_KEY # type: ignore
-        YOUR_DOMAIN = "http://127.0.0.1:8000"
-        checkout_session = stripe.checkout.Session.create(
-            line_items=[
-                {
-                        'price_data': {
-                            'currency': 'cad',
-                            'unit_amount': product.get_display_price_cents,
-                            'product_data': {
-                                'name': product.name
+        if request.user.is_authenticated:
+            product_id = self.kwargs["pk"]
+            product = Product.objects.get(id=product_id)
+            stripe.api_key = settings.STRIPE_SECRET_KEY # type: ignore
+            YOUR_DOMAIN = settings.DOMAIN
+            checkout_session = stripe.checkout.Session.create(
+                line_items=[
+                    {
+                            'price_data': {
+                                'currency': 'cad',
+                                'unit_amount': product.get_display_price_cents,
+                                'product_data': {
+                                    'name': product.name
+                                },
                             },
-                        },
-                        'quantity': 1
-                }
-            ],
-            mode='payment',
-            success_url=YOUR_DOMAIN + '/success',
-            cancel_url=YOUR_DOMAIN + '/cancel',
-            automatic_tax={'enabled': True},
-        )
-        response = redirect(checkout_session.url) #type: ignore
-        return response
+                            'quantity': 1
+                    }
+                ],
+                mode='payment',
+                success_url=YOUR_DOMAIN + '/success',
+                cancel_url=YOUR_DOMAIN + '/cancel',
+                automatic_tax={'enabled': True},
+            )
+            response = redirect(checkout_session.url) #type: ignore
+            return response
+        else:
+            messages.error(request, "You must be logged in to purchase a product.")
+            return redirect("store")
     
     
 def success(request: HttpRequest) -> HttpResponse:
