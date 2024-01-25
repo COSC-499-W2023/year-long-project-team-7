@@ -121,7 +121,7 @@ a {
 
 a:hover {
     color: var(--clr-primary-lighter);
-    transform: translateY(-2px);
+    transform: translateY(-0.125em);
 }
 
 /* Titles and animations */
@@ -139,26 +139,7 @@ a:hover {
         opacity: 1;
     }
 }
-@keyframes increaseTextSize {
-    0% {
-        opacity: 0;
-        font-size: 36px;
-    }
-    100% {
-        opacity: 1;
-        font-size: 50px;
-    }
-}
 
-.increase-size-fade {
-    font-size: 36px;
-    animation: increaseTextSizeFade 1s ease;
-    -webkit-animation: increaseTextSizeFade 1s ease;
-    -moz-animation: increaseTextSizeFade 1s ease;
-    -o-animation: increaseTextSizeFade 1s ease;
-    -ms-animation: increaseTextSizeFade 1s ease;
-    animation-fill-mode: forwards;
-}
 .fade-in-first {
     animation: fadeIn 0.5s;
     -webkit-animation: fadeIn 0.5s;
@@ -200,7 +181,7 @@ a:hover {
 /* Navbar */
 
 .logo {
-    width: 50px;
+    width: 3.125em;
     height: auto;
 }
 
@@ -227,10 +208,10 @@ a:hover {
 }
 
 .profile-picture {
-    width: 40px;
-    height: 40px;
+    width: 2.5em;
+    height: 2.5em;
     border-radius: 50%;
-    margin-left: 10px;
+    margin-left: 0.625em;
 }
 .navbar-brand {
     font-family: var(--ff-heading);
@@ -261,10 +242,10 @@ a:hover {
     border: 2px solid var(--foreground);
     background: transparent;
     cursor: pointer;
-    padding-bottom: 30px;
-    border-radius: 5px;
-    width: 30px;
-    height: 30px;
+    padding-bottom: 1.875em;
+    border-radius: 0.3125em;
+    width: 1.875em;
+    height: 1.875em;
 }
 
 /* CSS for small screens (Keeps formatting order when toggler is pushed) */
@@ -352,8 +333,8 @@ input[type="range"]::-moz-range-thumb {
     border: 2px solid var(--clr-primary);
     background-color: var(--clr-primary);
     color: white;
-    border-radius: 20px;
-    padding: 10px 20px;
+    border-radius: 1.25em;
+    padding: 0.625em 1.25em;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
@@ -391,14 +372,14 @@ input[type="range"]::-moz-range-thumb {
 
 .template-choice {
     display: inline-block;
-    margin: 10px;
+    margin: 0.625em;
     cursor: pointer;
 }
 
 .template-choice img {
     width: 200px;
     height: auto;
-    border-radius: 10px;
+    border-radius: 0.625em;
     border: 2px solid transparent;
 }
 
@@ -471,10 +452,10 @@ input[type="range"]::-moz-range-thumb {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 20px;
+    padding: 1.25em;
     background-color: #00000000;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 0 10px #00000000;
+    border-radius: 0.625em; /* Rounded corners */
+    box-shadow: 0 0 0.625em #00000000;
 }
 
 @keyframes spinner {
