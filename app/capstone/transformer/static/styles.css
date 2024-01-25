@@ -73,7 +73,18 @@ main {
 }
 
 footer {
-    align-self: flex-end;
+    margin-top: 5em;
+}
+
+footer p {
+    color: grey;
+}
+
+footer a {
+    text-decoration: underline;
+    color: grey;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 1px;
 }
 
 div {
@@ -176,6 +187,15 @@ a:hover {
     .homepage-container {
         margin-top: 8rem;
     }
+}
+
+/* About Us */
+.about-container {
+    max-width: 35em;
+}
+
+.about-container p {
+    text-align: center;
 }
 
 /* Navbar */
@@ -486,9 +506,3 @@ input[type="range"]::-moz-range-thumb {
     padding: 2em;
     border-radius: 2em;
 }
-
-/* History */
-/* .table {
-    --bs-table-bg: var(--background) !important;
-    --bs-table-color: var(--foreground) !important;
-} */

@@ -1,20 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <div class="container d-flex align-items-center flex-column justify-content-center gap-5">
+    <div class="container d-flex flex-column align-items-center  justify-content-center gap-5">
         <h1 class="fade-in-first bigger-h1 title">About Us</h1>
-        <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3"
-             style="width: 80%">
-            <p class="text-center fade-in-second bigger-p">
+        <div class="about-container d-flex flex-column align-items-center justify-content-center gap-3">
+            <p class="fade-in-second bigger-p">
                 We are working towards making teaching and learning more convenient
                 by empowering professors.
             </p>
-            <p class="text-center fade-in-second bigger-p">
+            <p class="fade-in-second bigger-p">
                 We are are a group of students working to integrate AI into the
                 learning process by giving professors a fast and convenient way to
                 turn their existing course content into learning aids for students.
             </p>
-            <p class="text-center fade-in-second bigger-p">We believe in the promise of AI in improving the way we learn.</p>
+            <p class="fade-in-second bigger-p">We believe in the promise of AI in improving the way we learn.</p>
         </div>
         <div class="flex-row fade-in-second">
             <a class="mx-3" target="_blank" href="https://example.com/">
@@ -39,13 +38,9 @@
         </div>
     </div>
     <footer>
-        <p class="text-center" style="color: grey">
+        <p class="text-center">
             Icons by
-            <a style="text-decoration: underline;
-                      color: grey;
-                      text-underline-offset: 5px;
-                      text-decoration-thickness: 1px"
-               href="https://icons8.com/">Icons8</a>
+            <a href="https://icons8.com/">Icons8</a>
         </p>
     </footer>
-{% endblock %}
+{% endblock content %}
