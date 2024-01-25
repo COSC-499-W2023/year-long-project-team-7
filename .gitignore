@@ -8,3 +8,4 @@ files/
 ssl-cert/
 logs/
 settings_env.py
+start.sh
