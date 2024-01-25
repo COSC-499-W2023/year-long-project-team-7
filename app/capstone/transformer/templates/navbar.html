@@ -16,6 +16,8 @@
             <a class="navbar-brand" href="{% url 'index' %}"><b>PLATONIX</b></a>
             <a href="{% url 'index' %}" class="homepage-nav" aria="homepage">
                 <img class="logo"
+                     width="50"
+                     height="50"
                      src="{% static 'img/thinker-100-solid.png' %}"
                      alt="Logo" />
             </a>
@@ -52,8 +54,10 @@
             {% if user.is_authenticated %}
                 <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                      alt="Profile Picture"
-                     class="profile-picture" />
-                <a class="nav-link logout-nav" href="/logout"><b>Logout</b></a>
+                     class="profile-picture"
+                     width="40"
+                     height="40" />
+                <a class="nav-link logout-nav" href="{% url "logout" %}"><b>Logout</b></a>
             {% endif %}
         </div>
     </div>
