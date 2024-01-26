@@ -20,7 +20,7 @@ class TransformerForm(forms.Form):
                 "rows": 10,
                 "cols": 40,
                 "placeholder": "Enter your prompt here (optional)",
-                "class": "form-control rounded",
+                "class": "form-control rounded custom-text-area",
             }
         ),
     )

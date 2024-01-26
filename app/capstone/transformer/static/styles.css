@@ -29,7 +29,7 @@
     --fs-600: 1.25rem;
     --fs-700: 1.5rem;
     --fs-800: 1.8rem;
-    --fs-xl: 3rem;
+    --fs-xl: 2.7rem;
 }
 
 .lightmode {
@@ -345,8 +345,12 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* File upload */
+.file-upload-btn {
+    width: max-content;
+}
 
 .custom-file-upload {
+    text-align: center;
     position: relative;
     display: inline-block;
     overflow: hidden;
@@ -361,6 +365,10 @@ input[type="range"]::-moz-range-thumb {
 
 .custom-file-input {
     display: none;
+}
+
+.custom-text-area {
+    height: 8em;
 }
 
 .file-upload-text {
@@ -388,19 +396,47 @@ input[type="range"]::-moz-range-thumb {
     transform: translateY(0px);
 }
 
+.submit-btn {
+    border-radius: 2rem;
+    font-size: var(--fs-500);
+    display: block;
+    width: 200px;
+}
+
+@media (min-width: 720px) {
+    .submit-btn {
+        width: 300px;
+    }
+}
+
 /* Templates */
 
+.template-picker {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .template-choice {
-    display: inline-block;
     margin: 0.625em;
     cursor: pointer;
 }
 
 .template-choice img {
-    width: 200px;
+    width: 300px;
     height: auto;
     border-radius: 0.625em;
     border: 2px solid transparent;
+}
+
+@media (min-width: 765px) {
+    .template-choice img {
+        width: 210px;
+    }
+}
+
+.template-choice input[type="radio"] {
+    display: none !important;
 }
 
 .template-choice input[type="radio"]:checked + img {
