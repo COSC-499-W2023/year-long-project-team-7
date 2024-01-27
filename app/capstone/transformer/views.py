@@ -75,7 +75,6 @@ def transform(request: HttpRequest) -> HttpResponse:
 @login_required(login_url="login")
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     conversion = get_object_or_404(Conversion, id=conversion_id)
-
     if request.user.is_authenticated:
         if conversion.user != request.user:
             return HttpResponseForbidden(
@@ -195,6 +194,10 @@ class CreateCheckoutSessionView(View):
                             'quantity': 1
                     }
                 ],
+                metadata={
+                    "product_id": product.id,
+                    "user_id": request.user.id
+                },
                 mode='payment',
                 success_url=YOUR_DOMAIN + '/success',
                 cancel_url=YOUR_DOMAIN + '/cancel',
@@ -217,7 +220,32 @@ def cancel(request: HttpRequest) -> HttpResponse:
   
 @csrf_exempt
 def stripe_webhook(request: HttpRequest) -> HttpResponse:   #this will be needed later to authenticate payments
-  payload = request.body
-  print(payload) 
-  return HttpResponse(status=200)
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        # Retrieve the session. If you require line items in the response, you may include them by expanding line_items.
+        session = stripe.checkout.Session.retrieve(
+        event['data']['object']['id'],
+        expand=['line_items'],
+        )
+        line_items = session.line_items
+        # Fulfill the purchase
+        fulfill_order(line_items)
+    # Passed signature verification
+    return HttpResponse(status=200)
 
+def fulfill_order(line_items):
+  # TODO: fill me in
+  print("Fulfilling order")
