@@ -64,7 +64,7 @@
                         {% for value, text in form.template.field.choices %}
                             <label class="template-choice">
                                 <input type="radio" name="template" value="{{ value }}" style="display:none">
-                                <img src="{% static 'img/template_0' %}{{ value }}.png"
+                                <img src="{% static 'img/template_' %}{{ value }}.png"
                                      alt="{{ text }}"
                                      class="template-image">
                             </label>
