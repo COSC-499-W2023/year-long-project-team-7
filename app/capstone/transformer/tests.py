@@ -236,8 +236,7 @@ class StoreTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "store.html")
-        
-
+       
 class EmailVerificationTest(TestCase):
     def test_email_verification_flow(self):
         # Make a POST request to the sign-up view with valid data
