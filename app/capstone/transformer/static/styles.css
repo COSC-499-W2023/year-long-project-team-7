@@ -310,7 +310,7 @@ input[type="range"] {
     appearance: none;
     background: transparent;
     cursor: pointer;
-    width: 15rem;
+    width: 100%;
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
@@ -471,7 +471,25 @@ input[type="range"]::-moz-range-thumb {
     border-color: var(--clr-primary);
 }
 
+/* Transform Options */
+
+.options {
+    padding: 0.5em;
+    display: grid;
+    gap: 1em;
+    grid-template-columns: repeat(auto-fit, minmax(12em, 1fr));
+}
+
+.dropdown {
+    width: 75%;
+}
+
+.options p {
+    font-weight: 600;
+}
+
 /* Loading screen */
+
 .loading-overlay {
     display: none; /* Hidden by default */
     position: fixed;

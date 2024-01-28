@@ -27,33 +27,30 @@
                 <div class="mb-5">
                     <h2 class="text-left">Options</h2>
                     <hr />
-                    <div class="row">
-                        <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
+                    <div class="options">
+                        <div class="mt-4 text-center d-flex flex-column align-items-center">
                             <p>Language</p>
                             {{ form.language }}
                         </div>
-                        <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
+                        <div class="mt-4 text-center d-flex flex-column align-items-center">
                             <p>Tone</p>
                             {{ form.tone }}
                         </div>
-                        <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
+                        <div class="mt-4 text-center d-flex flex-column align-items-center">
                             <p>Complexity</p>
                             {{ form.complexity }}
                             <small id="complexity_value" class="mt-2">Default</small>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
+                        <div class="mt-4 text-center d-flex flex-column align-items-center">
                             <p>Number of Images</p>
                             {{ form.image_frequency }}
                             <small id="image_frequency_value" class="mt-2">Default</small>
                         </div>
-                        <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
+                        <div class="mt-4 text-center d-flex flex-column align-items-center">
                             <p>Number of slides</p>
                             {{ form.num_slides }}
                             <small id="num_slides_value" class="mt-2">{{ form.num_slides.value }}</small>
                         </div>
-                        <div class="col-4 mb-3 text-center d-flex flex-column align-items-center"></div>
                     </div>
                 </div>
                 <div class="mb-5">
