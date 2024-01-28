@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center align-items-center">
+<div class="d-flex justify-content-center align-items-center mb-5 login-container">
     <div class="card d-flex mt-5 justify-content-center align-items-center"
          style="width: 90%;
                 max-width: 400px">
@@ -24,15 +24,15 @@
             <div class="form-group">
                 <strong>{{ form.email.label }}</strong>
                 {{ form.email }}
-                {% if form.email.errors %}<div style="color: darkred" class="error">{{ form.email.errors }}</div>{% endif %}
+                {% if form.email.errors %}<div class="error">{{ form.email.errors }}</div>{% endif %}
             </div>
             <br />
             <div class="form-group">
                 <strong>{{ form.password.label }}</strong>
                 {{ form.password }}
-                {% if form.password.errors %}<div style="color: darkred" class="error">{{ form.password.errors }}</div>{% endif %}
+                {% if form.password.errors %}<div class="error">{{ form.password.errors }}</div>{% endif %}
             </div>
-            <button class="btn btn-primary mt-3" style="width: 100%" type="submit">{{ submit_text }}</button>
+            <button class="btn btn-primary mt-3 mx-auto login-button" type="submit">{{ submit_text }}</button>
         </form>
         <div class="line mb-3"></div>
         <a class="custom-signin" href="{{ form_alt_action }}">

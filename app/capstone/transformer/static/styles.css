@@ -448,6 +448,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* Sign In/Sign Up */
+
 .custom-signin {
     display: inline-block;
     text-decoration: none;
@@ -469,6 +470,18 @@ input[type="range"]::-moz-range-thumb {
 
 .login-register-form {
     border-color: var(--clr-primary);
+}
+
+.login-button {
+    display: block;
+    width: 50%;
+    max-width: 150px;
+}
+
+@media (max-width: 992px) {
+    .login-container {
+        margin-top: -4em;
+    }
 }
 
 /* Transform Options */
