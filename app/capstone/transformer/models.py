@@ -32,3 +32,10 @@ class Product(models.Model):
     get_display_price = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
     description = models.TextField()
     phrase = models.TextField()
+
+class Subscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    has_subscription = models.BooleanField(default=False)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    name = models.TextField()
