@@ -567,6 +567,18 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* Store */
+
+.store-card-container {
+    display: grid;
+    justify-content: center;
+    gap: 1em;
+    margin: auto 1em;
+    grid-template-columns: repeat(auto-fit, minmax(20em, 1fr));
+}
+
+.store-card {
+}
+
 .card {
     background: var(--clr-card);
     color: var(--foreground);

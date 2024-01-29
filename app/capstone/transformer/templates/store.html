@@ -5,9 +5,9 @@
         <div class="justify-content-center">
             <h1 class="text-center title h1 mt-3">Choose your subscription:</h1>
         </div>
-        <div class="row justify-content-around">
+        <div class="store-card-container">
             {% for p in products %}
-                <div class="col-4">
+                <div class="store-card">
                     <div class="card align-items-center mt-5">
                         <div class="card-title fw-bold mt-3 h3">{{ p.name }}</div>
                         <div class="card-subtitle fw-bold mt-4">{{ p.description }}</div>
