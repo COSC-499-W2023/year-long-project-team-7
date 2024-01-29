@@ -13,18 +13,21 @@ from typing import List, Dict
 import json
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 import stripe
 from django.conf import settings
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from .subscriptionManager import has_valid_subscription, give_subscription_to_user
+from django.contrib.auth.models import User
+from datetime import date, timedelta
 
 
 def index(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html")
 
 
-@login_required(login_url="login")
+@user_passes_test(has_valid_subscription)
 def transform(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = TransformerForm(request.POST)
@@ -238,14 +241,22 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:   #this will be needed
         # Retrieve the session. If you require line items in the response, you may include them by expanding line_items.
         session = stripe.checkout.Session.retrieve(
         event['data']['object']['id'],
-        expand=['line_items'],
+        expand=['metadata'],
         )
-        line_items = session.line_items
-        # Fulfill the purchase
-        fulfill_order(line_items)
+        user_id = session.metadata["user_id"]
+        product_id = session.metadata["product_id"]
+        subscription_user = User.objects.get(id=user_id)
+        subscription_product = Product.objects.get(id=product_id)
+        start_date = date.today()
+        # Fulfill the subscription purchase
+        if subscription_product.name == "Daily Subscription":
+            end_date = start_date + timedelta(days=1)
+            give_subscription_to_user(subscription_user, start_date, end_date)
+        elif subscription_product.name == "Daily Subscription":
+            end_date = start_date + timedelta(days=30)
+            give_subscription_to_user(subscription_user, start_date, end_date)
+        elif subscription_product.name == "Daily Subscription":
+            end_date = start_date + timedelta(days=365)
+            give_subscription_to_user(subscription_user ,start_date, end_date)
     # Passed signature verification
     return HttpResponse(status=200)
-
-def fulfill_order(line_items):
-  # TODO: fill me in
-  print("Fulfilling order")
