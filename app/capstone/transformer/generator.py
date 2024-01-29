@@ -14,7 +14,7 @@ from docx import Document  # type: ignore
 from striprtf.striprtf import rtf_to_text
 import os
 import subprocess
-
+from django.conf import settings
 
 def pptx_to_pdf(pptx_filename: str) -> str:
     file_system = FileSystemStorage()
@@ -22,9 +22,7 @@ def pptx_to_pdf(pptx_filename: str) -> str:
     files_location = file_system.base_location
     base_name, extension = pptx_filename.rsplit(".", 1)
 
-    command = (
-        f"soffice --headless --convert-to pdf --outdir {files_location} {file_path}"
-    )
+    command = f"soffice --headless --convert-to pdf --outdir {files_location} {file_path}" if settings.IS_DEV else f"HOME=/var/lib/www-libreoffice soffice --headless --convert-to pdf --outdir {files_location} {file_path}"
 
     subprocess.run(command, shell=True, check=True)
 
