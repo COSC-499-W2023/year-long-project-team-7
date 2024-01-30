@@ -8,6 +8,7 @@ from django.core.files.storage import FileSystemStorage
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
+from .forms import (UpdateEmailForm, UpdatePasswordForm, ProfileUpdateForm, AccountDeletionForm)
 from .models import Conversion, File, Products
 from typing import List, Dict
 import json
@@ -179,3 +180,45 @@ def store(request: HttpRequest) -> HttpResponse:
 
 def payments(request: HttpRequest) -> HttpResponse:
     return render(request, "payments.html")
+
+
+@login_required(login_url="login")
+def profile(request):
+    if request.method == "POST":
+        # User forms for changing username and password
+        e_form = UpdateEmailForm(request.POST, instance=request.user)
+        p_form = UpdatePasswordForm(user=request.user, data=request.POST)
+        # Profile form for changing profile picture
+        pic_form = ProfileUpdateForm(
+            request.POST, request.FILES, instance=request.user.profile
+        )
+        # Delete profile form
+        delete_form = AccountDeletionForm(request.POST)
+        if e_form.is_valid():
+            e_form.save()
+            messages.success(request, f"Your email has been updated!")
+        if p_form.is_valid():
+            p_form.save()
+            messages.success(request, f"Your password has been updated!")
+        if pic_form.is_valid():
+            pic_form.save()
+            # messages.success(request, f'Your profile picture has been updated!')   #For some reason this message always sends even when the field is blank
+        if delete_form.is_valid() and delete_form.cleaned_data["confirm_delete"]:
+            request.user.delete()
+            logout(request)  # Log out the user after account deletion
+            messages.success(request, f"Your account has been deleted.")
+            return redirect("login")
+        return redirect("profile")
+    else:
+        e_form = UpdateEmailForm(instance=request.user)
+        p_form = UpdatePasswordForm(user=request.user)
+        pic_form = ProfileUpdateForm(instance=request.user.profile)
+        delete_form = AccountDeletionForm()
+    context = {
+        "e_form": e_form,
+        "p_form": p_form,
+        "pic_form": pic_form,
+        "delete_form": delete_form,
+    }
+    return render(request, "profile.html", context)
+    
