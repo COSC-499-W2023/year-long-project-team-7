@@ -1,17 +1,7 @@
-import pdfplumber
-from pptx import Presentation  # type: ignore
 from .models import Conversion, File, User
 from .presentationGenerator import PresentationGenerator
-from reportlab.lib.pagesizes import letter  # type: ignore
-from reportlab.lib import colors  # type: ignore
-from reportlab.lib.styles import getSampleStyleSheet  # type: ignore
-from reportlab.platypus import SimpleDocTemplate, Paragraph  # type: ignore
-from reportlab.pdfgen import canvas  # type: ignore
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
-from striprtf.striprtf import rtf_to_text  # type: ignore
-from docx import Document  # type: ignore
-from striprtf.striprtf import rtf_to_text
 import os
 import subprocess
 from django.conf import settings
@@ -38,7 +28,6 @@ def generate_output(files: list[File], conversion: Conversion) -> None:
     pres_manager = PresentationGenerator([f.file.path for f in files], conversion)
 
     output_file_path = pres_manager.build_presentation()
-    # output_file_path = "nothing.pptx"
     file_name, file_extension = os.path.splitext(output_file_path)
 
     user = None
@@ -62,7 +51,7 @@ def generate_output(files: list[File], conversion: Conversion) -> None:
     new_pdf = File(
         user=user,
         conversion=conversion,
-        type="pdf",
+        type="application/pdf",
         file=pdf_preview_path,
         is_output=True,
     )
