@@ -5,13 +5,13 @@ from django.contrib.auth.models import User
 
 
 class Conversion(models.Model):
-    date = models.DateField(default=timezone.now)
+    date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     user_parameters = JSONField(null=True)
 
 
 class File(models.Model):
-    date = models.DateField(default=timezone.now)
+    date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     conversion = models.ForeignKey(Conversion, on_delete=models.CASCADE)
     is_output = models.BooleanField(default=False)
@@ -21,7 +21,7 @@ class File(models.Model):
 
 
 class Transaction(models.Model):
-    date = models.DateField(default=timezone.now)
+    date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.IntegerField()
 

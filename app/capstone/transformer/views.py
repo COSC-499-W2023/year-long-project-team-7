@@ -20,6 +20,45 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html")
 
 
+def home(request: HttpRequest) -> HttpResponse:
+    return render(request, "home.html")
+
+
+def about(request: HttpRequest) -> HttpResponse:
+    return render(request, "about.html")
+
+
+def register(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Account successfully created.")
+            return redirect("login")
+        else:
+            messages.error(request, "Error in the form submission.")
+    else:
+        form = RegisterForm()
+    return render(request, "register.html", {"form": form})
+
+
+def login(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
+            user = authenticate(request, username=username, password=password)
+            if user:
+                auth_login(request, user)
+                return redirect("transform")
+            else:
+                messages.error(request, "Incorrect Credentials.")
+    else:
+        form = LoginForm()
+    return render(request, "login.html", {"form": form})
+
+
 @login_required(login_url="login")
 def transform(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
@@ -101,45 +140,6 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     )
 
 
-def home(request: HttpRequest) -> HttpResponse:
-    return render(request, "home.html")
-
-
-def about(request: HttpRequest) -> HttpResponse:
-    return render(request, "about.html")
-
-
-def register(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Account successfully created.")
-            return redirect("login")
-        else:
-            messages.error(request, "Error in the form submission.")
-    else:
-        form = RegisterForm()
-    return render(request, "register.html", {"form": form})
-
-
-def login(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data["email"]
-            password = form.cleaned_data["password"]
-            user = authenticate(request, username=username, password=password)
-            if user:
-                auth_login(request, user)
-                return redirect("transform")
-            else:
-                messages.error(request, "Incorrect Credentials.")
-    else:
-        form = LoginForm()
-    return render(request, "login.html", {"form": form})
-
-
 @login_required(login_url="login")
 def logout(request: HttpRequest) -> HttpResponse:
     auth_logout(request)
@@ -150,7 +150,9 @@ def logout(request: HttpRequest) -> HttpResponse:
 @login_required(login_url="login")
 def history(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
-        user_conversions = Conversion.objects.filter(user=request.user).all()
+        user_conversions = (
+            Conversion.objects.filter(user=request.user).order_by("-date").all()
+        )
 
         history = {}
 

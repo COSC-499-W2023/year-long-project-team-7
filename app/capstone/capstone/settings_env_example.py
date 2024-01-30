@@ -8,6 +8,8 @@ OPENAI_MODEL = "gpt-3.5-turbo-1106"
 # OPENAI_MODEL = "gpt-4-1106-preview" WARNING! EXPENSIVE!
 
 DEBUG = True
+IS_DEV = True
+
 
 EMAIL_HOST_PASSWORD = "your email host password here"
 
