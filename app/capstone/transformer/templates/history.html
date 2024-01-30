@@ -66,6 +66,12 @@
                             </div>
                         </div>
                     </div>
+                {% empty %}
+                    <div class="d-flex flex-column justify-content-center align-items-center"
+                         style="height: 200px">
+                        <p>You have no transformations.</p>
+                        <a href="/transform" class="btn btn-primary">Start a new transformation</a>
+                    </div>
                 {% endfor %}
             </div>
         </div>

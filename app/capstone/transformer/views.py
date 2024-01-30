@@ -1,14 +1,21 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
-from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import logout as auth_logout, get_user_model
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.core.files.storage import FileSystemStorage
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
 from .models import Conversion, File, Products
+from .tokens import account_activation_token
 from typing import List, Dict
 import json
 from .generator import generate_output
@@ -32,9 +39,16 @@ def register(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Account successfully created.")
-            return redirect("login")
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            email = form.cleaned_data.get("email")
+            if email:
+                activateEmail(request, user, email)
+                messages.success(request, "Account successfully created.")
+                return redirect("login")
+            else:
+                messages.error(request, "Email is required.")
         else:
             messages.error(request, "Error in the form submission.")
     else:
@@ -57,6 +71,13 @@ def login(request: HttpRequest) -> HttpResponse:
     else:
         form = LoginForm()
     return render(request, "login.html", {"form": form})
+
+
+@login_required(login_url="login")
+def logout(request: HttpRequest) -> HttpResponse:
+    auth_logout(request)
+    messages.success(request, "Logged Out Successfully.")
+    return redirect("login")
 
 
 @login_required(login_url="login")
@@ -124,15 +145,6 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
 
     output_files = File.objects.filter(conversion=conversion, is_output=True)
 
-    #! Might need later
-    # pdf_previews = []
-    # pdf_previews.append("example.pdf")
-    # for file in output_files:
-    #     file_name = file.file.name
-    #     base_name, extension = file_name.rsplit(".", 1)
-    #     if file_system.exists(f"{base_name}.pdf"):
-    #         pdf_previews.append(f"{base_name}.pdf")
-
     return render(
         request,
         "results.html",
@@ -140,11 +152,49 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     )
 
 
-@login_required(login_url="login")
-def logout(request: HttpRequest) -> HttpResponse:
-    auth_logout(request)
-    messages.success(request, "Logged Out Successfully.")
+def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
+    User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except:
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, "Email verified. You can now log into your account.")
+        return redirect("login")
+    else:
+        messages.error(request, "Activation link is invalid!")
     return redirect("index")
+
+
+def activateEmail(request: HttpRequest, user: User, to_email: str) -> None:
+    mail_subject = "Activate your Platonix account"
+    message = render_to_string(
+        "template_activate_account.html",
+        {
+            "user": user.username,
+            "domain": get_current_site(request).domain,
+            "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+            "token": account_activation_token.make_token(user),
+            "protocol": "https" if request.is_secure() else "http",
+        },
+    )
+    email = EmailMessage(mail_subject, message, to=[to_email])
+    if email.send():
+        messages.success(
+            request,
+            f"Hi {user}, please go to your inbox at {to_email} \
+                     and click on the activiation link to complete registration.",
+        )
+    else:
+        messages.error(
+            request,
+            f"Problem sending email to {to_email}. Please verify \
+                       spelling.",
+        )
+    return
 
 
 @login_required(login_url="login")
@@ -173,6 +223,7 @@ def history(request: HttpRequest) -> HttpResponse:
 
 def store(request: HttpRequest) -> HttpResponse:
     products = Products.objects.all()
+    print(products)
     return render(request, "store.html", {"products": products})
 
 

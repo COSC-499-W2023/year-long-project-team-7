@@ -209,3 +209,18 @@ _Tasks Screenshot_
 2. Stripe payment integration (subscription_checkout branch)
 
 [14]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=milestone%3A%22Week+15%22++assignee%3A%40me
+
+## Jan 15 -> Jan 21
+
+![evaluation screenshot](../../img/keiran-eval-16.png)
+_Team evaluation Screenshot_
+
+![w15 tasks screenshot](../../img/keiran-w16-tasks.png)
+_Tasks Screenshot_
+
+[Individual W16 Tasks][15]
+
+### Goals this week
+1. Stripe payment integration (subscription_checkout branch)
+
+[15]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=+assignee%3A%40me
