@@ -250,3 +250,22 @@ Note: Account functionality has had it's merge conflicts resolved. This week the
 
 <br>
 
+## Jan 21 2023 -> Jan 28 2024
+
+![evaluation-screenshot](../../img/liam-eval-17.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w17-tasks.png)
+<br>
+Note: Basic user account functionality is complete. While there is an addionional deletion feature I'd like to add (see comment in my latest PR), I'm holding off on it until after peer reviews are complete.
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Milestone)
+<br>
+[Latest PR](https://github.com/COSC-499-W2023/year-long-project-team-7/pull/190)
+
+<br>
