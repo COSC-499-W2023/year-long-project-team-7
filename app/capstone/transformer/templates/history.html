@@ -2,16 +2,15 @@
 {% load static %}
 {% load json_filter %}
 {% block content %}
-    {% include 'navbar.html' %}
-    <div class="container d-flex justify-content-center bg-dark text-white"
+    <div class="container d-flex justify-content-center"
          style="padding-top: 100px">
         <div class="col-8">
             <h1 class="text-center title">Transformation History</h1>
             <br>
             <div id="accordion">
                 {% for conversion, files in history.items %}
-                    <div class="card bg-dark text-light border-light mb-3">
-                        <div class="card-header border-light"
+                    <div class="card mb-3 border-light">
+                        <div class="card-header"
                              id="heading{{ forloop.counter }}"
                              data-toggle="collapse"
                              data-target="#collapse{{ forloop.counter }}"
@@ -23,7 +22,7 @@
                              class="collapse"
                              aria-labelledby="heading{{ forloop.counter }}"
                              data-parent="#accordion">
-                            <div class="card-body text-light">
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <p class="card-text">
@@ -46,13 +45,13 @@
                                         </p>
                                     </div>
                                     <div class="col-md-6">
-                                        <h4 class="card-subtitle mb-2 text-light">Input Files</h4>
+                                        <h4 class="card-subtitle mb-2">Input Files</h4>
                                         {% for file in files.input_files %}
                                             <p class="card-text">
                                                 <a href="{{ file.file.url }}" download>{{ file.file }}</a>
                                             </p>
                                         {% endfor %}
-                                        <h4 class="card-subtitle mb-2 text-light">Output Files</h4>
+                                        <h4 class="card-subtitle mb-2">Output Files</h4>
                                         {% for file in files.output_files %}
                                             <p class="card-text">
                                                 <a href="{{ file.file.url }}" download>{{ file.file }}</a>
