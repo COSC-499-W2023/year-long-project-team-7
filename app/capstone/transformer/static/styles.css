@@ -216,6 +216,12 @@ a:hover {
     padding-right: 1.5em;
 }
 
+@media (min-width: 992px) {
+    .logout {
+        display: none;
+    }
+}
+
 .navbar-right {
     display: flex;
     flex-direction: row;
