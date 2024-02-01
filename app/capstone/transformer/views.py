@@ -152,6 +152,25 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     )
 
 
+@login_required(login_url="login")
+def download_file(request: HttpRequest, file_id: int) -> HttpResponse:
+    file = get_object_or_404(File, id=file_id)
+
+    if request.user.is_authenticated:
+        if file.user != request.user:
+            return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+            )
+    else:
+        return HttpResponseForbidden(
+            "You do not have permission to access this resource."
+        )
+
+    response = HttpResponse(file.file, content_type=file.type)
+    response["Content-Disposition"] = f'attachment; filename="{file.file.name}"'
+    return response
+
+
 def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
     User = get_user_model()
     try:

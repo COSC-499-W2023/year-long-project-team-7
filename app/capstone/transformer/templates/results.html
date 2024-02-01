@@ -32,7 +32,7 @@
                                 pdfjsLib.GlobalWorkerOptions.workerSrc =  "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.7.570/build/pdf.worker.min.js";
                                 
                                 const pdfContainer = document.getElementById("pdf-container");
-                                const pdfUrl = "{{ file.file.url }}";
+                                const pdfUrl = "{% url 'download_file' file.id %}";
                 
                                 let currentPage = 1;
                             
@@ -74,7 +74,7 @@
                 <div class="d-flex justify-content-center">
                     <p>
                         {% for file in output_files %}
-                            <a href="{{ file.file.url }}" download>{{ file.file }}</a>
+                            <a href="{% url 'download_file' file.id %}" download>{{ file.file }}</a>
                             {% if not forloop.last %}&nbsp;&nbsp;{% endif %}
                         {% endfor %}
                     </p>

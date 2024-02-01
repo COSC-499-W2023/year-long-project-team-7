@@ -48,13 +48,13 @@
                                         <h4 class="card-subtitle mb-2">Input Files</h4>
                                         {% for file in files.input_files %}
                                             <p class="card-text">
-                                                <a href="{{ file.file.url }}" download>{{ file.file }}</a>
+                                                <a href="{% url 'download_file' file.id %}" download>{{ file.file }}</a>
                                             </p>
                                         {% endfor %}
                                         <h4 class="card-subtitle mb-2">Output Files</h4>
                                         {% for file in files.output_files %}
                                             <p class="card-text">
-                                                <a href="{{ file.file.url }}" download>{{ file.file }}</a>
+                                                <a href="{% url 'download_file' file.id %}" download>{{ file.file }}</a>
                                             </p>
                                         {% endfor %}
                                     </div>
