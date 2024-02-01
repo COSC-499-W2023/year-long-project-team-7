@@ -1,4 +1,5 @@
 #bash
+sudo systemctl start docker
 docker start capstone-postgres
 source venv/bin/activate
 cd app
