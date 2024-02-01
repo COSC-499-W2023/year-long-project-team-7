@@ -14,7 +14,7 @@
                 <div class="card-body text-light">
                     {% if output_files %}
                         {% for file in output_files %}
-                            {% if file.type == "pdf" %}
+                            {% if file.type == "application/pdf" %}
                                 <div class="d-flex justify-content-center align-items-center">
                                     <a id="prev-button" class="btn btn-primary">
                                         <span class="bi bi-arrow-left"></span>
