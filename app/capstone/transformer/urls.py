@@ -14,4 +14,5 @@ urlpatterns = [
     path("payments", views.payments, name="payments"),
     path("results/<int:conversion_id>/", views.results, name="results"),
     path("profile", views.profile, name="profile"),
+    path("activate/<uidb64>/<token>", views.activate, name="activate"),
 ]
