@@ -1,4 +1,5 @@
 #bash
+docker start capstone-postgres
 source venv/bin/activate
 cd app
 pip install -r requirements.txt
