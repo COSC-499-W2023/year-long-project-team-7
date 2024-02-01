@@ -16,7 +16,54 @@ addEventListener("load", () => {
     }
 });
 
+
+function pdfPreview(){
+    pdfjsLib.GlobalWorkerOptions.workerSrc =  "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.7.570/build/pdf.worker.min.js";
+                                
+    const pdfContainer = document.getElementById("pdf-container");
+    const pdf = $('#pdf-file').val();
+
+    let currentPage = 1;
+
+    const showPage = function (pageNum) {
+        pdfjsLib
+            .getDocument(pdf)
+            .promise.then((pdfDoc) => {
+                return pdfDoc.getPage(pageNum);
+            })
+            .then((page) => {
+                const scale = 1;
+                const viewport = page.getViewport({ scale });
+    
+                const canvas = document.getElementById("pdf-canvas");
+                const context = canvas.getContext("2d");
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                pdfContainer.appendChild(canvas);
+    
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport,
+                };
+                const renderTask = page.render(renderContext);
+                currentPage = pageNum;
+                return renderTask.promise;
+            })
+            .catch((error) => {
+                console.error("Error loading PDF:", error);
+            });
+    };
+
+    showPage(currentPage);
+}
+
 $(document).ready(function () {
+
+    if($("#pdf-file").length > 0){
+        console.log("asdgfasdf")
+        pdfPreview();
+    }
+
     $(".file-download-button").click(function () {
         const fileUrl = $(this).attr("data-fileurl");
         window.location.href = fileUrl;

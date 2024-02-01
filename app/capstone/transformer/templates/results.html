@@ -25,48 +25,7 @@
                                         <span class="bi bi-arrow-right"></span>
                                     </a>
                                 </div>
-                                <!-- PDF Rendering -->
-                                <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.7.570/build/pdf.min.js"></script>
-                                <script id="pdf-preview-script">
-                                // Set workerSrc
-                                pdfjsLib.GlobalWorkerOptions.workerSrc =  "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.7.570/build/pdf.worker.min.js";
-                                
-                                const pdfContainer = document.getElementById("pdf-container");
-                                const pdfUrl = "{% url 'download_file' file.id %}";
-                
-                                let currentPage = 1;
-                            
-                                const showPage = function (pageNum) {
-                                    pdfjsLib
-                                        .getDocument(pdfUrl)
-                                        .promise.then((pdfDoc) => {
-                                            return pdfDoc.getPage(pageNum);
-                                        })
-                                        .then((page) => {
-                                            const scale = 1;
-                                            const viewport = page.getViewport({ scale });
-                                
-                                            const canvas = document.getElementById("pdf-canvas");
-                                            const context = canvas.getContext("2d");
-                                            canvas.height = viewport.height;
-                                            canvas.width = viewport.width;
-                                            pdfContainer.appendChild(canvas);
-                                
-                                            const renderContext = {
-                                                canvasContext: context,
-                                                viewport: viewport,
-                                            };
-                                            const renderTask = page.render(renderContext);
-                                            currentPage = pageNum;
-                                            return renderTask.promise;
-                                        })
-                                        .catch((error) => {
-                                            console.error("Error loading PDF:", error);
-                                        });
-                                };
-
-                                showPage(currentPage);
-                                </script>
+                                <input type="hidden" id="pdf-file" value="{% url 'download_file' file.id %}">
                             {% endif %}
                         {% endfor %}
                     {% endif %}
