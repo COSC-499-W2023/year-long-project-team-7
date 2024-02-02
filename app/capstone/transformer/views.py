@@ -222,13 +222,14 @@ def cancel(request: HttpRequest) -> HttpResponse:
 
   
 @csrf_exempt
-def stripe_webhook(request: HttpRequest) -> HttpResponse:   #this will be needed later to authenticate payments
+def stripe_webhook(request: HttpRequest) -> HttpResponse:
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
+    webhook_key = settings.STRIPE_WEBHOOK_SECRET #type: ignore
     try:
         event = stripe.Webhook.construct_event(
-            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+            payload, sig_header, webhook_key
         )
     except ValueError as e:
         # Invalid payload
@@ -240,23 +241,15 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:   #this will be needed
     if event['type'] == 'checkout.session.completed':
         # Retrieve the session. If you require line items in the response, you may include them by expanding line_items.
         session = stripe.checkout.Session.retrieve(
-        event['data']['object']['id'],
-        expand=['metadata'],
+        event['data']['object']['id']
         )
-        user_id = session.metadata["user_id"]
-        product_id = session.metadata["product_id"]
+        user_id = session["metadata"]["user_id"]
+        product_id = session["metadata"]["product_id"]
         subscription_user = User.objects.get(id=user_id)
         subscription_product = Product.objects.get(id=product_id)
         start_date = date.today()
-        # Fulfill the subscription purchase
-        if subscription_product.name == "Daily Subscription":
-            end_date = start_date + timedelta(days=1)
-            give_subscription_to_user(subscription_user, start_date, end_date)
-        elif subscription_product.name == "Daily Subscription":
-            end_date = start_date + timedelta(days=30)
-            give_subscription_to_user(subscription_user, start_date, end_date)
-        elif subscription_product.name == "Daily Subscription":
-            end_date = start_date + timedelta(days=365)
-            give_subscription_to_user(subscription_user ,start_date, end_date)
+        length_days = subscription_product.length_days
+        end_date = start_date + timedelta(days=length_days)
+        give_subscription_to_user(subscription_user, start_date, end_date)
     # Passed signature verification
     return HttpResponse(status=200)
