@@ -23,10 +23,9 @@
                 <div class="col-4">
                     <div class="card bg-secondary align-items-center mt-5">
                         <div class="card-title text-white fw-bold mt-3 h3">{{ p.name }}</div>
-                        <div class="card-subtitle text-white fw-bold mt-4">{{ p.description }}</div>
+                        <div class="card-subtitle text-white fw-bold mt-2">{{ p.description }}</div>
                         <div class="text-white h3 mt-5">${{ p.get_display_price }}</div>
-                        <div class="card-subtitle mb-5 text-white">{{ p.phrase }}</div>
-                        <div class="card-subtitle mb-5 fw-bold text-white">{{ p.get_display_number }} Total Credit Limit</div>
+                        <div class="card-subtitle mt-1 mb-5 text-white">{{ p.phrase }}</div>
                         <form action="{% url 'create-checkout-session' p.id %}" method="POST">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-primary mb-3" id="checkout-button">Checkout</button>
