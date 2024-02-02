@@ -27,15 +27,15 @@ class Transaction(models.Model):
 
 class Product(models.Model):
     name = models.TextField()
-    get_display_number = models.IntegerField()
     get_display_price_cents = models.IntegerField(default=0) #stored in cents for stripe
     get_display_price = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
     description = models.TextField()
     phrase = models.TextField()
+    length_days = models.IntegerField(default=0)
 
 class Subscription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     has_subscription = models.BooleanField(default=False)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
-    name = models.TextField()
+    is_premium = models.BooleanField(default=False)
