@@ -16,15 +16,11 @@ def has_valid_subscription(user: User):
         return False
 
 def give_subscription_to_user(user: User, start_date, end_date): #type: ignore
-    try:
     subscription, created = Subscription.objects.get_or_create(user=user)
     subscription.has_subscription = True
     subscription.start_date = start_date
     subscription.end_date = end_date
     subscription.save()
-        print(f"Created subscription for user {user}")
-    except:
-        print(f"Failed to create subscription for user {user}")
 
 def delete_subscription(user: User):
     try:
