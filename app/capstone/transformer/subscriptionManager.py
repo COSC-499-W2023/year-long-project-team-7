@@ -3,23 +3,28 @@ from datetime import date
 from django.contrib.auth.models import User
 
 def has_valid_subscription(user: User): 
-    if hasattr(user, 'subscription'):
-        subscription = user.subscription
+    try:
+        subscription = Subscription.objects.get(user=user)
         return (
             subscription.has_subscription and
             subscription.start_date is not None and
             subscription.end_date is not None and
             subscription.start_date <= date.today() and
-            subscription.end_date > date.today()
+            subscription.end_date >= date.today()
         )
-    return False
+    except Subscription.DoesNotExist:
+        return False
 
 def give_subscription_to_user(user: User, start_date, end_date): #type: ignore
+    try:
     subscription, created = Subscription.objects.get_or_create(user=user)
     subscription.has_subscription = True
     subscription.start_date = start_date
     subscription.end_date = end_date
     subscription.save()
+        print(f"Created subscription for user {user}")
+    except:
+        print(f"Failed to create subscription for user {user}")
 
 def delete_subscription(user: User):
     try:
