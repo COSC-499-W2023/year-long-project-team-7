@@ -1,4 +1,6 @@
 from pptx import Presentation  # type: ignore
+
+from .presentationManager import PresentationManager
 from .models import Conversion
 from django.conf import settings
 import json
@@ -35,6 +37,8 @@ class SlideContent:
 
 class PresentationGenerator:
     def __init__(self, input_file_paths: list[str], conversion: Conversion):
+        self.manager = PresentationManager()
+
         with open(os.path.join(settings.BASE_DIR, "prompts.json"), "r") as file:
             self.prompts = json.load(file)
 
@@ -204,6 +208,8 @@ class PresentationGenerator:
         file_system = FileSystemStorage()
 
         template = Presentation(file_system.path(f"template_{self.template}.pptx"))
+
+        self.manager.set_presenetation(template)
 
         slide_contents = []
 
