@@ -27,6 +27,59 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html")
 
 
+def home(request: HttpRequest) -> HttpResponse:
+    return render(request, "home.html")
+
+
+def about(request: HttpRequest) -> HttpResponse:
+    return render(request, "about.html")
+
+
+def register(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            email = form.cleaned_data.get("email")
+            if email:
+                activateEmail(request, user, email)
+                messages.success(request, "Account successfully created.")
+                return redirect("login")
+            else:
+                messages.error(request, "Email is required.")
+        else:
+            messages.error(request, "Error in the form submission.")
+    else:
+        form = RegisterForm()
+    return render(request, "register.html", {"form": form})
+
+
+def login(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
+            user = authenticate(request, username=username, password=password)
+            if user:
+                auth_login(request, user)
+                return redirect("transform")
+            else:
+                messages.error(request, "Incorrect Credentials.")
+    else:
+        form = LoginForm()
+    return render(request, "login.html", {"form": form})
+
+
+@login_required(login_url="login")
+def logout(request: HttpRequest) -> HttpResponse:
+    auth_logout(request)
+    messages.success(request, "Logged Out Successfully.")
+    return redirect("login")
+
+
 @login_required(login_url="login")
 def transform(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
@@ -58,11 +111,12 @@ def transform(request: HttpRequest) -> HttpResponse:
 
             for uploaded_file in request.FILES.getlist("files"):
                 new_file = File()
-                new_file.user = request.user if request.user.is_authenticated else None
+                new_file.user = request.user  # type: ignore
                 new_file.conversion = conversion
                 if uploaded_file.content_type is not None:
                     new_file.type = uploaded_file.content_type
                 new_file.file = uploaded_file
+                new_file.is_input = True
                 new_file.save()
                 files.append(new_file)
 
@@ -91,15 +145,6 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
 
     output_files = File.objects.filter(conversion=conversion, is_output=True)
 
-    #! Might need later
-    # pdf_previews = []
-    # pdf_previews.append("example.pdf")
-    # for file in output_files:
-    #     file_name = file.file.name
-    #     base_name, extension = file_name.rsplit(".", 1)
-    #     if file_system.exists(f"{base_name}.pdf"):
-    #         pdf_previews.append(f"{base_name}.pdf")
-
     return render(
         request,
         "results.html",
@@ -107,33 +152,23 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     )
 
 
-def home(request: HttpRequest) -> HttpResponse:
-    return render(request, "home.html")
+@login_required(login_url="login")
+def download_file(request: HttpRequest, file_id: int) -> HttpResponse:
+    file = get_object_or_404(File, id=file_id)
 
-
-def about(request: HttpRequest) -> HttpResponse:
-    return render(request, "about.html")
-
-
-def register(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            email = form.cleaned_data.get("email")
-            if email:
-                activateEmail(request, user, email)
-                messages.success(request, "Account successfully created.")
-                return redirect("login")
-            else:
-                messages.error(request, "Email is required.")
-        else:
-            messages.error(request, "Error in the form submission.")
+    if request.user.is_authenticated:
+        if file.user != request.user:
+            return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+            )
     else:
-        form = RegisterForm()
-    return render(request, "register.html", {"form": form})
+        return HttpResponseForbidden(
+            "You do not have permission to access this resource."
+        )
+
+    response = HttpResponse(file.file, content_type=file.type)
+    response["Content-Disposition"] = f'attachment; filename="{file.file.name}"'
+    return response
 
 
 def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
@@ -181,58 +216,33 @@ def activateEmail(request: HttpRequest, user: User, to_email: str) -> None:
     return
 
 
-def login(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data["email"]
-            password = form.cleaned_data["password"]
-            user = authenticate(request, username=username, password=password)
-            if user:
-                auth_login(request, user)
-                return redirect("transform")
-            else:
-                messages.error(request, "Incorrect Credentials.", "danger")
-    else:
-        form = LoginForm()
-    return render(request, "login.html", {"form": form})
-
-
 @login_required(login_url="login")
-def logout(request: HttpRequest) -> HttpResponse:
-    auth_logout(request)
-    messages.success(request, "Logged Out Successfully.")
-    return redirect("login")
-
-
 def history(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
-        files = (
-            File.objects.filter(user=request.user, is_output=True).order_by("id").all()
+        user_conversions = (
+            Conversion.objects.filter(user=request.user).order_by("-date").all()
         )
-        input_files = File.objects.filter(user=request.user, is_output=False).all()
-        history = []
-        for f in files:
-            row = []
-            row.append(f.date.strftime("%d/%m/%Y"))
-            row.append(
-                input_files.filter(conversion__id=f.conversion.id)
-                .values("file")
-                .get()["file"]
-            )
-            row.append(f.file.name)
-            row.append(f.file.name.split("_")[2].split(".")[0])
-            row.append(f.file.url)
-            history.append(row)
+
+        history = {}
+
+        for conversion in user_conversions:
+            input_files = File.objects.filter(conversion=conversion, is_input=True)
+            output_files = File.objects.filter(conversion=conversion, is_output=True)
+            history[conversion] = {
+                "input_files": input_files,
+                "output_files": output_files,
+            }
+
     else:
         return HttpResponseForbidden(
             "You do not have permission to access this resource."
         )
-    return render(request, "history.html", {"data": history})
+    return render(request, "history.html", {"history": history})
 
 
 def store(request: HttpRequest) -> HttpResponse:
     products = Products.objects.all()
+    print(products)
     return render(request, "store.html", {"products": products})
 
 
