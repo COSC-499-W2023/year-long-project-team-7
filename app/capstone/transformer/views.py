@@ -28,7 +28,7 @@ def index(request: HttpRequest) -> HttpResponse:
 
 
 def transform(request: HttpRequest) -> HttpResponse:
-    if has_valid_subscription(request.user):
+    if has_valid_subscription(request.user.id):
         if request.method == "POST":
             form = TransformerForm(request.POST)
 
@@ -183,7 +183,7 @@ def store(request: HttpRequest) -> HttpResponse:
 class CreateCheckoutSessionView(View):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse: # type: ignore
         if request.user.is_authenticated:
-            if has_valid_subscription(request.user):
+            if has_valid_subscription(request.user.id):
                 messages.error(request, "You already have an active subscription.")
                 return redirect("store")
             else:

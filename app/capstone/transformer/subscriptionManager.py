@@ -2,9 +2,9 @@ from .models import Subscription
 from datetime import date
 from django.contrib.auth.models import User
 
-def has_valid_subscription(user: User) -> bool: 
+def has_valid_subscription(user_id: int) -> bool: 
     try:
-        subscription = Subscription.objects.get(user=user)
+        subscription = Subscription.objects.get(user=user_id)
         return (
             subscription.has_subscription and
             subscription.start_date is not None and
