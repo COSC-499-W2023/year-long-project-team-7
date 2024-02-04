@@ -241,7 +241,7 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
     except ValueError as e:
         # Invalid payload
         return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError as e:
+    except stripe.error.SignatureVerificationError as e: #type: ignore
         # Invalid signature
         return HttpResponse(status=400)
     # Handle the checkout.session.completed event
