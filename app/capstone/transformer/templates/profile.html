@@ -1,21 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <div class="container d-flex justify-content-center"
-         style="padding-top: 100px">
-        <div class="content-section">
+    <div class="container d-flex justify-content-center" style="padding-top: 100px">
+        <div class="content-section rounded p-4" style="background-color: #1c1c1c">
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
-                     role="alert">
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     <strong>Message:</strong> {{ message }}
-                    <button type="button"
-                            class="close"
-                            data-bs-dismiss="alert"
-                            aria-label="Close">
+                    <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             {% endfor %}
+            
             <div class="media">
                 <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" />
                 <div class="media-body">
@@ -23,58 +19,61 @@
                     <p class="text-secondary">{{ user.email }}</p>
                 </div>
             </div>
-            <!-- FORMS HERE -->
+
+            <!-- Email Update Form -->
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4">Email</legend>
                     <div class="form-group">
                         {{ e_form }}
-                        <!-- User form for changing email -->
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mt-3">
                         <button class="btn btn-outline-info" type="submit">Update Email</button>
                     </div>
                 </fieldset>
             </form>
             <br>
+
+            <!-- Password Update Form -->
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4">Password</legend>
                     <div class="form-group">
                         {{ p_form }}
-                        <!-- User form for changing password -->
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mt-3">
                         <button class="btn btn-outline-info" type="submit">Update Password</button>
                     </div>
                 </fieldset>
             </form>
             <br>
+
+            <!-- Profile Picture Update Form -->
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4">Profile Picture</legend>
                     <div class="form-group">
                         {{ pic_form }}
-                        <!-- Profile form for changing profile picture -->
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mt-3">
                         <button class="btn btn-outline-info" type="submit">Update Profile Picture</button>
                     </div>
                 </fieldset>
             </form>
             <br>
+
+            <!-- Account Deletion Form -->
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4">Account Deletion</legend>
                     <div class="form-group">
                         {{ delete_form.as_p }}
-                        <!-- Account deletion form -->
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mt-3">
                         <button class="btn btn-danger" type="submit">Delete Account</button>
                     </div>
                 </fieldset>
