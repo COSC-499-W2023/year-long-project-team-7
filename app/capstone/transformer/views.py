@@ -256,12 +256,18 @@ def profile(request):
         if e_form.is_valid():
             e_form.save()
             messages.success(request, f"Your email has been updated!")
+        else:
+            messages.error(request, f"Invalid email form data. Please check and try again.")
         if p_form.is_valid():
             p_form.save()
             messages.success(request, f"Your password has been updated!")
+        else:
+            messages.error(request, f"Invalid password form data. Please check and try again.")
         if pic_form.is_valid():
             pic_form.save()
             # messages.success(request, f'Your profile picture has been updated!')   #For some reason this message always sends even when the field is blank
+        else:
+            messages.error(request, f"Invalid profile picture form data. Please check and try again.")
         if delete_form.is_valid() and delete_form.cleaned_data["confirm_delete"]:
             request.user.delete()
             logout(request)  # Log out the user after account deletion
