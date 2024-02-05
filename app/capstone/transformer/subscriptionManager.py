@@ -2,7 +2,7 @@ from .models import Subscription
 from datetime import date
 from django.contrib.auth.models import User
 
-def has_valid_subscription(user_id: int) -> bool: 
+def has_valid_subscription(user_id) -> bool: #type: ignore
     try:
         subscription = Subscription.objects.get(user=user_id)
         return (
