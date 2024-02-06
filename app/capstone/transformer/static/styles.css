@@ -399,7 +399,8 @@ input[type="range"]::-moz-range-thumb {
     animation: spinner 1s ease infinite;
 }
 
-/* Store */
+/* Cards */
+
 .card {
     background: var(--clr-card);
     color: var(--foreground);
@@ -407,7 +408,13 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 2em;
 }
 
+.card-header,
+.card-footer {
+    background: var(--clr-card);
+}
+
 /* History */
+
 .table {
     --bs-table-bg: var(--background) !important;
     --bs-table-color: var(--foreground) !important;

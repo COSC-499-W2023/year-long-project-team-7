@@ -16,7 +16,9 @@ addEventListener("load", () => {
     }
 });
 
+
 $(document).ready(function () {
+
     $(".file-download-button").click(function () {
         const fileUrl = $(this).attr("data-fileurl");
         window.location.href = fileUrl;
@@ -70,22 +72,6 @@ $(document).ready(function () {
 
     $("#generator-form").on("submit", function (event) {
         $(".loading-overlay").show();
-    });
-
-    // Reference the showPage function from results.html
-    const pdfPreviewScript = document.getElementById("pdf-preview-script");
-    if (pdfPreviewScript) {
-        eval(pdfPreviewScript.text);
-    }
-
-    // Event listener
-    $("#next-button").on("click", function () {
-        // This function is defined in results.html
-        showPage(currentPage + 1);
-    });
-
-    $("#prev-button").on("click", function () {
-        showPage(currentPage - 1);
     });
 
     $("#light-mode-toggle").on("click", function () {

@@ -15,4 +15,5 @@ urlpatterns = [
     path("results/<int:conversion_id>/", views.results, name="results"),
     path("profile", views.profile, name="profile"),
     path("activate/<uidb64>/<token>", views.activate, name="activate"),
+    path("download_file/<int:file_id>/", views.download_file, name="download_file"),
 ]
