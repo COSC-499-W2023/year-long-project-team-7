@@ -310,7 +310,7 @@ This week saw some significant changes in the plan for the project. We were told
 
 This week I began to work on some of the aspects of responsive design, starting with the transformer page for the app. I have been investigating further into Bootstrap and the common responsive techniques of modern CSS. I reorganized our CSS files to use variables and predefined color palettes to make them easier to maintain. I also implemented a light/dark mode switch feature to make the UI more appealing to a wider number of users. I have begun the process of changing our units into relative ones which will better scale with the responsive layout, but have not yet finished this process.
 
-## Jan 22 2023 -> Jan 28 2023
+## Jan 22 2024 -> Jan 28 2024
 
 ![evaluation-screenshot](../../img/esteban-eval-16.png)
 <br>
@@ -357,3 +357,34 @@ _Team Evaluation Screenshot_
 ### Self Reflection and Learning
 
 This week my goal was to finish the process of making the site fully responsive ahead of peer evaluations. I managed to style the entire site, with the exception of the `history` page with had to be reworked due to a bug. I found this process to be very interesting, albeit very demanding. I implemented CSS flexbox and grid patterns as well as media queries and other responsive design techniques. I also managed to optimize our template code reuse slightly in the processes and lint most of our templates to be much more readable. I find that the new way I organized our CSS stylesheet helped speed up the process tremendously and I am very happy with my results with the page. I feel that our site looks very good in any screen size, and I am proud of the work I managed to achieve for this period.
+
+## Jan 29 2024 -> Feb 2024
+
+![evaluation-screenshot](../../img/esteban-eval-17.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-17.png)
+
+### Goals
+
+-   [x] Remove History Page Test Bug
+-   [x] Results Page/History Page Light Mode Bug
+-   [x] Test production app
+    -   [x] Make notes
+    -   [x] Code review
+    -   [x] Bug fixing
+    -   [x] Merge conflicts before peer testing
+-   [x] Peer Testing Survey Questions and Tasks
+
+### Self Reflection and Learning
+
+This week our team was focused on getting prepared for peer testing to make sure we got the most value out of it as possible. As such, I did not work on new features, instead I focused on making sure our existing material was ready in the production site for the peer evaluation. I also worked with Keiran to design the tasks we would give our evaluators. As well as the rest of the team, I spent time manually testing our production site and producing bug reports for the team so that we would be ready to show off our site to the other teams.
+
+I unfortunately became sick during the weekend, so I was not able to get started on the features I have planned for next week. This will include adding tooltips to our transformation page, creating an FAQ page, as well as making the site WCAG compliant for accessibility. I will also begin working on our new feature, exercise creation.
+
+Since a lot of my work was done this week in person with the team, it is not reflected in the GitHub Project.
