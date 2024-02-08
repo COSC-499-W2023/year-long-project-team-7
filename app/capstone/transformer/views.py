@@ -14,7 +14,7 @@ from django.core.mail import EmailMessage
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
-from .models import Conversion, File, Products
+from .models import Conversion, File, Product
 from .tokens import account_activation_token
 from typing import List, Dict
 import json
