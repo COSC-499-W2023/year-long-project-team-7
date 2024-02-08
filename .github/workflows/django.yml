@@ -38,7 +38,7 @@ jobs:
       - name: Transfer profile pic
         run: |
           mkdir app/capstone/files/
-          cp app/capstone/transformer/img/default_pfp.jpg app/capstone/files/default_pfp.jpg 
+          cp app/capstone/transformer/static/img/default_pfp.jpg app/capstone/files/default_pfp.jpg 
       - name: Run Tests
         run: |
           cd app/capstone
