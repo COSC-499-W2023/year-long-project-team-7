@@ -133,7 +133,7 @@
     ```
     
 
-10. **All done!**
+9. **All done!**
 
     You can now access the site through your browser.
 
