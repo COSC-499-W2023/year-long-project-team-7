@@ -1,4 +1,24 @@
+let lightMode = localStorage.getItem("lightMode");
+
+const enableLightMode = () => {
+    document.body.classList.add("lightmode");
+    localStorage.setItem("lightMode", "enabled");
+};
+
+const disableLightMode = () => {
+    document.body.classList.remove("lightmode");
+    localStorage.setItem("lightMode", "disabled");
+};
+
+addEventListener("load", () => {
+    if (lightMode === "enabled") {
+        enableLightMode();
+    }
+});
+
+
 $(document).ready(function () {
+
     $(".file-download-button").click(function () {
         const fileUrl = $(this).attr("data-fileurl");
         window.location.href = fileUrl;
@@ -54,19 +74,12 @@ $(document).ready(function () {
         $(".loading-overlay").show();
     });
 
-    // Reference the showPage function from results.html
-    const pdfPreviewScript = document.getElementById("pdf-preview-script");
-    if (pdfPreviewScript) {
-        eval(pdfPreviewScript.text);
-    }
-
-    // Event listener
-    $("#next-button").on("click", function () {
-        // This function is defined in results.html
-        showPage(currentPage + 1);
-    });
-
-    $("#prev-button").on("click", function () {
-        showPage(currentPage - 1);
+    $("#light-mode-toggle").on("click", function () {
+        if (lightMode !== "enabled") {
+            enableLightMode();
+        } else {
+            disableLightMode();
+        }
+        lightMode = localStorage.getItem("lightMode");
     });
 });

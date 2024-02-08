@@ -49,7 +49,7 @@ class PresentationGenerator:
         )
         self.template = json.loads(conversion.user_parameters).get("template", 1)
 
-        self.client = OpenAI(api_key=settings.OPENAI_API_KEY)  # type: ignore
+        self.client = OpenAI(api_key=settings.OPENAI_API_KEY, organization="org-hYPJO2WKqFAN1o75AdfdfeBx")  # type: ignore
 
         self.openai_files = []
         for path in input_file_paths:
@@ -192,7 +192,13 @@ class PresentationGenerator:
             layout = template.slide_layouts.get_by_name(f"IMAGE{selected_image_slide}")
             image_slide = template.slides.add_slide(layout)
             image_slide.shapes.title.text = content.title
-            image_slide.shapes[1].insert_picture(content.image.file)
+
+            shape = image_slide.shapes[1]
+
+            if shape.is_placeholder:
+                phf = shape.placeholder_format
+                if phf.type == 18:
+                    shape = shape.insert_picture(content.image.file)
 
     def build_presentation(self) -> str:
         file_system = FileSystemStorage()

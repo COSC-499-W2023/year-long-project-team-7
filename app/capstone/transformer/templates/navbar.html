@@ -15,7 +15,7 @@
         <a class="navbar-brand" href="{% url 'index' %}"><b>PLATONIX</b></a>
         <img class="logo"
              src="{% static 'img/thinker-100-solid.png' %}"
-             alt="Logo">
+             alt="Logo" />
         <!-- Links -->
         <div class="collapse navbar-collapse" id="navbarLinks">
             <ul class="navbar-nav ml-auto">
@@ -33,15 +33,19 @@
                         <a class="nav-link" href="{% url 'history' %}">History</a>
                     </li>
                 {% endif %}
-
             </ul>
         </div>
+        <button id="light-mode-toggle" class="light-mode-toggle">
+            <svg width="100%" viewBox="0 0 496 496">
+                <path fill="var(--foreground)" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)" />
+            </svg>
+        </button>
         <!-- Profile picture (Example source used) -->
         {% if user.is_authenticated %}
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                  alt="Profile Picture"
-                 class="profile-picture">
-            <a class="nav-link" style="margin-left: 10px;" href="/logout"><b>Logout</b></a>
+                 class="profile-picture" />
+            <a class="nav-link" style="margin-left: 10px" href="/logout"><b>Logout</b></a>
         {% endif %}
     </div>
 </nav>

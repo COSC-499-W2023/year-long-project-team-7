@@ -9,7 +9,7 @@
                 {% csrf_token %}
                 <div class="mb-5">
                     <h2 class="text-left">Input</h2>
-                    <hr>
+                    <hr />
                     <div class="row">
                         <div class="col-6">{{ form.prompt }}</div>
                         <div class="col-6">
@@ -18,7 +18,7 @@
                                        name="files"
                                        type="file"
                                        multiple
-                                       class="form-control-file custom-file-input">
+                                       class="form-control-file custom-file-input" />
                                 <span class="file-upload-text">Choose File(s)</span>
                             </label>
                             <div class="mt-3" id="selected-file-names"></div>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="mb-5">
                     <h2 class="text-left">Options</h2>
-                    <hr>
+                    <hr />
                     <div class="row">
                         <div class="col-4 mt-4 text-center d-flex flex-column align-items-center">
                             <p>Language</p>
@@ -59,14 +59,17 @@
                 </div>
                 <div class="mb-5">
                     <h2 class="text-left">Layout</h2>
-                    <hr>
+                    <hr />
                     <div class="col-12">
                         {% for value, text in form.template.field.choices %}
                             <label class="template-choice">
-                                <input type="radio" name="template" value="{{ value }}" style="display:none">
+                                <input type="radio"
+                                       name="template"
+                                       value="{{ value }}"
+                                       style="display: none" />
                                 <img src="{% static 'img/template_' %}{{ value }}.png"
                                      alt="{{ text }}"
-                                     class="template-image">
+                                     class="template-image" />
                             </label>
                         {% endfor %}
                     </div>
@@ -76,7 +79,7 @@
         </div>
     </div>
     <!--Loading Overlay-->
-    <div class="loading-overlay text-light">
+    <div class="loading-overlay">
         <div class="loading-overlay-textbox">
             <div class="spinner"></div>
             <h1>Building slides...</h1>

@@ -1,47 +1,79 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load json_filter %}
 {% block content %}
-{% include 'navbar.html' %}
-<div class="col d-flex justify-content-center mt-3">
-    <div class="card w-75 bg-secondary mt-5">
-        <div class="card-body">
-            <h5 class="card-title fw-bold mt-3 mb-3">Transformation History</h5>
-            <table class="table table-striped table-dark">
-                <thead>
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Input File</th>
-                    <th scope="col">Output File</th>
-                    <th scope="col">Download</th>
-                    <!-- not showing next two columns until later update
-                    <th scope="col">User Parameters</th>
-                    <th scope="col">Token Amount</th> -->
-                </tr>
-                {% for d in data %}
-                    <tbody>
-                        <tr>
-                            <td>{{d.0}}</td>
-                            <td>{{d.1}}</td>
-                            <td><a href="{% url 'results' conversion_id=d.3 %}">{{d.2}}</a></td>
-                            <td>
-                                <button class="btn btn-primary">
-                                    <a href="{{ d.4 }}" download="{{ d.3 }}">
-                                        <img src="{% static 'img/download_icon.png' %}"
-                                        alt="Download Icon"
-                                        class="download_icon"
-                                        height="25">
-                                    </a>
-                                </button>
-                            </td>
-                            <!-- not showing next two columns until later update
-                            <td> {{ d.5 }}</td>
-                            <td> {{ d.6 }} </td> -->
-                        </tr>
-                    </tbody>
+    <div class="container d-flex justify-content-center"
+         style="padding-top: 100px">
+        <div class="col-8">
+            <h1 class="text-center title">Transformation History</h1>
+            <br>
+            <div id="accordion">
+                {% for conversion, files in history.items %}
+                    <div class="card mb-3 border-light">
+                        <div class="card-header"
+                             id="heading{{ forloop.counter }}"
+                             data-toggle="collapse"
+                             data-target="#collapse{{ forloop.counter }}"
+                             aria-expanded="true"
+                             aria-controls="collapse{{ forloop.counter }}">
+                            <h3 class="card-title">{{ conversion.date }} UTC</h3>
+                        </div>
+                        <div id="collapse{{ forloop.counter }}"
+                             class="collapse"
+                             aria-labelledby="heading{{ forloop.counter }}"
+                             data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="card-text">
+                                            <strong>Prompt:</strong> {{ conversion.user_parameters|get_item:"prompt" }}
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Language:</strong> {{ conversion.user_parameters|get_item:"language" }}
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Tone:</strong> {{ conversion.user_parameters|get_item:"tone" }}
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Complexity:</strong> {{ conversion.user_parameters|get_item:"complexity" }}/6
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Number of Slides:</strong> {{ conversion.user_parameters|get_item:"num_slides" }}
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Image Frequency:</strong> {{ conversion.user_parameters|get_item:"image_frequency" }}/6
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4 class="card-subtitle mb-2">Input Files</h4>
+                                        {% for file in files.input_files %}
+                                            <p class="card-text">
+                                                <a href="{% url 'download_file' file.id %}" download>{{ file.file }}</a>
+                                            </p>
+                                        {% endfor %}
+                                        <h4 class="card-subtitle mb-2">Output Files</h4>
+                                        {% for file in files.output_files %}
+                                            <p class="card-text">
+                                                <a href="{% url 'download_file' file.id %}" download>{{ file.file }}</a>
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer border-light">
+                                <a href="/results/{{ conversion.id }}" class="btn btn-primary">View Results</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="d-flex flex-column justify-content-center align-items-center"
+                         style="height: 200px">
+                        <p>You have no transformations.</p>
+                        <a href="/transform" class="btn btn-primary">Start a new transformation</a>
+                    </div>
                 {% endfor %}
-                </thead>
-            </table>
+            </div>
         </div>
-    </div>        
-</div>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 {% endblock %}

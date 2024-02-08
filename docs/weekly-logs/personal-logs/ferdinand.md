@@ -178,3 +178,27 @@ _Team Evaluation Screenshot Week 14,15_
 <br>
 _Tasks Screenshot_
 
+
+## Jan 14 2024 -> Jan 21 2024
+
+![evaluation-screenshot](../../img/ferdinand-eval-16.png)
+_Team Evaluation Screenshot Week 16_
+
+<br>
+
+![tasks-screenshot](../../img/ferdinand-tasks-16.png)
+<br>
+_Tasks Screenshot_
+
+
+
+## Jan 22 2024 -> Jan 28 2024
+
+![evaluation-screenshot](../../img/ferdinand-eval-17.png)
+_Team Evaluation Screenshot Week 17_
+
+<br>
+
+![tasks-screenshot](../../img/ferdinand-tasks-17.png)
+<br>
+_Tasks Screenshot_

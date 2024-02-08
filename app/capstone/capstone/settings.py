@@ -98,3 +98,12 @@ MEDIA_URL = "/files/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "files")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Email settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+PASSWORD_RESET_TIMEOUT = 14400
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_FROM = "platonix.ai@gmail.com"
+EMAIL_HOST_USER = "platonix.ai@gmail.com"
