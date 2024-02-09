@@ -589,6 +589,11 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 2em;
 }
 
+.card-header,
+.card-footer {
+    background: var(--clr-card);
+}
+
 .card-text {
     height: 80%;
 }

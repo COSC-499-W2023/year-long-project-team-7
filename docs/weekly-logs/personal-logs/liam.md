@@ -250,3 +250,43 @@ Note: Account functionality has had it's merge conflicts resolved. This week the
 
 <br>
 
+## Jan 21 2023 -> Jan 28 2024
+
+![evaluation-screenshot](../../img/liam-eval-17.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w17-tasks.png)
+<br>
+Note: Basic user account functionality is complete. While there is an addionional deletion feature I'd like to add (see comment in my latest PR), I'm holding off on it until after peer reviews are complete.
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Milestone)
+<br>
+[Latest PR](https://github.com/COSC-499-W2023/year-long-project-team-7/pull/190)
+
+<br>
+
+## Jan 28 2023 -> Feb 4 2024
+
+![evaluation-screenshot](../../img/liam-eval-18.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w18-tasks.png)
+<br>
+Note: I feel I am falling behind. The account page is turning out to involve more than I anticipated which is why it hasn't been merged yet. This week I'd like to address the issues with it that my team brought to my attention so I can deliver a branch that is up to merging standards. If possible, I will count the additional work to the account page as its own issue so I don't drag the progress of the team down. After this week, I plan on addressing the peer review feedback we got.
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Milestone)
+<br>
+[Latest PR](https://github.com/COSC-499-W2023/year-long-project-team-7/pull/190)
+
+
+<br>

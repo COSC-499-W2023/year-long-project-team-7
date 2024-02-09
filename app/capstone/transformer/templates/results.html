@@ -1,87 +1,52 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <div class="col d-flex justify-content-center">
-        <div class="card w-75 bg-secondary mt-5">
-            <div class="card-body">
-                <h5 class="card-title  fw-bold">Transformation Results</h5>
-                <div style="border-bottom: 1px solid darkslategray;"></div>
-                <h6 class="card-subtitle mt-3 ">File Preview:</h6>
-                <div class="d-flex justify-content-center align-items-center">
-                    {% if output_files %}
-                        {% for file in output_files %}
-                            <p class="file-item">
-                                <span class="file-name">{{ file.file.name }}</span>
-                                <button class="file-download-button btn btn-primary"
-                                        data-fileurl="{{ file.file.url }}">Download</button>
-                            </p>
-                        {% endfor %}
-                    {% else %}
-                        <p>No output files available.</p>
-                    {% endif %}
+    <script src="{% static 'file-preview.js' %}"></script>
+    <div class="container d-flex justify-content-center"
+         style="padding-top: 100px">
+        <div class="col-12">
+            <h1 class="text-center title">Transformation Results</h1>
+            <br>
+            <div class="card border-light mb-3">
+                <div class="card-header border-light">
+                    <h3 class="card-title">Presentation Preview</h3>
                 </div>
-                <div class="d-flex">
+                <div class="card-body text-light">
                     {% if output_files %}
                         {% for file in output_files %}
-                            {% if file.type == "pdf" %}
-                                <div>
-                                    <h3>PDF Preview: {{ file.file.name }}</h3>
-                                    <div id = "pdf-container" style="width:800px;height:600px;">
+                            {% if file.type == "application/pdf" %}
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <a id="prev-button" class="btn btn-primary">
+                                        <span class="bi bi-arrow-left"></span>
+                                    </a>
+                                    <div id="pdf-container" style="width:800px;height:600px;" class="mx-3">
                                         <canvas style="width:800px;height:600px;" id="pdf-canvas"></canvas>
                                     </div>
+                                    <a id="next-button" class="btn btn-primary">
+                                        <span class="bi bi-arrow-right"></span>
+                                    </a>
                                 </div>
-                                <!-- PDF Rendering -->
-                                <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.7.570/build/pdf.min.js"></script>
-                                <script id="pdf-preview-script">
-                                    // Set workerSrc
-                                    pdfjsLib.GlobalWorkerOptions.workerSrc =  "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.7.570/build/pdf.worker.min.js";
-                                    
-                                    const pdfContainer = document.getElementById("pdf-container");
-                                    const pdfUrl = "{{ file.file.url }}";
-                    
-                                    let currentPage = 1;
-                                
-                                    const showPage = function (pageNum) {
-                                        pdfjsLib
-                                            .getDocument(pdfUrl)
-                                            .promise.then((pdfDoc) => {
-                                                return pdfDoc.getPage(pageNum);
-                                            })
-                                            .then((page) => {
-                                                const scale = 1;
-                                                const viewport = page.getViewport({ scale });
-                                    
-                                                const canvas = document.getElementById("pdf-canvas");
-                                                const context = canvas.getContext("2d");
-                                                canvas.height = viewport.height;
-                                                canvas.width = viewport.width;
-                                                pdfContainer.appendChild(canvas);
-                                    
-                                                const renderContext = {
-                                                    canvasContext: context,
-                                                    viewport: viewport,
-                                                };
-                                                const renderTask = page.render(renderContext);
-                                                currentPage = pageNum;
-                                                return renderTask.promise;
-                                            })
-                                            .catch((error) => {
-                                                console.error("Error loading PDF:", error);
-                                            });
-                                    };
-
-                                    showPage(currentPage);
-                                </script>
+                                <input type="hidden" id="pdf-file" value="{% url 'download_file' file.id %}">
                             {% endif %}
                         {% endfor %}
                     {% endif %}
                 </div>
-                <a id="prev-button" class="w-25 btn mt-3 btn-primary">Previous</a>
-                <a id="next-button" class="w-25 btn mt-3 btn-primary">Next</a>
-                <div class="d-flex justify-content-center align-items-center">
-                    <a class="w-25 btn mt-3 btn-primary" href="{% url "transform" %}">Back to Transform</a>
+                <div class="d-flex justify-content-center">
+                    <p>
+                        {% for file in output_files %}
+                            <a href="{% url 'download_file' file.id %}" download>{{ file.file }}</a>
+                            {% if not forloop.last %}&nbsp;&nbsp;{% endif %}
+                        {% endfor %}
+                    </p>
+                </div>
+                <div class="card-footer border-light">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <a class="w-25 btn mt-3 btn-primary" href="{% url "transform" %}">Back to Transform</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 {% endblock content %}

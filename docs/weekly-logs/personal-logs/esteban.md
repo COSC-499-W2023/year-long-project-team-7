@@ -254,7 +254,7 @@ After extensive research between code-only solutions (which were imperfect and t
 
 Rendering the PDF was a different challenge, but I finally found a solution in using Mozilla's `PDF.js` library. This library allows us to render PDFs in the browser by defining a canvas, and we can fetch the files from the file system by using Django models. I was very happy with my solution and finally achieving my end result after all the work I put into it. At the moment my solution still needs work to allow the user to scroll through all the pages of the PDF, but I have laid the groundwork to make this possible and feel happy with my work.
 
-## Jan 09 2023 -> Jan 14 2023
+## Jan 09 2024 -> Jan 14 2024
 
 ![evaluation-screenshot](../../img/esteban-eval-14.png)
 <br>
@@ -279,7 +279,7 @@ Moving forward I will be focusing on developing the social aspect of our app. Th
 
 This week I worked more with the `PDF.js` library and jQuery to be able to flip through the pages of the PDF as we are able to preview it fully, which involved fixing a bug that would not let a user download the PDF file as well as the PPTX file. I also worked on some test which verify that the `soffice` tool is available to the system when hosting the app, and which does a trial of the conversion to verify the command works. I will need to complete some more rigorous tests, like properly mocking a generated file and checking for an accompanying PDF, as well as testing the download functionality in case another bug like the last one shows up in the future.
 
-## Jan 15 2023 -> Jan 21 2023
+## Jan 15 2024 -> Jan 21 2024
 
 ![evaluation-screenshot](../../img/esteban-eval-15.png)
 <br>
@@ -309,3 +309,51 @@ _Team Evaluation Screenshot_
 This week saw some significant changes in the plan for the project. We were told that our MVP for the project was insufficient and did not meet the expecations of the client and our supervisor. This case as a surprise to us, and as such we are working on proposals about how to change our course. As such, I will no longer be working on the proposed social features since we have decided to drop them. Instead, I am working on making our site responsive so it can be used with mobiles, tablets, and desktop.
 
 This week I began to work on some of the aspects of responsive design, starting with the transformer page for the app. I have been investigating further into Bootstrap and the common responsive techniques of modern CSS. I reorganized our CSS files to use variables and predefined color palettes to make them easier to maintain. I also implemented a light/dark mode switch feature to make the UI more appealing to a wider number of users. I have begun the process of changing our units into relative ones which will better scale with the responsive layout, but have not yet finished this process.
+
+## Jan 22 2023 -> Jan 28 2023
+
+![evaluation-screenshot](../../img/esteban-eval-16.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-16.png)
+
+### Goals
+
+-   [x] Code Review
+-   [x] Bug fix `light-mode`
+-   [x] Responsive
+    -   [x] Global
+        -   [x] Margin for navbar
+        -   [x] Relative units
+        -   [x] Font sizes
+    -   [x] Navbar
+        -   [x] Responsive
+        -   [x] Make navbar not sticky in mobile
+        -   [ ] Nice to have: Slide from Right?
+    -   [x] Home
+        -   [x] Proper centering
+        -   [x] No background animation for mobile
+    -   [x] About/FAQ
+        -   [x] Proper centering
+        -   [x] Width
+    -   [x] Transform
+        -   [ ] Nice to have: Info Hovers
+        -   [x] Input
+        -   [x] Options
+        -   [x] Template
+        -   [x] Submit Button
+    -   [x] Login/Logout/Register
+        -   [x] Template refactor
+        -   [x] Responsive
+    -   [x] Store
+    -   [ ] History
+        -   [ ] Full styling
+
+### Self Reflection and Learning
+
+This week my goal was to finish the process of making the site fully responsive ahead of peer evaluations. I managed to style the entire site, with the exception of the `history` page with had to be reworked due to a bug. I found this process to be very interesting, albeit very demanding. I implemented CSS flexbox and grid patterns as well as media queries and other responsive design techniques. I also managed to optimize our template code reuse slightly in the processes and lint most of our templates to be much more readable. I find that the new way I organized our CSS stylesheet helped speed up the process tremendously and I am very happy with my results with the page. I feel that our site looks very good in any screen size, and I am proud of the work I managed to achieve for this period.
