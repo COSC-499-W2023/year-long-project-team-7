@@ -42,25 +42,26 @@ class PresentationManager:
     def __init__(self) -> None:
         pass
 
-    def setup(self, template: str) -> None:
-        self.template = Presentation(template)
+    def setup(self, template_path: str) -> None:
+        self.template_path = template_path
+        self.presentation = Presentation(template_path)
 
         self.delete_all_slides()
 
     def delete_all_slides(self) -> None:
         # Delete all slides from template presentation
-        xml_slides = self.template.slides._sldIdLst
+        xml_slides = self.presentation.slides._sldIdLst
         slides = list(xml_slides)
         for slide in slides:
             rId = slide.get("r:id")
             if rId is not None:
-                self.template.part.drop_rel(rId)
+                self.presentation.part.drop_rel(rId)
         xml_slides.clear()
 
     def save_presentation(self, conversion_id: int) -> str:
         file_system = FileSystemStorage()
         buffer = BytesIO()
-        self.template.save(buffer)
+        self.presentation.save(buffer)
         buffer.seek(0)
         file_content = ContentFile(buffer.read())
 
@@ -72,7 +73,10 @@ class PresentationManager:
 
     def get_title_slide_layout(self) -> typing.Any:
         potential_layouts = []
-        for slide_layout in self.template.slide_layouts:
+
+        temp_presentation = Presentation(self.template_path)
+
+        for slide_layout in temp_presentation.slide_layouts:
             if "title" in slide_layout.name.lower():
                 potential_layouts.append(slide_layout)
 
@@ -80,8 +84,11 @@ class PresentationManager:
 
     def get_image_slide_layout(self) -> typing.Any:
         potential_layouts = []
-        for slide_layout in self.template.slide_layouts:
-            temp_slide = self.template.slides.add_slide(slide_layout)
+
+        temp_presentation = Presentation(self.template_path)
+
+        for slide_layout in temp_presentation.slide_layouts:
+            temp_slide = temp_presentation.slides.add_slide(slide_layout)
 
             for shape in temp_slide.shapes:
                 if shape.is_placeholder:
@@ -96,8 +103,11 @@ class PresentationManager:
 
     def get_content_slide_layout(self) -> typing.Any:
         potential_layouts = []
-        for slide_layout in self.template.slide_layouts:
-            temp_slide = self.template.slides.add_slide(slide_layout)
+
+        temp_presentation = Presentation(self.template_path)
+
+        for slide_layout in temp_presentation.slide_layouts:
+            temp_slide = temp_presentation.slides.add_slide(slide_layout)
 
             for shape in temp_slide.shapes:
                 if shape.is_placeholder:
@@ -109,12 +119,12 @@ class PresentationManager:
                 if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX:
                     potential_layouts.append(slide_layout)
 
-        self.delete_all_slides()
         return random.choice(potential_layouts)
 
     def get_slide_layout_fields(self, layout: typing.Any) -> dict[SlideFieldTypes, int]:
         fields = {}
-        temp_slide = self.template.slides.add_slide(layout)
+        temp_presentation = Presentation(self.template_path)
+        temp_slide = temp_presentation.slides.add_slide(layout)
         shapes = temp_slide.shapes
         for shape in shapes:  # Use enumerate to get both index and shape
             if shape.is_placeholder:
@@ -141,11 +151,10 @@ class PresentationManager:
                     shape
                 )  # Use index for PICTURE shapes
 
-        self.delete_all_slides()
         return fields
 
     def add_slide_to_presentation(self, slide_content: SlideContent) -> None:
-        slide = self.template.slides.add_slide(slide_content.layout)
+        slide = self.presentation.slides.add_slide(slide_content.layout)
         fields = slide_content.fields
         content = slide_content.content
 
