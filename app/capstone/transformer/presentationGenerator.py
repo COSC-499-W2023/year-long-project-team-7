@@ -138,6 +138,8 @@ class PresentationGenerator:
     def build_slide(self, slide_num: int) -> SlideContent:
         image_slide_likelihood = {0: 0, 1: 0.2, 2: 0.3, 3: 0.4, 4: 0.6, 5: 0.7, 6: 0.8}
 
+        content: dict[SlideFieldTypes, typing.Union[str, File]] = {}
+
         is_image_slide = (
             False  # random.random() < image_slide_likelihood[self.image_frequency]
         )
@@ -145,8 +147,6 @@ class PresentationGenerator:
         if slide_num == 1:
             layout = self.manager.get_title_slide_layout()
             fields = self.manager.get_slide_layout_fields(layout)
-
-            content: dict[SlideFieldTypes, typing.Union[str, File]] = {}
 
             for key, value in fields.items():
                 if key == SlideFieldTypes.TITLE:
@@ -163,8 +163,6 @@ class PresentationGenerator:
         elif is_image_slide:
             layout = self.manager.get_image_slide_layout()
             fields = self.manager.get_slide_layout_fields(layout)
-
-            content = {}
 
             for key, value in fields.items():
                 if key == SlideFieldTypes.TITLE:
@@ -187,7 +185,6 @@ class PresentationGenerator:
             layout = self.manager.get_content_slide_layout()
             fields = self.manager.get_slide_layout_fields(layout)
 
-            content = {}
             for key, value in fields.items():
                 if key == SlideFieldTypes.TITLE:
                     content[
