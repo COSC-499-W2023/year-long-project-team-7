@@ -1,6 +1,12 @@
+import typing
 from pptx import Presentation  # type: ignore
 
-from .presentationManager import PresentationManager
+from .presentationManager import (
+    PresentationManager,
+    SlideFieldTypes,
+    SlideContent,
+    SlideTypes,
+)
 from .models import Conversion
 from django.conf import settings
 import json
@@ -15,24 +21,7 @@ import requests
 from .models import File
 from concurrent.futures import ThreadPoolExecutor
 from tenacity import retry, stop_after_attempt, wait_random_exponential
-
-
-class SlideContent:
-    def __init__(
-        self,
-        slide_num: int,
-        slide_type: str,
-        title: str,
-        sub_title: str,
-        image: File,
-        points: str,
-    ):
-        self.slide_type = slide_type
-        self.title = title
-        self.sub_title = sub_title
-        self.image = image
-        self.points = points
-        self.slide_num = slide_num
+from enum import Enum
 
 
 class PresentationGenerator:
@@ -145,99 +134,100 @@ class PresentationGenerator:
         image_file.save()
         return image_file
 
+    # Executed in parallel
     def build_slide(self, slide_num: int) -> SlideContent:
         image_slide_likelihood = {0: 0, 1: 0.2, 2: 0.3, 3: 0.4, 4: 0.6, 5: 0.7, 6: 0.8}
 
-        is_image_slide = random.random() < image_slide_likelihood[self.image_frequency]
+        is_image_slide = (
+            False  # random.random() < image_slide_likelihood[self.image_frequency]
+        )
 
         if slide_num == 1:
-            title = self.prompt_assistant(self.prompts["title"])
-            sub_title = self.prompt_assistant(f"{self.prompts['sub-title']}{title}")
+            layout = self.manager.get_title_slide_layout()
+            fields = self.manager.get_slide_layout_fields(layout)
 
-            return SlideContent(slide_num, "TITLE", title, sub_title, File(), "None")
+            content: dict[SlideFieldTypes, typing.Union[str, File]] = {}
+
+            for key, value in fields.items():
+                if key == SlideFieldTypes.TITLE:
+                    content[
+                        key
+                    ] = "This is the title"  # self.prompt_assistant(self.prompts["title"])
+                elif (
+                    key == SlideFieldTypes.TEXT
+                ):  # self.prompt_assistant(f"{self.prompts['sub-title']}{title}")
+                    content[key] = "This is the sub-title"
+
+            return SlideContent(slide_num, SlideTypes.TITLE, layout, fields, content)
 
         elif is_image_slide:
-            query = self.prompt_assistant(self.prompts["image-search"])
-            image = self.image_search(query)
-            return SlideContent(slide_num, "IMAGE", query, "None", image, "None")
+            layout = self.manager.get_image_slide_layout()
+            fields = self.manager.get_slide_layout_fields(layout)
+
+            content = {}
+
+            for key, value in fields.items():
+                if key == SlideFieldTypes.TITLE:
+                    content[
+                        key
+                    ] = "This is the title"  # self.prompt_assistant(self.prompts["title"])
+                elif key == SlideFieldTypes.TEXT:
+                    content[
+                        key
+                    ] = "This is some text"  # self.prompt_assistant(self.prompts["image-caption"])
+                elif key == SlideFieldTypes.IMAGE:
+                    query = (
+                        "HELLO"  # self.prompt_assistant(self.prompts["image-search"])
+                    )
+                    content[key] = File()  # self.image_search(query)
+
+            return SlideContent(slide_num, SlideTypes.IMAGE, layout, fields, content)
 
         else:
-            slide_content = self.prompt_assistant(
-                f"{self.prompts['slide'].format(slide_num=slide_num, num_slides=self.num_slides)}"
-            )
+            layout = self.manager.get_content_slide_layout()
+            fields = self.manager.get_slide_layout_fields(layout)
 
-            slide_title = slide_content.split("\n")[0]
-            slide_points = slide_content.replace(slide_title, "")
+            content = {}
+            for key, value in fields.items():
+                if key == SlideFieldTypes.TITLE:
+                    content[
+                        key
+                    ] = "This is the title"  # self.prompt_assistant(self.prompts["title"])
+                elif key == SlideFieldTypes.TEXT:
+                    content[
+                        key
+                    ] = "This is the text"  # self.prompt_assistant(self.prompts["content"])
 
-            return SlideContent(
-                slide_num, "CONTENT", slide_title, "None", File(), slide_points
-            )
-
-    def add_slide_to_presentation(
-        self, content: SlideContent, template: Presentation
-    ) -> None:
-        if content.slide_type == "TITLE":
-            layout = template.slide_layouts.get_by_name("TITLE")
-            title_slide = template.slides.add_slide(layout)
-            title_slide.shapes.title.text = content.title
-            title_slide.shapes[1].text = content.sub_title
-
-        elif content.slide_type == "CONTENT":
-            selected_content_slide = 1 if random.random() < 0.5 else 2
-            layout = template.slide_layouts.get_by_name(
-                f"CONTENT{selected_content_slide}"
-            )
-            content_slide = template.slides.add_slide(layout)
-            content_slide.shapes.title.text = content.title
-            content_slide.shapes[1].text = content.points
-
-        elif content.slide_type == "IMAGE":
-            selected_image_slide = 1 if random.random() < 0.5 else 2
-            layout = template.slide_layouts.get_by_name(f"IMAGE{selected_image_slide}")
-            image_slide = template.slides.add_slide(layout)
-            image_slide.shapes.title.text = content.title
-
-            shape = image_slide.shapes[1]
-
-            if shape.is_placeholder:
-                phf = shape.placeholder_format
-                if phf.type == 18:
-                    shape = shape.insert_picture(content.image.file)
+            return SlideContent(slide_num, SlideTypes.CONTENT, layout, fields, content)
 
     def build_presentation(self) -> str:
         file_system = FileSystemStorage()
 
-        template = Presentation(file_system.path(f"template_{self.template}.pptx"))
+        # template = Presentation(file_system.path(f"template_{self.template}.pptx"))
+        # template = Presentation(file_system.path(f"delete-my-slides.pptx"))
+        self.manager.setup(file_system.path(f"template_{self.template}.pptx"))
 
-        self.manager.set_presenetation(template)
-
-        slide_contents = []
+        slide_contents: list[SlideContent] = []
 
         # Fetch slide content in parallel for speed
-        with ThreadPoolExecutor() as executor:
-            future_slides = executor.map(
-                self.build_slide, range(1, self.num_slides + 1)
-            )
-            slide_contents = list(future_slides)
+        # with ThreadPoolExecutor() as executor:
+        #     future_slides = executor.map(
+        #         self.build_slide, range(1, self.num_slides + 1)
+        #     )
+        #     slide_contents = list(future_slides)
+
+        for i in range(1, self.num_slides + 1):
+            slide_contents.append(self.build_slide(i))
 
         # Sort and add slides to presentation
         sorted_slide_contents = sorted(
             slide_contents, key=lambda slide: slide.slide_num
         )
 
-        for content in sorted_slide_contents:
-            self.add_slide_to_presentation(content, template)
+        for slide_content in sorted_slide_contents:
+            self.manager.add_slide_to_presentation(slide_content)
 
-        buffer = BytesIO()
-        template.save(buffer)
-        buffer.seek(0)
-        file_content = ContentFile(buffer.read())
-
-        rel_path = f"conversion_output_{self.conversion.id}.pptx"
-
-        file_system.save(rel_path, file_content)
-
-        return rel_path
+        return self.manager.save_presentation(self.conversion.id)
 
     # delete all files and assistants when PresentationGenerator object is deleted
     def __del__(self) -> None:
