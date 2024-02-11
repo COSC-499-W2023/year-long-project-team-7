@@ -28,8 +28,8 @@ class SlideContent:
         slide_num: int,
         slide_type: SlideTypes,
         layout: typing.Any,
-        fields: dict[SlideFieldTypes, int],
-        content: dict[SlideFieldTypes, typing.Union[str, File]],
+        fields: list[dict[SlideFieldTypes, int]],
+        content: list[dict[SlideFieldTypes, typing.Union[str, File]]],
     ):
         self.slide_type = slide_type
         self.slide_num = slide_num
@@ -38,13 +38,18 @@ class SlideContent:
         self.content = content
 
 
-class PresentationManager:
-    def __init__(self) -> None:
-        pass
+class MissingPlaceHolderErros(Exception):
+    def __init__(self, message: str):
+        self.message = message
+        super().__init__(self.message)
 
+
+class PresentationManager:
     def setup(self, template_path: str) -> None:
-        self.template_path = template_path
-        self.presentation = Presentation(template_path)
+        file_system = FileSystemStorage()
+
+        self.template_path = file_system.path(template_path)
+        self.presentation = Presentation(self.template_path)
 
         self.delete_all_slides()
 
@@ -79,8 +84,10 @@ class PresentationManager:
         for slide_layout in temp_presentation.slide_layouts:
             if "title" in slide_layout.name.lower():
                 potential_layouts.append(slide_layout)
-
-        return random.choice(potential_layouts)
+        try:
+            return random.choice(potential_layouts)
+        except IndexError:
+            raise MissingPlaceHolderErros("Template does not have a title slide")
 
     def get_image_slide_layout(self) -> typing.Any:
         potential_layouts = []
@@ -97,9 +104,12 @@ class PresentationManager:
                         potential_layouts.append(slide_layout)
                 if shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
                     potential_layouts.append(slide_layout)
-
-        self.delete_all_slides()
-        return random.choice(potential_layouts)
+        try:
+            return random.choice(potential_layouts)
+        except IndexError:
+            raise MissingPlaceHolderErros(
+                "Template does not have any image placeholders"
+            )
 
     def get_content_slide_layout(self) -> typing.Any:
         potential_layouts = []
@@ -118,50 +128,82 @@ class PresentationManager:
 
                 if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX:
                     potential_layouts.append(slide_layout)
+        try:
+            return random.choice(potential_layouts)
+        except IndexError:
+            raise MissingPlaceHolderErros(
+                "Template does not have any text placeholders"
+            )
 
-        return random.choice(potential_layouts)
-
-    def get_slide_layout_fields(self, layout: typing.Any) -> dict[SlideFieldTypes, int]:
-        fields = {}
+    def get_slide_layout_fields(
+        self, layout: typing.Any
+    ) -> list[dict[SlideFieldTypes, int]]:
+        fields = []
         temp_presentation = Presentation(self.template_path)
         temp_slide = temp_presentation.slides.add_slide(layout)
         shapes = temp_slide.shapes
-        for shape in shapes:  # Use enumerate to get both index and shape
+        for shape in shapes:
             if shape.is_placeholder:
                 phf = shape.placeholder_format
                 if phf.type == PP_PLACEHOLDER.TITLE:
-                    fields[SlideFieldTypes.TITLE] = shapes.index(
-                        shape
-                    )  # Use index for position
+                    fields.append({SlideFieldTypes.TITLE: shapes.index(shape)})
+
                 elif phf.type == PP_PLACEHOLDER.BODY:
-                    fields[SlideFieldTypes.TEXT] = shapes.index(
-                        shape
-                    )  # Use index for position
+                    fields.append({SlideFieldTypes.TEXT: shapes.index(shape)})
+
                 elif phf.type == PP_PLACEHOLDER.PICTURE:
-                    fields[SlideFieldTypes.IMAGE] = shapes.index(
-                        shape
-                    )  # Use index for position
+                    fields.append({SlideFieldTypes.IMAGE: shapes.index(shape)})
                 continue
+
             if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX:
-                fields[SlideFieldTypes.TEXT] = shapes.index(
-                    shape
-                )  # Use index for TEXT box shapes
+                fields.append({SlideFieldTypes.TEXT: shapes.index(shape)})
+
             elif shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
-                fields[SlideFieldTypes.IMAGE] = shapes.index(
-                    shape
-                )  # Use index for PICTURE shapes
+                fields.append({SlideFieldTypes.IMAGE: shapes.index(shape)})
 
         return fields
 
     def add_slide_to_presentation(self, slide_content: SlideContent) -> None:
         slide = self.presentation.slides.add_slide(slide_content.layout)
         fields = slide_content.fields
-        content = slide_content.content
+        slide_contents = slide_content.content
 
-        for key, value in content.items():
-            if key == SlideFieldTypes.TITLE:
-                slide.shapes[fields[key]].text = value
-            elif key == SlideFieldTypes.TEXT:
-                slide.shapes[fields[key]].text = value
-            elif key == SlideFieldTypes.IMAGE:
-                slide.shapes[fields[key]].insert_picture(value)
+        titles, texts, images = [], [], []
+
+        for item in slide_contents:
+            for field_type, value in item.items():
+                if field_type == SlideFieldTypes.TITLE:
+                    titles.append(value)
+                elif field_type == SlideFieldTypes.TEXT:
+                    texts.append(value)
+                elif field_type == SlideFieldTypes.IMAGE:
+                    images.append(value)
+
+        for field in fields:
+            first_key, first_value = next(iter(field.items()))
+            if first_key == SlideFieldTypes.TITLE:
+                try:
+                    title_content = random.choice(titles)
+                    titles.remove(title_content)
+
+                    slide.shapes[first_value].text = title_content
+                except IndexError:
+                    continue
+
+            elif first_key == SlideFieldTypes.TEXT:
+                try:
+                    text_content = random.choice(texts)
+                    texts.remove(text_content)
+
+                    slide.shapes[first_value].text = text_content
+                except IndexError:
+                    continue
+
+            elif first_key == SlideFieldTypes.IMAGE:
+                try:
+                    image_content = random.choice(images)
+                    images.remove(image_content)
+
+                    slide.shapes[first_value].insert_picture(image_content.file)  # type: ignore
+                except IndexError:
+                    continue
