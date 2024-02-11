@@ -9,3 +9,4 @@ ssl-cert/
 logs/
 settings_env.py
 stripe.exe
+chromedriver.exe
