@@ -33,3 +33,4 @@ DATABASES = {
 }
 
 DOMAIN = "http://127.0.0.1:8000"
+PORT = "8000"
