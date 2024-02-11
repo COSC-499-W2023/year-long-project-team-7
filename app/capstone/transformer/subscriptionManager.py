@@ -2,7 +2,7 @@ from .models import Subscription
 from datetime import date
 from django.contrib.auth.models import User
 
-def has_valid_subscription(user_id) -> bool: #type: ignore
+def has_valid_subscription(user_id: int) -> bool:
     try:
         subscription = Subscription.objects.get(user=user_id)
         return (
@@ -15,7 +15,7 @@ def has_valid_subscription(user_id) -> bool: #type: ignore
     except Subscription.DoesNotExist:
         return False
 
-def give_subscription_to_user(user: User, start_date, end_date): #type: ignore
+def give_subscription_to_user(user: User, start_date: date, end_date: date) -> None:
     subscription, created = Subscription.objects.get_or_create(user=user)
     subscription.has_subscription = True
     subscription.start_date = start_date

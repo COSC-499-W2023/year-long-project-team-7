@@ -87,7 +87,7 @@ def logout(request: HttpRequest) -> HttpResponse:
     return redirect("login")
 
 def transform(request: HttpRequest) -> HttpResponse:
-    if has_valid_subscription(request.user.id):
+    if has_valid_subscription(request.user.id): # type: ignore
         if request.method == "POST":
             form = TransformerForm(request.POST)
 
