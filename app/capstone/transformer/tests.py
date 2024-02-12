@@ -21,6 +21,11 @@ from unittest.mock import patch
 import tempfile
 from .subscriptionManager import give_subscription_to_user
 from datetime import date, timedelta
+from django.conf import settings
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.contrib.contenttypes.models import ContentType
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 
 
 class TransformViewTestCase(TestCase):
@@ -241,6 +246,47 @@ class StoreTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "store.html")
+
+
+class StripePortalTestCase(StaticLiveServerTestCase):
+    driver = None
+    port = settings.PORT
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        ContentType.objects.clear_cache()
+        super().setUpClass()
+        service = Service(os.path.join(os.path.dirname(os.path.dirname(settings.BASE_DIR)), "chromedriver.exe"))
+        cls.driver = webdriver.Chrome(service=service)
+        cls.driver = webdriver.Chrome(StripePortalTestCase.driver_path)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            email="testuser@email.com", password="testpassword123", username="test"
+        )
+
+    def test_unauthenticated_portal_request(self):
+        self.driver.get(settings.DOMAIN + "/store")
+        self.driver.find_element(By.CLASS_NAME, "btn btn-primary mb-3").click()
+        self.assertEqual(self.driver.current_url, settings.DOMAIN + "/store") #redirected to store page
+
+    def test_valid_portal_request(self):
+        self.client.login(username="test", password="testpassword123")
+        self.driver.get(settings.DOMAIN + "/store")
+        self.driver.find_element(By.CLASS_NAME, "btn btn-primary mb-3").click()
+        self.assertNotAlmostEqual(self.driver.current_url, settings.DOMAIN + "/store") #not redirected to store page
+
+    def test_existing_subscription_portal_request(self):
+        self.client.login(username="test", password="testpassword123")
+        give_subscription_to_user(self.user, date.today(), (date.today() + timedelta(days=1)))
+        self.driver.find_element(By.CLASS_NAME, "btn btn-primary mb-3").click()
+        self.assertEqual(self.driver.current_url, settings.DOMAIN + "/store") #redirected to store page
 
 
 class SuccessTestCase(TestCase):
