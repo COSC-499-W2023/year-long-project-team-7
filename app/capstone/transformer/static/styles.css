@@ -572,6 +572,20 @@ input[type="range"]::-moz-range-thumb {
     animation: spinner 1s ease infinite;
 }
 
+/* Results */
+
+@media (max-width: 992px) {
+    #pdf-canvas {
+        width: 500px;
+    }
+}
+
+@media (max-width: 720px) {
+    #pdf-canvas {
+        width: 300px;
+    }
+}
+
 /* Store */
 
 .store-card-container {
