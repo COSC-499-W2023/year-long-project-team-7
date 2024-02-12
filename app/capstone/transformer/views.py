@@ -14,13 +14,20 @@ from django.core.mail import EmailMessage
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
-from .models import Conversion, File, Products
+from .models import Conversion, File, Product
 from .tokens import account_activation_token
 from typing import List, Dict
 import json
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+import stripe
+from django.conf import settings
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from .subscriptionManager import has_valid_subscription, give_subscription_to_user
+from django.contrib.auth.models import User
+from datetime import date, timedelta
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -79,60 +86,60 @@ def logout(request: HttpRequest) -> HttpResponse:
     messages.success(request, "Logged Out Successfully.")
     return redirect("login")
 
-
-@login_required(login_url="login")
 def transform(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        form = TransformerForm(request.POST)
+    if has_valid_subscription(request.user.id): # type: ignore
+        if request.method == "POST":
+            form = TransformerForm(request.POST)
 
-        if form.is_valid():
-            conversion = Conversion()
-            user_params = {
-                "prompt": form.cleaned_data["prompt"],
-                "language": form.cleaned_data["language"],
-                "tone": form.cleaned_data["tone"],
-                "complexity": form.cleaned_data["complexity"],
-                "num_slides": form.cleaned_data["num_slides"],
-                "image_frequency": form.cleaned_data["image_frequency"],
-                "template": int(form.cleaned_data["template"]),
-            }
-            conversion.user_parameters = json.dumps(user_params)
-            conversion.user = request.user  # type: ignore
+            if form.is_valid():
+                conversion = Conversion()
+                user_params = {
+                    "prompt": form.cleaned_data["prompt"],
+                    "language": form.cleaned_data["language"],
+                    "tone": form.cleaned_data["tone"],
+                    "complexity": form.cleaned_data["complexity"],
+                    "num_slides": form.cleaned_data["num_slides"],
+                    "image_frequency": form.cleaned_data["image_frequency"],
+                    "template": int(form.cleaned_data["template"]),
+                }
+                conversion.user_parameters = json.dumps(user_params)
+                conversion.user = request.user  # type: ignore
 
-            conversion.save()
+                conversion.save()
 
-            files = []
+                files = []
 
-            has_prompt = len(user_params["prompt"]) > 0
-            has_file = len(request.FILES.getlist("files"))
+                has_prompt = len(user_params["prompt"]) > 0
+                has_file = len(request.FILES.getlist("files"))
 
-            if not has_prompt and not has_file:
+                if not has_prompt and not has_file:
+                    return render(request, "transform.html", {"form": TransformerForm()})
+
+                for uploaded_file in request.FILES.getlist("files"):
+                    new_file = File()
+                    new_file.user = request.user if request.user.is_authenticated else None
+                    new_file.conversion = conversion
+                    if uploaded_file.content_type is not None:
+                        new_file.type = uploaded_file.content_type
+                    new_file.file = uploaded_file
+                    new_file.save()
+                    files.append(new_file)
+
+                generate_output(files, conversion)
+
+                return redirect("results", conversion_id=conversion.id)
+            else:
                 return render(request, "transform.html", {"form": TransformerForm()})
-
-            for uploaded_file in request.FILES.getlist("files"):
-                new_file = File()
-                new_file.user = request.user  # type: ignore
-                new_file.conversion = conversion
-                if uploaded_file.content_type is not None:
-                    new_file.type = uploaded_file.content_type
-                new_file.file = uploaded_file
-                new_file.is_input = True
-                new_file.save()
-                files.append(new_file)
-
-            generate_output(files, conversion)
-
-            return redirect("results", conversion_id=conversion.id)
         else:
             return render(request, "transform.html", {"form": TransformerForm()})
     else:
-        return render(request, "transform.html", {"form": TransformerForm()})
+        messages.error(request, "You must have an active subscription to use Transform.")
+        return redirect("store")
 
 
 @login_required(login_url="login")
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     conversion = get_object_or_404(Conversion, id=conversion_id)
-
     if request.user.is_authenticated:
         if conversion.user != request.user:
             return HttpResponseForbidden(
@@ -241,9 +248,90 @@ def history(request: HttpRequest) -> HttpResponse:
 
 
 def store(request: HttpRequest) -> HttpResponse:
-    products = Products.objects.all()
-    print(products)
+    products = Product.objects.all()
     return render(request, "store.html", {"products": products})
+
+
+class CreateCheckoutSessionView(View):
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse: # type: ignore
+        if request.user.is_authenticated:
+            if has_valid_subscription(request.user.id):
+                messages.error(request, "You already have an active subscription.")
+                return redirect("store")
+            else:
+                product_id = self.kwargs["pk"]
+                product = Product.objects.get(id=product_id)
+                stripe.api_key = settings.STRIPE_SECRET_KEY # type: ignore
+                YOUR_DOMAIN = settings.DOMAIN # type: ignore
+                checkout_session = stripe.checkout.Session.create(
+                    line_items=[
+                        {
+                                'price_data': {
+                                    'currency': 'cad',
+                                    'unit_amount': product.get_display_price_cents,
+                                    'product_data': {
+                                        'name': product.name
+                                    },
+                                },
+                                'quantity': 1
+                        }
+                    ],
+                    metadata={
+                        "product_id": product.id,
+                        "user_id": request.user.id
+                    },
+                    mode='payment',
+                    success_url=YOUR_DOMAIN + '/success',
+                    cancel_url=YOUR_DOMAIN + '/cancel',
+                    automatic_tax={'enabled': True},
+                )
+                response = redirect(checkout_session.url) #type: ignore
+                return response
+        else:
+            messages.error(request, "You must be logged in to purchase a product.")
+            return redirect("store")
+    
+    
+def success(request: HttpRequest) -> HttpResponse:
+    return render(request, "success.html")
+
+  
+def cancel(request: HttpRequest) -> HttpResponse:
+    return render(request, "cancel.html")
+
+  
+@csrf_exempt
+def stripe_webhook(request: HttpRequest) -> HttpResponse:
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+    webhook_key = settings.STRIPE_WEBHOOK_SECRET #type: ignore
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, webhook_key
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e: #type: ignore
+        # Invalid signature
+        return HttpResponse(status=400)
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        # Retrieve the session. If you require line items in the response, you may include them by expanding line_items.
+        session = stripe.checkout.Session.retrieve(
+        event['data']['object']['id']
+        )
+        user_id = session["metadata"]["user_id"]
+        product_id = session["metadata"]["product_id"]
+        subscription_user = User.objects.get(id=user_id)
+        subscription_product = Product.objects.get(id=product_id)
+        start_date = date.today()
+        length_days = subscription_product.length_days
+        end_date = start_date + timedelta(days=length_days)
+        give_subscription_to_user(subscription_user, start_date, end_date)
+    # Passed signature verification
+    return HttpResponse(status=200)
 
 
 def payments(request: HttpRequest) -> HttpResponse:
