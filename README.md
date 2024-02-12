@@ -123,7 +123,7 @@
 
     1. Install using instructions in the "apt" tab https://stripe.com/docs/stripe-cli
 
-    2. Log in with API webhook key (found in accounts sheet) ```stripe login --api-key [key here]```
+    2. Log in with API webhook key (found in accounts sheet) ```stripe login --interactive```
 
     3. Run ```stripe listen --forward-to localhost:8000/webhook```
 
