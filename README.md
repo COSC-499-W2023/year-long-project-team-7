@@ -129,7 +129,7 @@
 
     4. Run migrations
 
-    5. At this point you should be able to test buying a subscription with a fake credit card
+    5. At this point you should be able to test buying a subscription with a fake credit card. (card number 4242 4242 4242 4242).
     ```
     
 
