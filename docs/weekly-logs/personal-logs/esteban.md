@@ -358,7 +358,7 @@ _Team Evaluation Screenshot_
 
 This week my goal was to finish the process of making the site fully responsive ahead of peer evaluations. I managed to style the entire site, with the exception of the `history` page with had to be reworked due to a bug. I found this process to be very interesting, albeit very demanding. I implemented CSS flexbox and grid patterns as well as media queries and other responsive design techniques. I also managed to optimize our template code reuse slightly in the processes and lint most of our templates to be much more readable. I find that the new way I organized our CSS stylesheet helped speed up the process tremendously and I am very happy with my results with the page. I feel that our site looks very good in any screen size, and I am proud of the work I managed to achieve for this period.
 
-## Jan 29 2024 -> Feb 2024
+## Jan 29 2024 -> Feb 5 2024
 
 ![evaluation-screenshot](../../img/esteban-eval-17.png)
 <br>
