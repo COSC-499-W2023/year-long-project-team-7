@@ -21,6 +21,7 @@ import json
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+import traceback
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -86,41 +87,50 @@ def transform(request: HttpRequest) -> HttpResponse:
         form = TransformerForm(request.POST)
 
         if form.is_valid():
-            conversion = Conversion()
-            user_params = {
-                "prompt": form.cleaned_data["prompt"],
-                "language": form.cleaned_data["language"],
-                "tone": form.cleaned_data["tone"],
-                "complexity": form.cleaned_data["complexity"],
-                "num_slides": form.cleaned_data["num_slides"],
-                "image_frequency": form.cleaned_data["image_frequency"],
-                "template": int(form.cleaned_data["template"]),
-            }
-            conversion.user_parameters = json.dumps(user_params)
-            conversion.user = request.user  # type: ignore
+            try:
+                conversion = Conversion()
+                user_params = {
+                    "prompt": form.cleaned_data["prompt"],
+                    "language": form.cleaned_data["language"],
+                    "tone": form.cleaned_data["tone"],
+                    "complexity": form.cleaned_data["complexity"],
+                    "num_slides": form.cleaned_data["num_slides"],
+                    "image_frequency": form.cleaned_data["image_frequency"],
+                    "template": int(form.cleaned_data["template"]),
+                }
+                conversion.user_parameters = json.dumps(user_params)
+                conversion.user = request.user  # type: ignore
 
-            conversion.save()
+                conversion.save()
 
-            files = []
+                files = []
 
-            has_prompt = len(user_params["prompt"]) > 0
-            has_file = len(request.FILES.getlist("files"))
+                has_prompt = len(user_params["prompt"]) > 0
+                has_file = len(request.FILES.getlist("files"))
 
-            if not has_prompt and not has_file:
+                if not has_prompt and not has_file:
+                    return render(request, "transform.html", {"form": TransformerForm()})
+
+                for uploaded_file in request.FILES.getlist("files"):
+                    new_file = File()
+                    new_file.user = request.user  # type: ignore
+                    new_file.conversion = conversion
+                    if uploaded_file.content_type is not None:
+                        new_file.type = uploaded_file.content_type
+                    new_file.file = uploaded_file
+                    new_file.is_input = True
+                    new_file.save()
+                    files.append(new_file)
+
+                generate_output(files, conversion)
+            except:
+                #print traceback for developers
+                print(traceback.format_exc())
+                conversion.delete()
+                for file in files:
+                    file.delete()
+                messages.error(request, "We encountered an unexpected error while generating your content please try again.")
                 return render(request, "transform.html", {"form": TransformerForm()})
-
-            for uploaded_file in request.FILES.getlist("files"):
-                new_file = File()
-                new_file.user = request.user  # type: ignore
-                new_file.conversion = conversion
-                if uploaded_file.content_type is not None:
-                    new_file.type = uploaded_file.content_type
-                new_file.file = uploaded_file
-                new_file.is_input = True
-                new_file.save()
-                files.append(new_file)
-
-            generate_output(files, conversion)
 
             return redirect("results", conversion_id=conversion.id)
         else:
