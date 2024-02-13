@@ -2,6 +2,7 @@
 
 from django.db import migrations
 
+
 def import_products(app, schema_editor):
     Product = app.get_model("transformer", "Product")
     daily = Product.objects.create(
@@ -29,10 +30,10 @@ def import_products(app, schema_editor):
         phrase="Best Value!",
     )
 
-class Migration(migrations.Migration):
 
+class Migration(migrations.Migration):
     dependencies = [
-        ('transformer', '0015_product_get_display_price_cents_and_more'),
+        ("transformer", "0015_product_get_display_price_cents_and_more"),
     ]
 
     operations = [

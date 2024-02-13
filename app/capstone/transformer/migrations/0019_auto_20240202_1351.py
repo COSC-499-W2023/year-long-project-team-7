@@ -2,6 +2,7 @@
 
 from django.db import migrations
 
+
 def update_products(app, schema_editor):
     Product = app.get_model("transformer", "Product")
     Product.objects.all().delete()
@@ -11,7 +12,7 @@ def update_products(app, schema_editor):
         get_display_price=0.99,
         description="Get access to Platonix for 1 day",
         phrase="Most Flexible!",
-        length_days=1
+        length_days=1,
     )
     monthly = Product.objects.create(
         name="Monthly Subscription",
@@ -19,16 +20,15 @@ def update_products(app, schema_editor):
         get_display_price=4.99,
         description="Get access to Platonix for 1 month",
         phrase="Most Popular!",
-        length_days=30
+        length_days=30,
     )
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('transformer', '0018_remove_product_get_display_number_and_more'),
+        ("transformer", "0018_remove_product_get_display_number_and_more"),
     ]
 
     operations = [
-         migrations.RunPython(update_products),
+        migrations.RunPython(update_products),
     ]

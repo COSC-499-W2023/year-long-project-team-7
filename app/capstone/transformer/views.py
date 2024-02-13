@@ -92,8 +92,9 @@ def logout(request: HttpRequest) -> HttpResponse:
     messages.success(request, "Logged Out Successfully.")
     return redirect("login")
 
+
 def transform(request: HttpRequest) -> HttpResponse:
-    if has_valid_subscription(request.user.id): # type: ignore
+    if has_valid_subscription(request.user.id):  # type: ignore
         if request.method == "POST":
             form = TransformerForm(request.POST)
 
@@ -119,11 +120,15 @@ def transform(request: HttpRequest) -> HttpResponse:
                 has_file = len(request.FILES.getlist("files"))
 
                 if not has_prompt and not has_file:
-                    return render(request, "transform.html", {"form": TransformerForm()})
+                    return render(
+                        request, "transform.html", {"form": TransformerForm()}
+                    )
 
                 for uploaded_file in request.FILES.getlist("files"):
                     new_file = File()
-                    new_file.user = request.user if request.user.is_authenticated else None
+                    new_file.user = (
+                        request.user if request.user.is_authenticated else None
+                    )
                     new_file.conversion = conversion
                     if uploaded_file.content_type is not None:
                         new_file.type = uploaded_file.content_type
@@ -139,7 +144,9 @@ def transform(request: HttpRequest) -> HttpResponse:
         else:
             return render(request, "transform.html", {"form": TransformerForm()})
     else:
-        messages.error(request, "You must have an active subscription to use Transform.")
+        messages.error(
+            request, "You must have an active subscription to use Transform."
+        )
         return redirect("store")
 
 
@@ -259,7 +266,7 @@ def store(request: HttpRequest) -> HttpResponse:
 
 
 class CreateCheckoutSessionView(View):
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse: # type: ignore
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:  # type: ignore
         if request.user.is_authenticated:
             if has_valid_subscription(request.user.id):
                 messages.error(request, "You already have an active subscription.")
@@ -267,67 +274,58 @@ class CreateCheckoutSessionView(View):
             else:
                 product_id = self.kwargs["pk"]
                 product = Product.objects.get(id=product_id)
-                stripe.api_key = settings.STRIPE_SECRET_KEY # type: ignore
-                YOUR_DOMAIN = settings.DOMAIN # type: ignore
+                stripe.api_key = settings.STRIPE_SECRET_KEY  # type: ignore
+                YOUR_DOMAIN = settings.DOMAIN  # type: ignore
                 checkout_session = stripe.checkout.Session.create(
                     line_items=[
                         {
-                                'price_data': {
-                                    'currency': 'cad',
-                                    'unit_amount': product.get_display_price_cents,
-                                    'product_data': {
-                                        'name': product.name
-                                    },
-                                },
-                                'quantity': 1
+                            "price_data": {
+                                "currency": "cad",
+                                "unit_amount": product.get_display_price_cents,
+                                "product_data": {"name": product.name},
+                            },
+                            "quantity": 1,
                         }
                     ],
-                    metadata={
-                        "product_id": product.id,
-                        "user_id": request.user.id
-                    },
-                    mode='payment',
-                    success_url=YOUR_DOMAIN + '/success',
-                    cancel_url=YOUR_DOMAIN + '/cancel',
-                    automatic_tax={'enabled': True},
+                    metadata={"product_id": product.id, "user_id": request.user.id},
+                    mode="payment",
+                    success_url=YOUR_DOMAIN + "/success",
+                    cancel_url=YOUR_DOMAIN + "/cancel",
+                    automatic_tax={"enabled": True},
                 )
-                response = redirect(checkout_session.url) #type: ignore
+                response = redirect(checkout_session.url)  # type: ignore
                 return response
         else:
             messages.error(request, "You must be logged in to purchase a product.")
             return redirect("store")
-    
-    
+
+
 def success(request: HttpRequest) -> HttpResponse:
     return render(request, "success.html")
 
-  
+
 def cancel(request: HttpRequest) -> HttpResponse:
     return render(request, "cancel.html")
 
-  
+
 @csrf_exempt
 def stripe_webhook(request: HttpRequest) -> HttpResponse:
     payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
     event = None
-    webhook_key = settings.STRIPE_WEBHOOK_SECRET #type: ignore
+    webhook_key = settings.STRIPE_WEBHOOK_SECRET  # type: ignore
     try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, webhook_key
-        )
+        event = stripe.Webhook.construct_event(payload, sig_header, webhook_key)
     except ValueError as e:
         # Invalid payload
         return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError as e: #type: ignore
+    except stripe.error.SignatureVerificationError as e:  # type: ignore
         # Invalid signature
         return HttpResponse(status=400)
     # Handle the checkout.session.completed event
-    if event['type'] == 'checkout.session.completed':
+    if event["type"] == "checkout.session.completed":
         # Retrieve the session. If you require line items in the response, you may include them by expanding line_items.
-        session = stripe.checkout.Session.retrieve(
-        event['data']['object']['id']
-        )
+        session = stripe.checkout.Session.retrieve(event["data"]["object"]["id"])
         user_id = session["metadata"]["user_id"]
         product_id = session["metadata"]["product_id"]
         subscription_user = User.objects.get(id=user_id)
