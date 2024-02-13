@@ -27,14 +27,22 @@ class Transaction(models.Model):
     amount = models.IntegerField()
 
 
-class Products(models.Model):
+class Product(models.Model):
     name = models.TextField()
-    get_display_number = models.IntegerField()
-    get_display_price = models.FloatField()
+    get_display_price_cents = models.IntegerField(default=0) #stored in cents for stripe
+    get_display_price = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
     description = models.TextField()
     phrase = models.TextField()
+    length_days = models.IntegerField(default=0)
 
+class Subscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    has_subscription = models.BooleanField(default=False)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    is_premium = models.BooleanField(default=False)
 
+  
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default="default_pfp.jpg", upload_to="profile_pics")
