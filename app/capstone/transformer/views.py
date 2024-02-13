@@ -14,6 +14,12 @@ from django.core.mail import EmailMessage
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
+from .forms import (
+    UpdateEmailForm,
+    UpdatePasswordForm,
+    ProfileUpdateForm,
+    AccountDeletionForm,
+)
 from .models import Conversion, File, Product
 from .tokens import account_activation_token
 from typing import List, Dict
@@ -336,3 +342,57 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
 
 def payments(request: HttpRequest) -> HttpResponse:
     return render(request, "payments.html")
+
+
+@login_required
+def profile(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        # User forms for changing username and password
+        e_form = UpdateEmailForm(request.POST, instance=request.user)
+        p_form = UpdatePasswordForm(user=request.user, data=request.POST)  # type: ignore
+        # Profile form for changing profile picture
+        pic_form = ProfileUpdateForm(
+            request.POST, request.FILES, instance=request.user.profile  # type: ignore
+        )
+        # Delete profile form
+        delete_form = AccountDeletionForm(request.POST)
+        if e_form.is_valid():
+            e_form.save()
+            messages.success(request, f"Your email has been updated!")
+        else:
+            messages.error(
+                request, f"Invalid email form data. Please check and try again."
+            )
+        if p_form.is_valid():
+            p_form.save()
+            messages.success(request, f"Your password has been updated!")
+        else:
+            messages.error(
+                request, f"Invalid password form data. Please check and try again."
+            )
+        if pic_form.is_valid():
+            pic_form.save()
+            # messages.success(request, f'Your profile picture has been updated!')   #For some reason this message always sends even when the field is blank
+        else:
+            messages.error(
+                request,
+                f"Invalid profile picture form data. Please check and try again.",
+            )
+        if delete_form.is_valid() and delete_form.cleaned_data["confirm_delete"]:
+            request.user.delete()
+            logout(request)  # Log out the user after account deletion
+            messages.success(request, f"Your account has been deleted.")
+            return redirect("login")
+        return redirect("profile")
+    else:
+        e_form = UpdateEmailForm(instance=request.user)
+        p_form = UpdatePasswordForm(user=request.user)  # type: ignore
+        pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
+        delete_form = AccountDeletionForm()
+    context = {
+        "e_form": e_form,
+        "p_form": p_form,
+        "pic_form": pic_form,
+        "delete_form": delete_form,
+    }
+    return render(request, "profile.html", context)

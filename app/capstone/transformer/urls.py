@@ -11,6 +11,7 @@ urlpatterns = [
     path("history", views.history, name="history"),
     path("store", views.store, name="store"),
     path("results/<int:conversion_id>/", views.results, name="results"),
+    path("profile", views.profile, name="profile"),
     path("create-checkout-session/<int:pk>/", views.CreateCheckoutSessionView.as_view(), name="create-checkout-session"),
     path("success", views.success, name="success"),
     path("cancel", views.cancel, name="cancel"),

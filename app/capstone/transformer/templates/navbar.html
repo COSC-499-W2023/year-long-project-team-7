@@ -42,10 +42,12 @@
         </button>
         <!-- Profile picture (Example source used) -->
         {% if user.is_authenticated %}
-            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                 alt="Profile Picture"
-                 class="profile-picture" />
-            <a class="nav-link" style="margin-left: 10px" href="/logout"><b>Logout</b></a>
+            <a href="{% url 'profile' %}">
+                <img src="{{ user.profile.image.url }}"
+                     alt="Profile Picture"
+                     class="profile-picture">
+            </a>
+            <a class="nav-link" style="margin-left: 10px;" href="/logout"><b>Logout</b></a>
         {% endif %}
     </div>
 </nav>
