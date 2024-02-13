@@ -111,6 +111,4 @@ EMAIL_FROM = "platonix.ai@gmail.com"
 EMAIL_HOST_USER = "platonix.ai@gmail.com"
 
 
-MESSAGE_TAGS = {
-    message_constants.ERROR: "danger"
-}
+MESSAGE_TAGS = {message_constants.ERROR: "danger"}

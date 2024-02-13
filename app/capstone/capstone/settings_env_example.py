@@ -8,6 +8,7 @@ OPENAI_MODEL = "gpt-3.5-turbo-1106"
 
 STRIPE_SECRET_KEY = "stripe secret key here"
 STRIPE_PUBLIC_KEY = "stripe public key here"
+STRIPE_WEBHOOK_SECRET = "stripe webhook secret"
 
 
 UNSPLASH_ACCESS_KEY = "unsplash access key here"
@@ -30,3 +31,5 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+DOMAIN = "http://127.0.0.1:8000"

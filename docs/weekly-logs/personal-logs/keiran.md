@@ -215,7 +215,7 @@ _Tasks Screenshot_
 ![evaluation screenshot](../../img/keiran-eval-16.png)
 _Team evaluation Screenshot_
 
-![w15 tasks screenshot](../../img/keiran-w16-tasks.png)
+![w16 tasks screenshot](../../img/keiran-w16-tasks.png)
 _Tasks Screenshot_
 
 [Individual W16 Tasks][15]
@@ -224,3 +224,23 @@ _Tasks Screenshot_
 1. Stripe payment integration (subscription_checkout branch)
 
 [15]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=+assignee%3A%40me
+
+## Jan 22 -> Jan 28
+
+Missed this log.
+
+## Jan 29 -> Feb 4
+
+![evaluation screenshot](../../img/keiran-eval-17.png)
+_Team evaluation Screenshot_
+
+![w17 tasks screenshot](../../img/keiran-w17-tasks.png)
+_Tasks Screenshot_
+
+[Individual W17 Tasks][16]
+
+### Goals this week
+1. Fix Stripe payments (subscription_checkout branch)
+2. Stripe user permissions (subscription_checkout branch)
+
+[16]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=+assignee%3A%40me

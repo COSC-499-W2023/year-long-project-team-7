@@ -620,10 +620,6 @@ input[type="range"]::-moz-range-thumb {
     background: var(--clr-card);
 }
 
-.card-text {
-    height: 80%;
-}
-
 /* Tooltips */
 
 .custom-tooltip {
