@@ -623,3 +623,9 @@ input[type="range"]::-moz-range-thumb {
 .card-text {
     height: 80%;
 }
+
+/* Tooltips */
+
+.custom-tooltip {
+    cursor: pointer;
+}
