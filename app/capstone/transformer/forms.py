@@ -141,18 +141,23 @@ class LoginForm(forms.Form):
     )
 
 
-class UpdateEmailForm(forms.ModelForm):
+class UpdateEmailForm(forms.ModelForm):  # type: ignore
     email = forms.EmailField()
+
     class Meta:
         model = User
         fields = ["email"]
-    def clean_email(self):
+
+    def clean_email(self):  # type: ignore
         new_email = self.cleaned_data.get("email")
+        if not new_email:  # Add a check to ensure new_email is not None
+            raise ValidationError("Email cannot be empty.")
         current_email = self.instance.email
         if User.objects.exclude(pk=self.instance.pk).filter(email=new_email).exists():
             raise ValidationError("This email address is already in use.")
         return new_email
-    def save(self, commit=True):
+
+    def save(self, commit: bool = True):  # type: ignore
         user = super(UpdateEmailForm, self).save(commit=False)
         user.username = self.cleaned_data["email"]
         if commit:
@@ -163,10 +168,10 @@ class UpdateEmailForm(forms.ModelForm):
 class UpdatePasswordForm(PasswordChangeForm):
     class Meta:
         model = User
-        fields = []
+        fields = []  # type: ignore
 
 
-class ProfileUpdateForm(forms.ModelForm):
+class ProfileUpdateForm(forms.ModelForm):  # type: ignore
     class Meta:
         model = Profile
         fields = ["image"]
@@ -177,4 +182,3 @@ class AccountDeletionForm(forms.Form):
         required=True,
         widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
-    
