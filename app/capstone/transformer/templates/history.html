@@ -1,23 +1,24 @@
 {% extends "base.html" %}
 {% load static %}
 {% load json_filter %}
-{% block
-    content %}
-    <div class="container d-flex justify-content-center"
-         style="padding-top: 100px">
+{% block content %}
+    <div class="container d-flex justify-content-center">
         <div class="col-8">
             <h1 class="text-center title">Transformation History</h1>
             <br />
             <div id="accordion">
                 {% for conversion, files in history.items %}
                     <div class="card mb-3 border-light">
-                        <div class="card-header"
+                        <div class="card-header accordion-header"
                              id="heading{{ forloop.counter }}"
                              data-toggle="collapse"
                              data-target="#collapse{{ forloop.counter }}"
                              aria-expanded="true"
                              aria-controls="collapse{{ forloop.counter }}">
-                            <h3 class="card-title">{{ conversion.date }} UTC</h3>
+                            <div style="clear: both">
+                                <h3 class="card-title" style="float: left">{{ conversion.date }} UTC</h3>
+                                <h2 style="float: right">&#x2304</h2>
+                            </div>
                         </div>
                         <div id="collapse{{ forloop.counter }}"
                              class="collapse"
@@ -26,54 +27,48 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <p class="card-text">
-                                            <strong>Prompt:</strong> {{
-                                            conversion.user_parameters|get_item:"prompt"
-                                            }}
+                                        <p class="accordion-text">
+                                            <strong>Prompt:</strong> {{ conversion.user_parameters|get_item:"prompt" }}
                                         </p>
-                                        <p class="card-text">
-                                            <strong>Language:</strong> {{
-                                            conversion.user_parameters|get_item:"language"
-                                            }}
+                                        <p class="accordion-text">
+                                            <strong>Language:</strong> {{ conversion.user_parameters|get_item:"language" }}
                                         </p>
-                                        <p class="card-text">
-                                            <strong>Tone:</strong> {{
-                                            conversion.user_parameters|get_item:"tone"
-                                            }}
+                                        <p class="accordion-text">
+                                            <strong>Tone:</strong> {{ conversion.user_parameters|get_item:"tone" }}
                                         </p>
-                                        <p class="card-text">
-                                            <strong>Complexity:</strong> {{
-                                            conversion.user_parameters|get_item:"complexity"
-                                            }}/6
+                                        <p class="accordion-text">
+                                            <strong>Complexity:</strong> {{ conversion.user_parameters|get_item:"complexity" }}/6
                                         </p>
-                                        <p class="card-text">
-                                            <strong>Number of Slides:</strong> {{
-                                            conversion.user_parameters|get_item:"num_slides"
-                                            }}
+                                        <p class="accordion-text">
+                                            <strong>Number of Slides:</strong> {{ conversion.user_parameters|get_item:"num_slides" }}
                                         </p>
-                                        <p class="card-text">
-                                            <strong>Image Frequency:</strong> {{
-                                            conversion.user_parameters|get_item:"image_frequency"
-                                            }}/6
+                                        <p class="accordion-text">
+                                            <strong>Image Frequency:</strong> {{ conversion.user_parameters|get_item:"image_frequency" }}/6
                                         </p>
                                     </div>
                                     <div class="col-md-6">
-                                        <h4 class="card-subtitle mb-2">Input Files</h4>
-                                        {% for file in files.input_files %}
-                                            <p class="card-text">
-                                                <a href="{% url 'download_file' file.id %}" download>{{ file.file }}</a>
-                                            </p>
-                                        {% endfor %}
+                                        {% if files.input_files %}
+                                            <h4 class="card-subtitle mb-2">Input Files</h4>
+                                            {% for file in files.input_files %}
+                                                <p class="accordion-text">
+                                                    <a class="btn btn-primary history-download"
+                                                       href="{% url 'download_file' file.id %}"
+                                                       download>{{ file.file }}</a>
+                                                </p>
+                                            {% endfor %}
+                                        {% endif %}
                                         <h4 class="card-subtitle mb-2">Output Files</h4>
                                         {% for file in files.output_files %}
-                                            <p class="card-text">
-                                                <a href="{% url 'download_file' file.id %}" download>{{ file.file }}</a>
+                                            <p class="accordion-text">
+                                                <a class="btn btn-primary history-download"
+                                                   href="{% url 'download_file' file.id %}"
+                                                   download>{{ file.file }}</a>
                                             </p>
                                         {% endfor %}
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer border-light">
+                            <div class="card-footer border-light d-flex justify-content-center">
                                 <a href="/results/{{ conversion.id }}" class="btn btn-primary">View Results</a>
                             </div>
                         </div>
@@ -88,6 +83,5 @@
             </div>
         </div>
     </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 {% endblock content %}
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-{% endblock %}

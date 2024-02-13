@@ -34,7 +34,7 @@
                 </div>
                 <div class="d-inline-flex flex-column justify-content-center flex-md-row gap-1 mt-5">
                         {% for file in output_files %}
-                            <a class="btn btn-primary" style=" text-align: center;" href="{% url 'download_file' file.id %}" download>{{ file.file }}</a>
+                            <a class="btn btn-primary" style="text-align: center;" href="{% url 'download_file' file.id %}" download>{{ file.file }}</a>
                             {% if not forloop.last %}&nbsp;&nbsp;{% endif %}
                         {% endfor %}
                 </div>

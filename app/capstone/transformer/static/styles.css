@@ -391,6 +391,7 @@ input[type="range"]::-moz-range-thumb {
 /* Buttons */
 
 .btn-primary {
+    font-size: var(--fs-400);
     background-color: var(--clr-primary) !important;
     border-color: var(--clr-primary) !important;
 }
@@ -576,14 +577,29 @@ input[type="range"]::-moz-range-thumb {
 
 @media (max-width: 992px) {
     #pdf-canvas {
-        width: 500px;
+        width: 31.25em;
     }
 }
 
 @media (max-width: 720px) {
     #pdf-canvas {
-        width: 300px;
+        width: 18.75em;
     }
+}
+
+/* History */
+
+.card-title {
+    padding-top: 0.3em;
+    float: left;
+}
+
+.history-download {
+    width: 100%;
+}
+
+.accordion-header:hover {
+    cursor: pointer;
 }
 
 /* Store */
