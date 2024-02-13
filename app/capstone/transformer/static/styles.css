@@ -186,12 +186,17 @@ a:hover {
 }
 
 /* About Us */
+
 .about-container {
     max-width: 35em;
 }
 
 .about-container p {
     text-align: center;
+}
+
+.faq-title {
+    font-family: var(--ff-heading);
 }
 
 /* Navbar */
