@@ -388,3 +388,36 @@ This week our team was focused on getting prepared for peer testing to make sure
 I unfortunately became sick during the weekend, so I was not able to get started on the features I have planned for next week. This will include adding tooltips to our transformation page, creating an FAQ page, as well as making the site WCAG compliant for accessibility. I will also begin working on our new feature, exercise creation.
 
 Since a lot of my work was done this week in person with the team, it is not reflected in the GitHub Project.
+
+## Jan 6 2024 -> Feb 12 2024
+
+![evaluation-screenshot](../../img/esteban-eval-18.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-18.png)
+
+### Goals
+
+- [x] Transform
+	- [x] Tooltips
+- [x] FAQ/Help/Transform Info
+	- [x] Clarify what things are doing
+- [x] History
+	- [x] Responsive
+	- [x] Peer testing improved UX
+- [x] Results Page
+	- [x] Responsive
+	- [x] PDF Preview Fix
+- [x] WCAG Start
+	- [x] Test screen reader
+
+### Self Reflection and Learning
+
+This week I worked on some peer feedback we got from our evaluation. These changes were focused on improving the user experience of the site. As part of this, I added a new FAQ section to the site and renamed the "Transform Page" to "Create". I also added tooltips to the presentation creation tool and made the results page communicate what elements are clicklable more clearly. I also fixed some issues our PDF previews were having when displayed in smaller screens and restyled the results. I've gotten started with the work of making our site more accessible by implementing WCAG development practices and begun testing with a screenreader. 
+
+A lot of the time I spent this week was in troubleshooting the bootstrap "tooltip" plugin. Due to an obscure conflicting rule in our styling, the tooltips were not working as needed. This halted progress for about a day and was a difficult problem to solve as it involved thorough reading of the Bootstrap documentation and manually working through our styling rules to locate the problem.
