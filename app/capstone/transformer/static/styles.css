@@ -87,10 +87,6 @@ footer a {
     text-decoration-thickness: 1px;
 }
 
-div {
-    transition: all 0.2s linear !important;
-}
-
 /* Typography */
 .bigger-h1 {
     font-size: var(--fs-xl);
