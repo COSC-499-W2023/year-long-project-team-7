@@ -17,6 +17,10 @@ addEventListener("load", () => {
 });
 
 $(document).ready(function () {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+
     $(".file-download-button").click(function () {
         const fileUrl = $(this).attr("data-fileurl");
         window.location.href = fileUrl;
