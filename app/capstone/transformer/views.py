@@ -14,7 +14,13 @@ from django.core.mail import EmailMessage
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
-from .models import Conversion, File, Products
+from .forms import (
+    UpdateEmailForm,
+    UpdatePasswordForm,
+    ProfileUpdateForm,
+    AccountDeletionForm,
+)
+from .models import Conversion, File, Product
 from .tokens import account_activation_token
 from typing import List, Dict
 import json
@@ -22,6 +28,13 @@ from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 import traceback
+import stripe
+from django.conf import settings
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from .subscriptionManager import has_valid_subscription, give_subscription_to_user
+from django.contrib.auth.models import User
+from datetime import date, timedelta
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -81,11 +94,10 @@ def logout(request: HttpRequest) -> HttpResponse:
     return redirect("login")
 
 
-@login_required(login_url="login")
 def transform(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        form = TransformerForm(request.POST)
-
+    if has_valid_subscription(request.user.id):  # type: ignore
+        if request.method == "POST":
+            form = TransformerForm(request.POST)
         if form.is_valid():
             try:
                 conversion = Conversion()
@@ -109,16 +121,19 @@ def transform(request: HttpRequest) -> HttpResponse:
                 has_file = len(request.FILES.getlist("files"))
 
                 if not has_prompt and not has_file:
-                    return render(request, "transform.html", {"form": TransformerForm()})
+                    return render(
+                        request, "transform.html", {"form": TransformerForm()}
+                    )
 
                 for uploaded_file in request.FILES.getlist("files"):
                     new_file = File()
-                    new_file.user = request.user  # type: ignore
+                    new_file.user = (
+                        request.user if request.user.is_authenticated else None
+                    )
                     new_file.conversion = conversion
                     if uploaded_file.content_type is not None:
                         new_file.type = uploaded_file.content_type
                     new_file.file = uploaded_file
-                    new_file.is_input = True
                     new_file.save()
                     files.append(new_file)
 
@@ -136,13 +151,15 @@ def transform(request: HttpRequest) -> HttpResponse:
         else:
             return render(request, "transform.html", {"form": TransformerForm()})
     else:
-        return render(request, "transform.html", {"form": TransformerForm()})
+        messages.error(
+            request, "You must have an active subscription to use Transform."
+        )
+        return redirect("store")
 
 
 @login_required(login_url="login")
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     conversion = get_object_or_404(Conversion, id=conversion_id)
-
     if request.user.is_authenticated:
         if conversion.user != request.user:
             return HttpResponseForbidden(
@@ -251,10 +268,136 @@ def history(request: HttpRequest) -> HttpResponse:
 
 
 def store(request: HttpRequest) -> HttpResponse:
-    products = Products.objects.all()
-    print(products)
+    products = Product.objects.all()
     return render(request, "store.html", {"products": products})
+
+
+class CreateCheckoutSessionView(View):
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:  # type: ignore
+        if request.user.is_authenticated:
+            if has_valid_subscription(request.user.id):
+                messages.error(request, "You already have an active subscription.")
+                return redirect("store")
+            else:
+                product_id = self.kwargs["pk"]
+                product = Product.objects.get(id=product_id)
+                stripe.api_key = settings.STRIPE_SECRET_KEY  # type: ignore
+                YOUR_DOMAIN = settings.DOMAIN  # type: ignore
+                checkout_session = stripe.checkout.Session.create(
+                    line_items=[
+                        {
+                            "price_data": {
+                                "currency": "cad",
+                                "unit_amount": product.get_display_price_cents,
+                                "product_data": {"name": product.name},
+                            },
+                            "quantity": 1,
+                        }
+                    ],
+                    metadata={"product_id": product.id, "user_id": request.user.id},
+                    mode="payment",
+                    success_url=YOUR_DOMAIN + "/success",
+                    cancel_url=YOUR_DOMAIN + "/cancel",
+                    automatic_tax={"enabled": True},
+                )
+                response = redirect(checkout_session.url)  # type: ignore
+                return response
+        else:
+            messages.error(request, "You must be logged in to purchase a product.")
+            return redirect("store")
+
+
+def success(request: HttpRequest) -> HttpResponse:
+    return render(request, "success.html")
+
+
+def cancel(request: HttpRequest) -> HttpResponse:
+    return render(request, "cancel.html")
+
+
+@csrf_exempt
+def stripe_webhook(request: HttpRequest) -> HttpResponse:
+    payload = request.body
+    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+    event = None
+    webhook_key = settings.STRIPE_WEBHOOK_SECRET  # type: ignore
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, webhook_key)
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:  # type: ignore
+        # Invalid signature
+        return HttpResponse(status=400)
+    # Handle the checkout.session.completed event
+    if event["type"] == "checkout.session.completed":
+        # Retrieve the session. If you require line items in the response, you may include them by expanding line_items.
+        session = stripe.checkout.Session.retrieve(event["data"]["object"]["id"])
+        user_id = session["metadata"]["user_id"]
+        product_id = session["metadata"]["product_id"]
+        subscription_user = User.objects.get(id=user_id)
+        subscription_product = Product.objects.get(id=product_id)
+        start_date = date.today()
+        length_days = subscription_product.length_days
+        end_date = start_date + timedelta(days=length_days)
+        give_subscription_to_user(subscription_user, start_date, end_date)
+    # Passed signature verification
+    return HttpResponse(status=200)
 
 
 def payments(request: HttpRequest) -> HttpResponse:
     return render(request, "payments.html")
+
+
+@login_required
+def profile(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        # User forms for changing username and password
+        e_form = UpdateEmailForm(request.POST, instance=request.user)
+        p_form = UpdatePasswordForm(user=request.user, data=request.POST)  # type: ignore
+        # Profile form for changing profile picture
+        pic_form = ProfileUpdateForm(
+            request.POST, request.FILES, instance=request.user.profile  # type: ignore
+        )
+        # Delete profile form
+        delete_form = AccountDeletionForm(request.POST)
+        if e_form.is_valid():
+            e_form.save()
+            messages.success(request, f"Your email has been updated!")
+        else:
+            messages.error(
+                request, f"Invalid email form data. Please check and try again."
+            )
+        if p_form.is_valid():
+            p_form.save()
+            messages.success(request, f"Your password has been updated!")
+        else:
+            messages.error(
+                request, f"Invalid password form data. Please check and try again."
+            )
+        if pic_form.is_valid():
+            pic_form.save()
+            # messages.success(request, f'Your profile picture has been updated!')   #For some reason this message always sends even when the field is blank
+        else:
+            messages.error(
+                request,
+                f"Invalid profile picture form data. Please check and try again.",
+            )
+        if delete_form.is_valid() and delete_form.cleaned_data["confirm_delete"]:
+            request.user.delete()
+            logout(request)  # Log out the user after account deletion
+            messages.success(request, f"Your account has been deleted.")
+            return redirect("login")
+        return redirect("profile")
+    else:
+        e_form = UpdateEmailForm(instance=request.user)
+        p_form = UpdatePasswordForm(user=request.user)  # type: ignore
+        pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
+        delete_form = AccountDeletionForm()
+    context = {
+        "e_form": e_form,
+        "p_form": p_form,
+        "pic_form": pic_form,
+        "delete_form": delete_form,
+    }
+    return render(request, "profile.html", context)
