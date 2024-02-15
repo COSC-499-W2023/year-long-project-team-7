@@ -202,3 +202,15 @@ _Team Evaluation Screenshot Week 17_
 ![tasks-screenshot](../../img/ferdinand-tasks-17.png)
 <br>
 _Tasks Screenshot_
+
+## Jan 29 2024 -> Feb 11 2024
+
+![evaluation-screenshot](../../img/ferdinand-eval-19.png)
+_Team Evaluation Screenshot Week 17_
+
+<br>
+
+![tasks-screenshot](../../img/ferdinand-tasks-19.png)
+<br>
+_Tasks Screenshot_
+

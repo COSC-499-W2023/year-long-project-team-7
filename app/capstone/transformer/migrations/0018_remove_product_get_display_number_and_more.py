@@ -4,28 +4,27 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('transformer', '0017_subscription'),
+        ("transformer", "0017_subscription"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='product',
-            name='get_display_number',
+            model_name="product",
+            name="get_display_number",
         ),
         migrations.RemoveField(
-            model_name='subscription',
-            name='name',
+            model_name="subscription",
+            name="name",
         ),
         migrations.AddField(
-            model_name='product',
-            name='length_days',
+            model_name="product",
+            name="length_days",
             field=models.IntegerField(default=0),
         ),
         migrations.AddField(
-            model_name='subscription',
-            name='is_premium',
+            model_name="subscription",
+            name="is_premium",
             field=models.BooleanField(default=False),
         ),
     ]

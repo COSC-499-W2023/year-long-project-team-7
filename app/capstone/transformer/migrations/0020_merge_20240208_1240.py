@@ -4,11 +4,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('transformer', '0015_alter_conversion_date_alter_file_date_and_more'),
-        ('transformer', '0019_auto_20240202_1351'),
+        ("transformer", "0015_alter_conversion_date_alter_file_date_and_more"),
+        ("transformer", "0019_auto_20240202_1351"),
     ]
 
-    operations = [
-    ]
+    operations = []

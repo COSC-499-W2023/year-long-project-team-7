@@ -4,24 +4,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('transformer', '0013_auto_20231130_1121'),
+        ("transformer", "0013_auto_20231130_1121"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField()),
-                ('get_display_number', models.IntegerField()),
-                ('get_display_price', models.IntegerField()),
-                ('description', models.TextField()),
-                ('phrase', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField()),
+                ("get_display_number", models.IntegerField()),
+                ("get_display_price", models.IntegerField()),
+                ("description", models.TextField()),
+                ("phrase", models.TextField()),
             ],
         ),
         migrations.DeleteModel(
-            name='Products',
+            name="Products",
         ),
     ]
