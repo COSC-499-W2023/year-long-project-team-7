@@ -127,7 +127,7 @@ class PresentationGenerator:
         image = requests.get(image_url).content
 
         file_system = FileSystemStorage()
-        rel_path = f"{query}.jpg"
+        rel_path = f"{query[:30]}.jpg"
         file_system.save(rel_path, ContentFile(image))
 
         image_file = File(

@@ -1,21 +1,47 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <div class="vertical-center-top flex-column justify-content-center gap-5"
-         style="padding-top: 20px">
+    <div class="container d-flex flex-column align-items-center justify-content-center gap-5">
         <h1 class="fade-in-first bigger-h1 title">About Us</h1>
-        <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3"
-             style="width: 80%">
-            <p class="text-center fade-in-second bigger-p">
+        <div class="about-container d-flex flex-column align-items-center justify-content-center gap-3">
+            <p class="fade-in-second bigger-p">
                 We are working towards making teaching and learning more convenient
                 by empowering professors.
             </p>
-            <p class="text-center fade-in-second bigger-p">
+            <p class="fade-in-second bigger-p">
                 We are are a group of students working to integrate AI into the
                 learning process by giving professors a fast and convenient way to
                 turn their existing course content into learning aids for students.
             </p>
-            <p class="text-center fade-in-second bigger-p">We believe in the promise of AI in improving the way we learn.</p>
+            <p class="fade-in-second bigger-p">We believe in the promise of AI in improving the way we learn.</p>
+        </div>
+        <hr width="300" />
+        <h1 class="fade-in-first bigger-h1 title">FAQ</h1>
+        <div class="faq-container d-flex flex-column align-items-center justify-content-center gap-3">
+            <h2 class="faq-title">What is Platonix?</h2>
+            <p class="fade-in-second bigger-p">
+                Platonix is a tool to create presentations for educational purposes. It is based off of OpenAI's ChatGPT technology which allows you to create PowerPoint presentations from scratch or based on your own presentations.
+            </p>
+            <hr />
+            <h2 class="faq-title">What can I do with Platonix?</h2>
+            <p class="fade-in-second bigger-p">
+                Platonix is able to take in input in the form of any text file (such as text and Markdown) and produce a PowerPoint presentation with images based on the contents. It can also create presentations from user prompts. Its most powerful feature is being able to take in your PowerPoint presentations and use them as a template for creating new presentations. We believe this could help education professionals jump off their existing material and quickly create new presentations in their own style. Platonix lets you quickly iterate through possible presentations slides to fit your needs.
+            </p>
+            <hr />
+            <h2 class="faq-title">Who is Platonix for?</h2>
+            <p class="fade-in-second bigger-p">
+                Platonix was created with teaching professionals in mind, but it is also a powerful tool for anyone interested in creating PowerPoint presentations through AI.
+            </p>
+            <hr />
+            <h2 class="faq-title">Is Platonix reliable?</h2>
+            <p class="fade-in-second bigger-p">
+                Platonix uses AI to create presentations, and as such is limited by its capabilities. Like all AI applications, Platonix's can suffer from <a href="https://www.ibm.com/topics/ai-hallucinations">hallucinations</a> and it may not always produce truthful information. We urge users to verify the presentations they generate for potential mistakes, and to use our re-prompting feature to regenerate content they find unsuitable.
+            </p>
+            <hr />
+            <h2 class="faq-title">Can I trust Platonix with my data?</h2>
+            <p class="fade-in-second bigger-p">
+                We will never sell your data or distribute the presentations you upload or create with Platonix. However, due to the nature of generative AI, what you upload to the Platonix site will be hosted on our server and be used by OpenAI's ChatGPT. You can read more about their privacy policy <a href="https://openai.com/policies/privacy-policy">here</a>.
+            </p>
         </div>
         <div class="flex-row fade-in-second">
             <a class="mx-3" target="_blank" href="https://example.com/">
@@ -40,13 +66,9 @@
         </div>
     </div>
     <footer>
-        <p class="text-center" style="color: grey">
+        <p class="text-center">
             Icons by
-            <a style="text-decoration: underline;
-                      color: grey;
-                      text-underline-offset: 5px;
-                      text-decoration-thickness: 1px"
-               href="https://icons8.com/">Icons8</a>
+            <a href="https://icons8.com/">Icons8</a>
         </p>
     </footer>
-{% endblock %}
+{% endblock content %}

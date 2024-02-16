@@ -2,13 +2,12 @@
 {% load static %}
 {% block content %}
     <link rel="stylesheet" href="{% static 'grad-background.css' %}" />
-    <div class="container-fluid vertical-center-top flex-column justify-content-center gap-5"
-         style="margin-top: -3em">
-        <div class="h-75 d-flex flex-column align-items-center justify-content-center gap-3">
-            <h1 class="title fade-in-first bigger-h1">Welcome to Platonix</h1>
+    <div class="homepage-container container-fluid d-flex flex-column justify-content-center align-items-center gap-5">
+        <div class="container-fluid d-flex flex-column justify-content-center align-items-center">
+            <h1 class="title fade-in-first bigger-h1 gap-3">Welcome to Platonix</h1>
             <p class="fade-in-second bigger-p">Your personal AI driven educational assistant</p>
         </div>
-        <div class="d-flex flex-column align-items-center justify-content-center fade-in-second">
+        <div class="container-fluid d-flex flex-column justify-content-center align-items-center fade-in-second mb-5">
             <p class="bigger-p">
                 Turn your texts into beautiful slide presentations, using
                 <a href="{% url 'transform' %}">the latest AI technology</a>.
@@ -17,13 +16,11 @@
                 Learn what makes us <a href="{% url 'about' %}">tick</a>.
             </p>
             {% if not user.is_authenticated %}
-                <button class="btn btn-primary mt-3"
-                        style="width: 100%"
-                        onclick="window.location.href='/login'">Login to get started</button>
+                <button class="btn btn-primary mt-3" onclick="window.location.href='/login'">Login to get started</button>
             {% endif %}
         </div>
     </div>
     <div class="wave"></div>
     <div class="wave"></div>
     <div class="wave"></div>
-{% endblock %}
+{% endblock content %}
