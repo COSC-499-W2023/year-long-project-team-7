@@ -290,3 +290,23 @@ Note: I feel I am falling behind. The account page is turning out to involve mor
 
 
 <br>
+
+## Feb 5 2023 -> Feb 11 2024
+
+![evaluation-screenshot](../../img/liam-eval-19.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w19-tasks.png)
+<br>
+Note: Will add forgot-password email feature this week. Plan on addressing peer review fixes over the break.
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Milestone)
+<br>
+
+
+<br>

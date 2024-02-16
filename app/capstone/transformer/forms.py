@@ -1,8 +1,9 @@
 from django import forms
 from django.forms import Textarea, NumberInput, RadioSelect, TextInput, Select
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from .models import Profile
 
 
 class TransformerForm(forms.Form):
@@ -137,4 +138,47 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(attrs={"class": "form-control form-control-lg"}),
+    )
+
+
+class UpdateEmailForm(forms.ModelForm):  # type: ignore
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ["email"]
+
+    def clean_email(self):  # type: ignore
+        new_email = self.cleaned_data.get("email")
+        if not new_email:  # Add a check to ensure new_email is not None
+            raise ValidationError("Email cannot be empty.")
+        current_email = self.instance.email
+        if User.objects.exclude(pk=self.instance.pk).filter(email=new_email).exists():
+            raise ValidationError("This email address is already in use.")
+        return new_email
+
+    def save(self, commit: bool = True):  # type: ignore
+        user = super(UpdateEmailForm, self).save(commit=False)
+        user.username = self.cleaned_data["email"]
+        if commit:
+            user.save()
+        return user
+
+
+class UpdatePasswordForm(PasswordChangeForm):
+    class Meta:
+        model = User
+        fields = []  # type: ignore
+
+
+class ProfileUpdateForm(forms.ModelForm):  # type: ignore
+    class Meta:
+        model = Profile
+        fields = ["image"]
+
+
+class AccountDeletionForm(forms.Form):
+    confirm_delete = forms.BooleanField(
+        required=True,
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
