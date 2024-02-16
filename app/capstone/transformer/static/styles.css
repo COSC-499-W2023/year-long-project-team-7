@@ -5,9 +5,10 @@
 
 :root {
     --clr-primary: #7b68ee;
-    --clr-primary-lighter: #a496ff;
+    --clr-primary-lighter: #c6bdff;
     --clr-primary-darker: #5344a7;
-    --clr-secondary: #d496a7;
+    --clr-gray: #cccccc;
+    --clr-link: #9181ed;
     --clr-nav-hover: #eed1ff;
     --clr-nav: #222222;
     --clr-deep: #053a5f;
@@ -34,9 +35,10 @@
 
 .lightmode {
     --clr-primary: #7b68ee;
-    --clr-primary-lighter: #a496ff;
+    --clr-primary-lighter: #654fee;
     --clr-primary-darker: #5344a7;
-    --clr-secondary: #d496a7;
+    --clr-gray: #e8e8e8;
+    --clr-link: #4c30eb;
     --clr-nav-hover: #eed1ff;
     --clr-nav: #222222;
     --clr-deep: #2f89ca95;
@@ -121,7 +123,7 @@ h1 {
 /* Links */
 a {
     display: inline-block;
-    color: var(--clr-primary);
+    color: var(--clr-link);
     text-decoration: none;
     transition: color 0.2s, transform 0.2s;
 }
@@ -629,4 +631,14 @@ input[type="range"]::-moz-range-thumb {
 
 .custom-tooltip {
     cursor: pointer;
+}
+
+/* Profile Page */
+
+.profile-content {
+    background-color: var(--clr-card);
+}
+
+.account-email {
+    color: var(--clr-gray);
 }
