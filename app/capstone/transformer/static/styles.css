@@ -5,15 +5,17 @@
 
 :root {
     --clr-primary: #745EED;
+    --clr-link: #9483F1;
     --clr-primary-lighter: #a496ff;
     --clr-primary-darker: #5344a7;
     --clr-secondary: #d496a7;
     --clr-nav-hover: #eed1ff;
     --clr-nav: #000000;
     --clr-deep: #053a5f;
+    --clr-gray: #919191;
     --clr-warn: #bf4e30;
     --clr-light: #ffffff;
-    --clr-dark: #000000;
+    --clr-dark: #252a2e;
     --clr-card: #434c54;
 
     --background: var(--clr-dark);
@@ -34,14 +36,16 @@
 
 .lightmode {
     --clr-primary: #745EED;
+    --clr-link: #583EEA;
     --clr-primary-lighter: #a496ff;
     --clr-primary-darker: #5344a7;
     --clr-secondary: #d496a7;
     --clr-nav-hover: #eed1ff;
     --clr-nav: #000000;
     --clr-deep: #2f89ca95;
+    --clr-gray: #5c5c5c;
     --clr-warn: #bf4e30;
-    --clr-light: #ffffff;
+    --clr-light: #dbdbdb;
     --clr-dark: #000000;
     --clr-card: #a59be2;
 
@@ -77,12 +81,12 @@ footer {
 }
 
 footer p {
-    color: #5c5c5c;
+    color: var(--clr-gray);
 }
 
 footer a {
     text-decoration: underline;
-    color: #5c5c5c;
+    color: var(--clr-gray);
     text-underline-offset: 5px;
     text-decoration-thickness: 1px;
 }
@@ -121,7 +125,7 @@ h1 {
 /* Links */
 a {
     display: inline-block;
-    color: var(--clr-primary);
+    color: var(--clr-link);
     text-decoration: none;
     transition: color 0.2s, transform 0.2s;
 }

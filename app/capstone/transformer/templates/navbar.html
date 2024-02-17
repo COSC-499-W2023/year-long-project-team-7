@@ -14,7 +14,7 @@
             </button>
             <!-- Title/logo -->
             <a class="navbar-brand" href="{% url 'index' %}"><b>PLATONIX</b></a>
-            <a href="{% url 'index' %}" class="homepage-nav" aria="homepage">
+            <a href="{% url 'index' %}" class="homepage-nav" aria-label="homepage">
                 <img class="logo"
                      width="50"
                      height="50"
@@ -55,6 +55,7 @@
                 <a href="{% url 'profile' %}">
                     <img src="{{ user.profile.image.url }}"
                          alt="Profile Picture"
+                         aria-label="My Profile"
                          class="profile-picture"
                          width="40"
                          height="40">
