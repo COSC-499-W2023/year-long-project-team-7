@@ -4,16 +4,16 @@
 /* Global */
 
 :root {
-    --clr-primary: #7b68ee;
+    --clr-primary: #745EED;
     --clr-primary-lighter: #a496ff;
     --clr-primary-darker: #5344a7;
     --clr-secondary: #d496a7;
     --clr-nav-hover: #eed1ff;
-    --clr-nav: #222222;
+    --clr-nav: #000000;
     --clr-deep: #053a5f;
     --clr-warn: #bf4e30;
-    --clr-light: #fdf0ff;
-    --clr-dark: #252a2e;
+    --clr-light: #ffffff;
+    --clr-dark: #000000;
     --clr-card: #434c54;
 
     --background: var(--clr-dark);
@@ -33,16 +33,16 @@
 }
 
 .lightmode {
-    --clr-primary: #7b68ee;
+    --clr-primary: #745EED;
     --clr-primary-lighter: #a496ff;
     --clr-primary-darker: #5344a7;
     --clr-secondary: #d496a7;
     --clr-nav-hover: #eed1ff;
-    --clr-nav: #222222;
+    --clr-nav: #000000;
     --clr-deep: #2f89ca95;
     --clr-warn: #bf4e30;
-    --clr-light: #f7ebeb;
-    --clr-dark: #1c1c1c;
+    --clr-light: #ffffff;
+    --clr-dark: #000000;
     --clr-card: #a59be2;
 
     --background: var(--clr-light);
@@ -77,12 +77,12 @@ footer {
 }
 
 footer p {
-    color: grey;
+    color: #5c5c5c;
 }
 
 footer a {
     text-decoration: underline;
-    color: grey;
+    color: #5c5c5c;
     text-underline-offset: 5px;
     text-decoration-thickness: 1px;
 }
@@ -196,6 +196,7 @@ a:hover {
 }
 
 .faq-title {
+    font-weight: bold;
     font-family: var(--ff-heading);
 }
 
