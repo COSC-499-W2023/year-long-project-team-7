@@ -45,8 +45,8 @@
                         <div class="mt-4 text-center d-flex flex-column align-items-center">
                             <p>
                                 Language <a class="custom-tooltip"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-title="Change language of presentation. Auto uses the language of your prompt.">
+    data-bs-toggle="tooltip"
+    data-bs-title="Change language of presentation. Auto uses the language of your prompt.">
                                 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      width="24px"
@@ -145,7 +145,10 @@
 <div class="col template-picker">
     {% for value, text in form.template.field.choices %}
         <label class="template-choice">
-            <input type="radio" name="template" value="{{ value }}" aria-label="Presentation template input" />
+            <input type="radio"
+                   name="template"
+                   value="{{ value }}"
+                   aria-label="Presentation template input" />
             <img src="{% static 'img/template_' %}{{ value }}.png"
                  alt="{{ text }}"
                  class="template-image" />

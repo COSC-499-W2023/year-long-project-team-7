@@ -14,7 +14,9 @@
                             aria-label="Close"></button>
                 </div>
             {% endfor %}
-            <h1 class="title h1 mt-3" tabindex="0" aria-label="Store Page. Choose your product.">Choose your product:</h1>
+            <h1 class="title h1 mt-3"
+                tabindex="0"
+                aria-label="Store Page. Choose your product.">Choose your product:</h1>
         </div>
         <div class="store-card-container mb-5">
             {% for p in products %}
@@ -25,7 +27,10 @@
                     <div class="card-subtitle mt-1 mb-5" tabindex="0">{{ p.phrase }}</div>
                     <form action="{% url 'create-checkout-session' p.id %}" method="POST">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary mb-3" id="checkout-button" aria-label="{{ p.name }} checkout">Checkout</button>
+                        <button type="submit"
+                                class="btn btn-primary mb-3"
+                                id="checkout-button"
+                                aria-label="{{ p.name }} checkout">Checkout</button>
                     </form>
                 </div>
             {% endfor %}
