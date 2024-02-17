@@ -3,11 +3,11 @@
 {% block content %}
     <div class="container d-flex justify-content-center">
         <div class="col-8">
-            <h1 class="text-center mb-5 title bigger-h1">Create</h1>
+            <h1 class="text-center mb-5 title bigger-h1" aria-label="Create Page" tabindex="0">Create</h1>
             <form id="generator-form" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-5">
-                    <h2 class="text-left">
+                    <h2 class="text-left" tabindex="0">
                         Input
                         <a class="custom-tooltip"
                            data-bs-toggle="tooltip"
@@ -32,14 +32,14 @@
                                        multiple
                                        class="form-control-file custom-file-input"
                                        aria-label="File input" />
-                                <span class="file-upload-text">Choose File(s)</span>
+                                <span class="file-upload-text" tabindex="0" aria-label="File upload button">Choose File(s)</span>
                             </label>
                             <div class="mt-3 text-center" id="selected-file-names"></div>
                         </div>
                     </div>
                 </div>
                 <div class="mb-5">
-                    <h2 class="text-left">Options</h2>
+                    <h2 class="text-left" tabindex="0">Options</h2>
                     <hr />
                     <div class="options">
                         <div class="mt-4 text-center d-flex flex-column align-items-center">
@@ -128,7 +128,7 @@
 </div>
 </div>
 <div class="mb-5">
-    <h2 class="text-left">
+    <h2 class="text-left" tabindex="0">
         Template <a class="custom-tooltip"
     data-bs-toggle="tooltip"
     data-bs-title="Choose one of our templates for your presentation, or base it off your own!">
@@ -144,11 +144,12 @@
 <hr />
 <div class="col template-picker">
     {% for value, text in form.template.field.choices %}
-        <label class="template-choice">
+        <label class="template-choice" tabindex="0">
             <input type="radio"
                    name="template"
                    value="{{ value }}"
-                   aria-label="Presentation template input" />
+                   aria-label="Presentation template choice {{ value }}" 
+                   />
             <img src="{% static 'img/template_' %}{{ value }}.png"
                  alt="{{ text }}"
                  class="template-image" />

@@ -84,4 +84,11 @@ $(document).ready(function () {
         }
         lightMode = localStorage.getItem("lightMode");
     });
+
+    $('.template-choice input[type="radio"]').on('keydown', function(event) {
+        if (event.keyCode === 13) {
+            $(this).click();
+        }
+    });
+
 });

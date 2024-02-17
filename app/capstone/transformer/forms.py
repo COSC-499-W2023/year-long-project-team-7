@@ -39,6 +39,7 @@ class TransformerForm(forms.Form):
             attrs={
                 "class": "form-control dropdown",
                 "aria-label": "Presentation language selection",
+                "role": "combobox",
             }
         ),
     )
