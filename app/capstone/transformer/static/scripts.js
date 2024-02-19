@@ -40,6 +40,8 @@ $(document).ready(function () {
         });
     });
 
+    $("input[name=template]:first").attr('checked', true);
+
     $("#id_complexity").on("input change", function () {
         var value = $(this).val();
         var text = "Default";

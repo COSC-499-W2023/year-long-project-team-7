@@ -27,12 +27,13 @@
                     <div class="row">
                         <div class="col-lg-8">{{ form.prompt }}</div>
                         <div class="col-lg-4 mt-4 mx-auto mt-lg-0">
-                            <input id="transform-file-upload" class="custom-file-upload"
-                            name="files"
-                            type="file"
-                            multiple
-                            tabindex="-1"
-                            aria-label="File upload"/>
+                            <input id="transform-file-upload"
+                                   class="custom-file-upload"
+                                   name="files"
+                                   type="file"
+                                   multiple
+                                   tabindex="-1"
+                                   aria-label="File upload" />
                             <button id="transform-file-btn" type="button" class="btn btn-primary">
                                 <label for="transform-file-upload">Choose File(s)</label>
                             </button>
@@ -144,11 +145,12 @@
     </a>
 </h2>
 <hr />
-<div class="col template-picker">
+<div class="col template-picker" role="radiogroup">
     {% for value, text in form.template.field.choices %}
-        <label class="template-choice" tabindex="0">
+        <label class="template-choice" for="template_{{ value }}">
             <input type="radio"
                    name="template"
+                   id="template_{{ value }}"
                    value="{{ value }}"
                    aria-label="Presentation template choice {{ value }}" />
             <img src="{% static 'img/template_' %}{{ value }}.png"

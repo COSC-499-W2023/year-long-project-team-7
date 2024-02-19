@@ -429,7 +429,10 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .template-choice input[type="radio"] {
-    display: none !important;
+    position: relative; /* This ensures the radio input is hidden behind images but remains accessible for aria */
+    left: 1.5em;
+    top: 1.5em;
+    z-index: -2;
 }
 
 .template-choice input[type="radio"]:checked + img {
