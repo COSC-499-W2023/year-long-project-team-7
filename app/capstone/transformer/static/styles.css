@@ -359,41 +359,19 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* File upload */
-.file-upload-btn {
-    width: max-content;
-}
 
 .custom-file-upload {
-    text-align: center;
-    position: relative;
-    display: inline-block;
-    overflow: hidden;
-    border: 2px solid var(--clr-primary);
-    background-color: var(--clr-primary);
-    color: white;
-    border-radius: 1.25em;
-    padding: 0.625em 1.25em;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    position: absolute;
+    top: -1000px;
+    left: -1000px;
 }
 
-.custom-file-input {
-    display: none;
+#transform-file-btn label {
+    cursor: pointer;
 }
 
 .custom-text-area {
     height: 8em;
-}
-
-.file-upload-text {
-    position: relative;
-    z-index: 1;
-}
-
-.custom-file-upload:hover {
-    background-color: white;
-    color: var(--clr-primary);
-    border-color: var(--clr-primary);
 }
 
 /* Buttons */

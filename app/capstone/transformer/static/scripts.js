@@ -26,6 +26,11 @@ $(document).ready(function () {
         window.location.href = fileUrl;
     });
 
+    $("#transform-file-btn").on("click", function() {
+        $("#transform-file-upload").trigger("click");
+        console.log("File upload triggered")
+    })
+
     $("#transform-file-upload").on("change", function (event) {
         $("#selected-file-names").empty();
 

@@ -26,16 +26,16 @@
                     <hr />
                     <div class="row">
                         <div class="col-lg-8">{{ form.prompt }}</div>
-                        <div class="col-lg-4 mt-4 mx-auto mt-lg-0 file-upload-btn">
-                            <label class="custom-file-upload">
-                                <input id="transform-file-upload"
-                                       name="files"
-                                       type="file"
-                                       multiple
-                                       class="form-control-file custom-file-input"
-                                       aria-label="File input" />
-                                <span class="file-upload-text" tabindex="0" aria-label="File upload button">Choose File(s)</span>
-                            </label>
+                        <div class="col-lg-4 mt-4 mx-auto mt-lg-0">
+                            <input id="transform-file-upload" class="custom-file-upload"
+                            name="files"
+                            type="file"
+                            multiple
+                            tabindex="-1"
+                            aria-label="File upload"/>
+                            <button id="transform-file-btn" type="button" class="btn btn-primary">
+                                <label for="transform-file-upload">Choose File(s)</label>
+                            </button>
                             <div class="mt-3 text-center" id="selected-file-names"></div>
                         </div>
                     </div>
