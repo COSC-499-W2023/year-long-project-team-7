@@ -597,17 +597,20 @@ input[type="range"]::-moz-range-thumb {
 
 /* History */
 
-.card-title {
-    padding-top: 0.3em;
-    float: left;
+.entry-date {
+    flex: 1;
+}
+
+.entry-dropdown {
+    margin-left: auto;
 }
 
 .history-download {
     width: 100%;
 }
 
-.accordion-header {
-    cursor: pointer;
+.accordion-button {
+    clear: both;
 }
 
 /* Store */
