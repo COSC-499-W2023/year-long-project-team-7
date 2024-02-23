@@ -24,14 +24,18 @@ $(document).ready(function () {
         window.location.href = fileUrl;
     });
 
-    $("#transform-file-upload").on("change", function (event) {
-        $("#selected-file-names").empty();
+    $("#transform-input-file-upload").on("change", function (event) {
+        $("#selected-input-file-names").empty();
 
         Array.from(event.target.files).forEach((file) => {
-            console.log(file);
-            $("#selected-file-names").append(`<p>${file.name}</p>`);
+            $("#selected-input-file-names").append(`<p>${file.name}</p>`);
         });
     });
+
+    $("#transform-template-file-upload").on("change", function (event) {
+        $("#selected-template-file-name").empty();
+        $("#selected-template-file-name").append(`<p>${event.target.files[0].name}</p>`);
+    })
 
     $("#id_complexity").on("input change", function () {
         var value = $(this).val();

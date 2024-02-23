@@ -12,6 +12,15 @@ class TransformerForm(forms.Form):
         self.fields["num_slides"].initial = 10
         self.fields["image_frequency"].initial = 3
 
+    model = forms.ChoiceField(
+        label="Model",
+        choices=[
+            ("gpt-3.5-turbo-0125", "GPT-3.5"),
+            ("gpt-4-0125-preview", "GPT-4"),
+        ],
+        widget=forms.Select(attrs={"class": "form-control dropdown"}),
+    )
+
     prompt = forms.CharField(
         label="Prompt",
         required=False,
@@ -96,6 +105,7 @@ class TransformerForm(forms.Form):
             (6, "Template 6"),
         ],
         widget=RadioSelect(),
+        required=False,
     )
 
 

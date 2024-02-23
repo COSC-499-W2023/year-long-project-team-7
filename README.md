@@ -86,8 +86,8 @@
     ```
     /year-long-project-team-7/app/capstone$
 
-    python3 manage.py makemigrations
-    python3 manage.py migrate
+    python manage.py makemigrations
+    python manage.py migrate
     ```
 
 6. **Create a Django superuser (Optional)**
@@ -101,7 +101,7 @@
     ```
     /year-long-project-team-7/app/capstone$
 
-    python3 manage.py createsuperuser
+    python manage.py createsuperuser
     ```
 
 7. **Start Django server**
@@ -109,7 +109,7 @@
     ```
     /year-long-project-team-7/app/capstone$
 
-    python3 manage.py runserver
+    python manage.py runserver
     ```
 
 8. **All done!**

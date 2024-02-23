@@ -1,13 +1,9 @@
-from collections import Counter
-import typing
-
 from .openAiManager import OpenAiManager
 from .presentationManager import (
+    FieldTypes,
+    MissingPlaceholderError,
     PresentationManager,
-    SlideFieldTypes,
     SlideContent,
-    SlideTypes,
-    MissingPlaceHolderErros,
 )
 from .models import Conversion
 from django.conf import settings
@@ -22,18 +18,17 @@ from .prompts import *
 
 
 class PresentationGenerator:
-    def __init__(self, input_file_paths: list[str], conversion: Conversion):
+    def __init__(self, input_file_text: str, conversion: Conversion, template: File):
+        self.user_parameters = json.loads(conversion.user_parameters)
+
         self.presentation_manager = PresentationManager()
-        self.openai_manager = OpenAiManager()
+
+        self.openai_manager = OpenAiManager(input_file_text, self.user_parameters)
         self.conversion = conversion
 
-        user_parameters = json.loads(conversion.user_parameters)
-
-        self.num_slides = user_parameters.get("num_slides", 10)
-        self.image_frequency = user_parameters.get("image_frequency", 3)
-
-        self.openai_manager.setup_assistant(input_file_paths, user_parameters)
-        self.template = user_parameters.get("template", 1)
+        self.num_slides = self.user_parameters.get("num_slides", 10)
+        self.image_frequency = self.user_parameters.get("image_frequency", 3)
+        self.template = template
 
     def image_search(self, query: str) -> File:
         api_url = "https://api.unsplash.com/search/photos"
@@ -65,105 +60,39 @@ class PresentationGenerator:
     def build_slide(self, slide_num: int) -> SlideContent:
         image_slide_likelihood = {0: 0, 1: 0.2, 2: 0.3, 3: 0.4, 4: 0.6, 5: 0.7, 6: 0.8}
 
-        content: list[dict[SlideFieldTypes, typing.Union[str, File]]] = []
-
         is_image_slide = random.random() < image_slide_likelihood[self.image_frequency]
 
         if slide_num == 1:
             layout = self.presentation_manager.get_title_slide_layout()
-            fields = self.presentation_manager.get_slide_layout_fields(layout)
-            title = self.openai_manager.prompt_assistant(TITLE_SLIDE_TITLE)
-
-            for field in fields:
-                first_key, first_value = next(iter(field.items()))
-                if first_key == SlideFieldTypes.TITLE:
-                    content.append({first_key: title})
-                elif first_key == SlideFieldTypes.TEXT:
-                    content.append(
-                        {
-                            first_key: self.openai_manager.prompt_assistant(
-                                TITLE_SLIDE_SUB_TITLE.format(title=title)
-                            )
-                        }
-                    )
-
-            return SlideContent(slide_num, SlideTypes.TITLE, layout, fields, content)
 
         elif is_image_slide:
             layout = self.presentation_manager.get_image_slide_layout()
-            fields = self.presentation_manager.get_slide_layout_fields(layout)
-
-            num_text_fields = sum(
-                1 for field in fields if SlideFieldTypes.TEXT in field.keys()
-            )
-
-            slide_text = self.openai_manager.prompt_assistant(
-                SLIDE.format(
-                    slide_num=slide_num,
-                    num_slides=self.num_slides,
-                    num_text_fields=num_text_fields,
-                )
-            )
-
-            slide_texts = slide_text.split("\n")
-
-            content.append({SlideFieldTypes.TITLE: slide_texts[0]})
-
-            slide_texts.pop(0)
-
-            for index, text in enumerate(slide_texts):
-                if index < num_text_fields:
-                    content.append({SlideFieldTypes.TEXT: text})
-                else:
-                    break
-
-            image_search_query = self.openai_manager.prompt_assistant(
-                IMAGE_SEARCH.format(content=slide_text)
-            )
-            image = self.image_search(image_search_query)
-
-            image_fields = [
-                field for field in fields if SlideFieldTypes.IMAGE in field.keys()
-            ]
-
-            for field in image_fields:
-                first_key, first_value = next(iter(field.items()))
-                content.append({first_key: image})
-
-            return SlideContent(slide_num, SlideTypes.IMAGE, layout, fields, content)
 
         else:
-            layout = self.presentation_manager.get_image_slide_layout()
-            fields = self.presentation_manager.get_slide_layout_fields(layout)
+            layout = self.presentation_manager.get_content_slide_layout()
 
-            num_text_fields = sum(
-                1 for field in fields if SlideFieldTypes.TEXT in field.keys()
-            )
+        fields = self.presentation_manager.get_slide_layout_fields(layout)
 
-            slide_text = self.openai_manager.prompt_assistant(
-                SLIDE.format(
-                    slide_num=slide_num,
-                    num_slides=self.num_slides,
-                    num_text_fields=num_text_fields,
-                )
-            )
+        slide_content = SlideContent(slide_num, layout, fields)
 
-            slide_texts = slide_text.split("\n")
+        slide_json = slide_content.to_json_string()
 
-            content.append({SlideFieldTypes.TITLE: slide_texts[0]})
+        response = self.openai_manager.prompt_chat(SLIDE.format(slide_json=slide_json))
 
-            slide_texts.pop(0)
+        try:
+            slide_content.update_from_json(response)
+        except Exception as e:
+            print(e)
 
-            for index, text in enumerate(slide_texts):
-                if index < num_text_fields:
-                    content.append({SlideFieldTypes.TEXT: text})
-                else:
-                    break
+        for field in slide_content.fields:
+            if field.field_type == FieldTypes.IMAGE:
+                if isinstance(field.value, str):
+                    field.value = self.image_search(field.value)
 
-            return SlideContent(slide_num, SlideTypes.CONTENT, layout, fields, content)
+        return slide_content
 
     def build_presentation(self) -> str:
-        self.presentation_manager.setup(f"template_{self.template}.pptx")
+        self.presentation_manager.setup(self.template)
 
         slide_contents: list[SlideContent] = []
 
@@ -174,7 +103,7 @@ class PresentationGenerator:
                     self.build_slide, range(1, self.num_slides + 1)
                 )
                 slide_contents = list(future_slides)
-        except MissingPlaceHolderErros as e:
+        except MissingPlaceholderError as e:
             print(e.message)
             return e.message
 

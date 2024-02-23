@@ -94,22 +94,27 @@ def transform(request: HttpRequest) -> HttpResponse:
                 "complexity": form.cleaned_data["complexity"],
                 "num_slides": form.cleaned_data["num_slides"],
                 "image_frequency": form.cleaned_data["image_frequency"],
-                "template": int(form.cleaned_data["template"]),
+                "template": form.cleaned_data["template"],
+                "model": form.cleaned_data["model"],
             }
             conversion.user_parameters = json.dumps(user_params)
             conversion.user = request.user  # type: ignore
 
             conversion.save()
 
-            files = []
+            input_files = []
 
             has_prompt = len(user_params["prompt"]) > 0
-            has_file = len(request.FILES.getlist("files"))
+            has_file = len(request.FILES.getlist("input_files"))
 
             if not has_prompt and not has_file:
-                return render(request, "transform.html", {"form": TransformerForm()})
+                return render(
+                    request,
+                    "transform.html",
+                    {"form": TransformerForm(), "errors": ["No input provided"]},
+                )
 
-            for uploaded_file in request.FILES.getlist("files"):
+            for uploaded_file in request.FILES.getlist("input_files"):
                 new_file = File()
                 new_file.user = request.user  # type: ignore
                 new_file.conversion = conversion
@@ -118,13 +123,47 @@ def transform(request: HttpRequest) -> HttpResponse:
                 new_file.file = uploaded_file
                 new_file.is_input = True
                 new_file.save()
-                files.append(new_file)
+                input_files.append(new_file)
 
-            generate_output(files, conversion)
+            has_template_selection = user_params["template"] != ""
+            has_template_file = len(request.FILES.getlist("template_file"))
+            if not has_template_selection and not has_template_file:
+                return render(
+                    request,
+                    "transform.html",
+                    {"form": TransformerForm(), "errors": ["No template provided"]},
+                )
+
+            if has_template_file:
+                uploaded_template_file = request.FILES.getlist("template_file")[0]
+                template_file = File()
+                template_file.user = request.user  # type: ignore
+                template_file.conversion = conversion
+                template_file.type = str(uploaded_template_file.content_type)
+                template_file.file = template_file
+                template_file.is_input = False
+                template_file.save()
+            else:
+                template_file = File.objects.get(
+                    file=f"template_{user_params['template']}.pptx"
+                )
+
+            result = generate_output(input_files, template_file, conversion)
+
+            if "Error" in result:
+                return render(
+                    request,
+                    "transform.html",
+                    {"form": TransformerForm(), "errors": [result]},
+                )
 
             return redirect("results", conversion_id=conversion.id)
         else:
-            return render(request, "transform.html", {"form": TransformerForm()})
+            return render(
+                request,
+                "transform.html",
+                {"form": TransformerForm(), "errors": form.errors},
+            )
     else:
         return render(request, "transform.html", {"form": TransformerForm()})
 

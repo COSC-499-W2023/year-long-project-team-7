@@ -1,5 +1,6 @@
 from enum import Enum
 from io import BytesIO
+import json
 import typing
 from pptx import Presentation  # type: ignore
 from django.core.files.storage import FileSystemStorage
@@ -10,45 +11,66 @@ from pptx.enum.shapes import MSO_SHAPE_TYPE
 from .models import File
 
 
-class SlideFieldTypes(Enum):
+class FieldTypes(Enum):
     TITLE = "TITLE"
     TEXT = "TEXT"
     IMAGE = "IMAGE"
 
 
-class SlideTypes(Enum):
-    TITLE = "TITLE"
-    CONTENT = "CONTENT"
-    IMAGE = "IMAGE"
+class SlideField:
+    def __init__(
+        self, field_index: int, field_type: FieldTypes, value: typing.Union[str, File]
+    ):
+        self.field_index = field_index
+        self.field_type = field_type
+        self.value = value
 
 
 class SlideContent:
     def __init__(
         self,
         slide_num: int,
-        slide_type: SlideTypes,
         layout: typing.Any,
-        fields: list[dict[SlideFieldTypes, int]],
-        content: list[dict[SlideFieldTypes, typing.Union[str, File]]],
+        fields: list[SlideField],
     ):
-        self.slide_type = slide_type
         self.slide_num = slide_num
         self.layout = layout
         self.fields = fields
-        self.content = content
+
+    def to_json_string(self) -> str:
+        slide_json = {
+            "SLIDE_NUM": self.slide_num,
+            "SLIDE_LAYOUT": self.layout.name,
+            "FIELDS": [
+                {
+                    "FIELD_INDEX": field.field_index,
+                    "FIELD_TYPE": field.field_type,
+                    "FIELD_VALUE": field.value,
+                }
+                for field in self.fields
+            ],
+        }
+        return str(slide_json)
+
+    def update_from_json(self, response: str) -> None:
+        object = json.loads(response)
+        for field in self.fields:
+            for new_field in object["FIELDS"]:
+                if str(field.field_index) == new_field["FIELD_INDEX"]:
+                    field.value = new_field["FIELD_VALUE"]
 
 
-class MissingPlaceHolderErros(Exception):
+class MissingPlaceholderError(Exception):
     def __init__(self, message: str):
-        self.message = message
+        self.message = "Error: " + message
         super().__init__(self.message)
 
 
 class PresentationManager:
-    def setup(self, template_path: str) -> None:
+    def setup(self, template: File) -> None:
         file_system = FileSystemStorage()
 
-        self.template_path = file_system.path(template_path)
+        self.template_path = file_system.path(template.file.name)
         self.presentation = Presentation(self.template_path)
 
         self.delete_all_slides()
@@ -70,7 +92,7 @@ class PresentationManager:
         buffer.seek(0)
         file_content = ContentFile(buffer.read())
 
-        rel_path = f"testing_id{conversion_id}.pptx"
+        rel_path = f"conversion_output_{conversion_id}.pptx"
 
         file_system.save(rel_path, file_content)
 
@@ -87,7 +109,7 @@ class PresentationManager:
         try:
             return random.choice(potential_layouts)
         except IndexError:
-            raise MissingPlaceHolderErros("Template does not have a title slide")
+            raise MissingPlaceholderError("Template does not have a title slide")
 
     def get_image_slide_layout(self) -> typing.Any:
         potential_layouts = []
@@ -107,7 +129,7 @@ class PresentationManager:
         try:
             return random.choice(potential_layouts)
         except IndexError:
-            raise MissingPlaceHolderErros(
+            raise MissingPlaceholderError(
                 "Template does not have any image placeholders"
             )
 
@@ -131,13 +153,11 @@ class PresentationManager:
         try:
             return random.choice(potential_layouts)
         except IndexError:
-            raise MissingPlaceHolderErros(
+            raise MissingPlaceholderError(
                 "Template does not have any text placeholders"
             )
 
-    def get_slide_layout_fields(
-        self, layout: typing.Any
-    ) -> list[dict[SlideFieldTypes, int]]:
+    def get_slide_layout_fields(self, layout: typing.Any) -> list[SlideField]:
         fields = []
         temp_presentation = Presentation(self.template_path)
         temp_slide = temp_presentation.slides.add_slide(layout)
@@ -146,64 +166,58 @@ class PresentationManager:
             if shape.is_placeholder:
                 phf = shape.placeholder_format
                 if phf.type == PP_PLACEHOLDER.TITLE:
-                    fields.append({SlideFieldTypes.TITLE: shapes.index(shape)})
+                    fields.append(
+                        SlideField(
+                            shapes.index(shape), FieldTypes.TITLE, "<SLIDE TITLE HERE>"
+                        )
+                    )
 
                 elif phf.type == PP_PLACEHOLDER.BODY:
-                    fields.append({SlideFieldTypes.TEXT: shapes.index(shape)})
+                    fields.append(
+                        SlideField(
+                            shapes.index(shape), FieldTypes.TEXT, "<SLIDE TEXT HERE>"
+                        )
+                    )
 
                 elif phf.type == PP_PLACEHOLDER.PICTURE:
-                    fields.append({SlideFieldTypes.IMAGE: shapes.index(shape)})
+                    fields.append(
+                        SlideField(
+                            shapes.index(shape),
+                            FieldTypes.IMAGE,
+                            "<IMAGE SEARCH QUERY HERE>",
+                        )
+                    )
                 continue
 
             if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX:
-                fields.append({SlideFieldTypes.TEXT: shapes.index(shape)})
+                fields.append(
+                    SlideField(
+                        shapes.index(shape), FieldTypes.TEXT, "<SLIDE TEXT HERE>"
+                    )
+                )
 
             elif shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
-                fields.append({SlideFieldTypes.IMAGE: shapes.index(shape)})
+                fields.append(
+                    SlideField(
+                        shapes.index(shape),
+                        FieldTypes.IMAGE,
+                        "<IMAGE SEARCH QUERY HERE>",
+                    )
+                )
 
         return fields
 
     def add_slide_to_presentation(self, slide_content: SlideContent) -> None:
         slide = self.presentation.slides.add_slide(slide_content.layout)
         fields = slide_content.fields
-        slide_contents = slide_content.content
-
-        titles, texts, images = [], [], []
-
-        for item in slide_contents:
-            for field_type, value in item.items():
-                if field_type == SlideFieldTypes.TITLE:
-                    titles.append(value)
-                elif field_type == SlideFieldTypes.TEXT:
-                    texts.append(value)
-                elif field_type == SlideFieldTypes.IMAGE:
-                    images.append(value)
 
         for field in fields:
-            first_key, first_value = next(iter(field.items()))
-            if first_key == SlideFieldTypes.TITLE:
-                try:
-                    title_content = random.choice(titles)
-                    titles.remove(title_content)
+            if field.field_type == FieldTypes.TITLE:
+                slide.shapes[field.field_index].text = field.value
 
-                    slide.shapes[first_value].text = title_content
-                except IndexError:
-                    continue
+            elif field.field_type == FieldTypes.TEXT:
+                slide.shapes[field.field_index].text = field.value
 
-            elif first_key == SlideFieldTypes.TEXT:
-                try:
-                    text_content = random.choice(texts)
-                    texts.remove(text_content)
-
-                    slide.shapes[first_value].text = text_content
-                except IndexError:
-                    continue
-
-            elif first_key == SlideFieldTypes.IMAGE:
-                try:
-                    image_content = random.choice(images)
-                    images.remove(image_content)
-
-                    slide.shapes[first_value].insert_picture(image_content.file)  # type: ignore
-                except IndexError:
-                    continue
+            elif field.field_type == FieldTypes.IMAGE:
+                if isinstance(field.value, File):
+                    slide.shapes[field.field_index].insert_picture(field.value.file)
