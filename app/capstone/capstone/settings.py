@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
+from django.contrib.messages import constants as message_constants
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -107,3 +109,6 @@ PASSWORD_RESET_TIMEOUT = 14400
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_FROM = "platonix.ai@gmail.com"
 EMAIL_HOST_USER = "platonix.ai@gmail.com"
+
+
+MESSAGE_TAGS = {message_constants.ERROR: "danger"}

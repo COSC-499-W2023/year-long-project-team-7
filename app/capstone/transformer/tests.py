@@ -12,13 +12,15 @@ from django.conf import settings
 from os import path, mkdir
 from shutil import rmtree
 from .models import Conversion, File
-from .models import Conversion, File, Products
+from .models import Conversion, File, Product
 from .forms import TransformerForm
 from .tokens import account_activation_token
 import json
 from urllib.parse import urlencode
 from unittest.mock import patch
 import tempfile
+from .subscriptionManager import give_subscription_to_user
+from datetime import date, timedelta
 
 
 class TransformViewTestCase(TestCase):
@@ -28,10 +30,14 @@ class TransformViewTestCase(TestCase):
         self.user = User.objects.create_user(
             email="testuser@email.com", password="testpassword123", username="test"
         )
+        give_subscription_to_user(
+            self.user, date.today(), (date.today() + timedelta(days=1))
+        )
 
     def test_transform_view_get_request(self):
+        self.client.login(username="test", password="testpassword123")
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 302)  # redirect to login
+        self.assertEqual(response.status_code, 200)  # retrieve transform page
 
     def test_transform_view_post_request_valid_form(self):
         self.client.login(username="test", password="testpassword123")
@@ -144,6 +150,9 @@ class UserSignInTestCase(TestCase):
             password="testpassword123",
             username="testuser@email.com",
         )
+        give_subscription_to_user(
+            self.user, date.today(), (date.today() + timedelta(days=1))
+        )
 
     def test_user_signin_valid_credentials(self):
         # Make a POST request to the sign-in view with valid credentials
@@ -236,6 +245,28 @@ class StoreTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "store.html")
+
+
+class SuccessTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse("success")
+
+    def test_store_view_get_request(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "success.html")
+
+
+class CancelTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse("cancel")
+
+    def test_store_view_get_request(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "cancel.html")
 
 
 class EmailVerificationTest(TestCase):

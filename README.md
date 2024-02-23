@@ -112,7 +112,28 @@
     python manage.py runserver
     ```
 
-8. **All done!**
+8. **Setting up Stripe**
+
+    ```
+    /year-long-project-team-7/app/capstone$
+
+    Setting up Stripe:
+
+    0. Update your settings_env with the stripe keys
+
+    1. Install using instructions in the "apt" tab https://stripe.com/docs/stripe-cli
+
+    2. Log in with API webhook key (found in accounts sheet) ```stripe login --interactive```
+
+    3. Run ```stripe listen --forward-to localhost:8000/webhook```
+
+    4. Run migrations
+
+    5. At this point you should be able to test buying a subscription with a fake credit card. (card number 4242 4242 4242 4242).
+    ```
+    
+
+9. **All done!**
 
     You can now access the site through your browser.
 
