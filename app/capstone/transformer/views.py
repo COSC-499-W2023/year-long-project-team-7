@@ -108,6 +108,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                     "num_slides": form.cleaned_data["num_slides"],
                     "image_frequency": form.cleaned_data["image_frequency"],
                     "template": int(form.cleaned_data["template"]),
+                    "model": form.cleaned_data["model"],
                 }
                 conversion.user_parameters = json.dumps(user_params)
                 conversion.user = request.user  # type: ignore
@@ -123,6 +124,12 @@ def transform(request: HttpRequest) -> HttpResponse:
                     return render(
                         request, "transform.html", {"form": TransformerForm()}
                     )
+                
+                if user_params["model"] == "GPT-4":
+                    OPENAI_MODEL = settings.OPENAI_MODEL_GPT4 # type: ignore
+                else:
+                    OPENAI_MODEL = settings.OPENAI_MODEL_GPT3 # type: ignore
+
 
                 for uploaded_file in request.FILES.getlist("files"):
                     new_file = File()
@@ -136,7 +143,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                     new_file.save()
                     files.append(new_file)
 
-                generate_output(files, conversion)
+                generate_output(files, conversion, OPENAI_MODEL)
 
                 return redirect("results", conversion_id=conversion.id)
             else:
