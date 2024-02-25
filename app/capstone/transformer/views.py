@@ -31,7 +31,7 @@ import stripe
 from django.conf import settings
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from .subscriptionManager import has_valid_subscription, give_subscription_to_user
+from .subscriptionManager import has_valid_subscription, give_subscription_to_user, has_premium_subscription
 from django.contrib.auth.models import User
 from datetime import date, timedelta
 
@@ -126,7 +126,11 @@ def transform(request: HttpRequest) -> HttpResponse:
                     )
                 
                 if user_params["model"] == "GPT-4":
-                    OPENAI_MODEL = settings.OPENAI_MODEL_GPT4 # type: ignore
+                    if has_premium_subscription(request.user.id):  # type: ignore
+                        OPENAI_MODEL = settings.OPENAI_MODEL_GPT4 # type: ignore
+                    else:
+                        messages.error(request, "You must have a premium subscription to use GPT-4 model.")
+                        return render(request, "transform.html", {"form": TransformerForm()})
                 else:
                     OPENAI_MODEL = settings.OPENAI_MODEL_GPT3 # type: ignore
 
