@@ -336,10 +336,6 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
     return HttpResponse(status=200)
 
 
-def payments(request: HttpRequest) -> HttpResponse:
-    return render(request, "payments.html")
-
-
 @login_required
 def profile(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
