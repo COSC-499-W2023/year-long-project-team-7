@@ -1,26 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <div class="container d-flex justify-content-center"
-         style="padding-top: 100px">
-        <div class="content-section rounded p-4" style="background-color: #1c1c1c">
+    <div class="container d-flex justify-content-center mb-5">
+        <div class="content-section rounded p-4 profile-content">
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
                      role="alert">
-                    <strong>Message:</strong> {{ message }}
+                    {{ message }}
                     <button type="button"
                             class="close"
                             data-bs-dismiss="alert"
-                            aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                            aria-label="Close"></button>
                 </div>
             {% endfor %}
             <div class="media">
                 <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" />
                 <div class="media-body">
                     <h2 class="account-heading">{{ user.username }}</h2>
-                    <p class="text-secondary">{{ user.email }}</p>
+                    <p class="account-email">{{ user.email }}</p>
                 </div>
             </div>
             <!-- Email Update Form -->
@@ -30,7 +27,7 @@
                     <legend class="border-bottom mb-4">Email</legend>
                     <div class="form-group">{{ e_form }}</div>
                     <div class="form-group mt-3">
-                        <button class="btn btn-outline-info" type="submit">Update Email</button>
+                        <button class="btn btn-primary" type="submit">Update Email</button>
                     </div>
                 </fieldset>
             </form>
@@ -42,7 +39,7 @@
                     <legend class="border-bottom mb-4">Password</legend>
                     <div class="form-group">{{ p_form }}</div>
                     <div class="form-group mt-3">
-                        <button class="btn btn-outline-info" type="submit">Update Password</button>
+                        <button class="btn btn-primary" type="submit">Update Password</button>
                     </div>
                 </fieldset>
             </form>
@@ -54,7 +51,7 @@
                     <legend class="border-bottom mb-4">Profile Picture</legend>
                     <div class="form-group">{{ pic_form }}</div>
                     <div class="form-group mt-3">
-                        <button class="btn btn-outline-info" type="submit">Update Profile Picture</button>
+                        <button class="btn btn-primary" type="submit">Update Profile Picture</button>
                     </div>
                 </fieldset>
             </form>

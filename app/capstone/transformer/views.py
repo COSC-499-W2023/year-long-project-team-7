@@ -154,9 +154,7 @@ def transform(request: HttpRequest) -> HttpResponse:
         else: 
             return render(request, "transform.html", {"form": TransformerForm()})
     else:
-        messages.error(
-            request, "You must have an active subscription to use Transform."
-        )
+        messages.error(request, "You must have an active subscription to use Create.")
         return redirect("store")
 
 
