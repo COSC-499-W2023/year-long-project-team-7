@@ -120,6 +120,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                 has_file = len(request.FILES.getlist("files"))
 
                 if not has_prompt and not has_file:
+                    messages.error(request, "Input must include a prompt and/or a file.")
                     return render(
                         request, "transform.html", {"form": TransformerForm()}
                     )
@@ -140,6 +141,7 @@ def transform(request: HttpRequest) -> HttpResponse:
 
                 return redirect("results", conversion_id=conversion.id)
             else:
+                messages.error(request, "You must select a template to create a presentation.")
                 return render(request, "transform.html", {"form": TransformerForm()})
         else:
             return render(request, "transform.html", {"form": TransformerForm()})
