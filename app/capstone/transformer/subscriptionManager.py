@@ -34,3 +34,11 @@ def delete_subscription(user: User) -> None:
         print(f"Subscription deleted for user {user}")
     except Subscription.DoesNotExist:
         print(f"No subscription found for user {user}")
+
+
+def has_premium_subscription(user_id: int) -> bool:
+    try:
+        subscription = Subscription.objects.get(user=user_id)
+        return subscription.is_premium
+    except Subscription.DoesNotExist:
+        return False
