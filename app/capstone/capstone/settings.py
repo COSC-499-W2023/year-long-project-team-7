@@ -112,3 +112,5 @@ EMAIL_HOST_USER = "platonix.ai@gmail.com"
 
 
 MESSAGE_TAGS = {message_constants.ERROR: "danger"}
+
+LOGIN_URL = "login"

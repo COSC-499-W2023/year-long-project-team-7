@@ -21,17 +21,14 @@
         <h1 class="h3 mb-3 mt-3 font-weight-normal">{{ form_title }}</h1>
         <form action="{{ form_action }}" method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <strong>{{ form.email.label }}</strong>
-                {{ form.email }}
-                {% if form.email.errors %}<div class="error">{{ form.email.errors }}</div>{% endif %}
-            </div>
-            <br />
-            <div class="form-group">
-                <strong>{{ form.password.label }}</strong>
-                {{ form.password }}
-                {% if form.password.errors %}<div class="error">{{ form.password.errors }}</div>{% endif %}
-            </div>
+            {% for field in form %}
+                <div class="form-group">
+                    <strong>{{ field.label }}</strong>
+                    {{ field }}
+                    {% if field.errors %}<div class="error">{{ field.errors }}</div>{% endif %}
+                </div>
+                <br />
+            {% endfor %}
             <button class="btn btn-primary mt-3 mx-auto login-button" type="submit">{{ submit_text }}</button>
         </form>
         <div class="line mb-3"></div>

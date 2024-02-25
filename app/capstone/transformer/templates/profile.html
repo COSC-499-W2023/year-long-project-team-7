@@ -8,7 +8,7 @@
                      role="alert">
                     {{ message }}
                     <button type="button"
-                            class="close"
+                            class="btn-close"
                             data-bs-dismiss="alert"
                             aria-label="Close"></button>
                 </div>
@@ -27,7 +27,7 @@
                     <legend class="border-bottom mb-4">Email</legend>
                     <div class="form-group">{{ e_form }}</div>
                     <div class="form-group mt-3">
-                        <button class="btn btn-primary" type="submit">Update Email</button>
+                        <button name="email_submit" class="btn btn-primary" type="submit">Update Email</button>
                     </div>
                 </fieldset>
             </form>
@@ -39,7 +39,7 @@
                     <legend class="border-bottom mb-4">Password</legend>
                     <div class="form-group">{{ p_form }}</div>
                     <div class="form-group mt-3">
-                        <button class="btn btn-primary" type="submit">Update Password</button>
+                        <button name="password_submit" class="btn btn-primary" type="submit">Update Password</button>
                     </div>
                 </fieldset>
             </form>
@@ -51,7 +51,7 @@
                     <legend class="border-bottom mb-4">Profile Picture</legend>
                     <div class="form-group">{{ pic_form }}</div>
                     <div class="form-group mt-3">
-                        <button class="btn btn-primary" type="submit">Update Profile Picture</button>
+                        <button name="profile_pic_submit" class="btn btn-primary" type="submit">Update Profile Picture</button>
                     </div>
                 </fieldset>
             </form>

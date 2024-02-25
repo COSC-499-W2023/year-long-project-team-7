@@ -343,52 +343,58 @@ def payments(request: HttpRequest) -> HttpResponse:
 @login_required
 def profile(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        # User forms for changing username and password
-        e_form = UpdateEmailForm(request.POST, instance=request.user)
-        p_form = UpdatePasswordForm(user=request.user, data=request.POST)  # type: ignore
-        # Profile form for changing profile picture
-        pic_form = ProfileUpdateForm(
-            request.POST, request.FILES, instance=request.user.profile  # type: ignore
-        )
-        # Delete profile form
-        delete_form = AccountDeletionForm(request.POST)
-        if e_form.is_valid():
-            e_form.save()
-            messages.success(request, f"Your email has been updated!")
-        else:
-            messages.error(
-                request, f"Invalid email form data. Please check and try again."
-            )
-        if p_form.is_valid():
-            p_form.save()
-            messages.success(request, f"Your password has been updated!")
-        else:
-            messages.error(
-                request, f"Invalid password form data. Please check and try again."
-            )
-        if pic_form.is_valid():
-            pic_form.save()
-            # messages.success(request, f'Your profile picture has been updated!')   #For some reason this message always sends even when the field is blank
-        else:
-            messages.error(
-                request,
-                f"Invalid profile picture form data. Please check and try again.",
-            )
-        if delete_form.is_valid() and delete_form.cleaned_data["confirm_delete"]:
-            request.user.delete()
-            logout(request)  # Log out the user after account deletion
-            messages.success(request, f"Your account has been deleted.")
-            return redirect("login")
+        if "profile_pic_submit" in request.POST:
+            pic_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)  # type: ignore
+            if pic_form.is_valid():
+                pic_form.save()
+                messages.success(request, "Your profile picture has been updated!")
+            else:
+                messages.error(
+                    request,
+                    "Invalid profile picture form data. Please check and try again.",
+                )
+        elif "email_submit" in request.POST:
+            e_form = UpdateEmailForm(request.POST, instance=request.user)
+            if e_form.is_valid():
+                e_form.save()
+                messages.success(request, "Your email has been updated!")
+            else:
+                messages.error(
+                    request, "Invalid email form data. Please check and try again."
+                )
+        elif "password_submit" in request.POST:
+            p_form = UpdatePasswordForm(user=request.user, data=request.POST)  # type: ignore
+            if p_form.is_valid():
+                p_form.save()
+                messages.success(request, "Your password has been updated!")
+                return redirect("profile")
+            else:
+                messages.error(
+                    request, "Invalid password form data. Please check and try again."
+                )
+        elif "delete_submit" in request.POST:
+            delete_form = AccountDeletionForm(request.POST)
+            if delete_form.is_valid() and delete_form.cleaned_data.get(
+                "confirm_delete"
+            ):
+                request.user.delete()
+                messages.success(request, "Your account has been deleted.")
+                return redirect("login")
+            else:
+                messages.error(
+                    request,
+                    "Account could not be deleted. Please confirm your deletion request.",
+                )
         return redirect("profile")
     else:
+        pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
         e_form = UpdateEmailForm(instance=request.user)
         p_form = UpdatePasswordForm(user=request.user)  # type: ignore
-        pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
         delete_form = AccountDeletionForm()
     context = {
+        "pic_form": pic_form,
         "e_form": e_form,
         "p_form": p_form,
-        "pic_form": pic_form,
         "delete_form": delete_form,
     }
     return render(request, "profile.html", context)
