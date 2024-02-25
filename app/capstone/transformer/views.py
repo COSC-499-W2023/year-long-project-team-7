@@ -331,7 +331,7 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         start_date = date.today()
         length_days = subscription_product.length_days
         end_date = start_date + timedelta(days=length_days)
-        give_subscription_to_user(subscription_user, start_date, end_date)
+        give_subscription_to_user(subscription_user, start_date, end_date, product_id)
     # Passed signature verification
     return HttpResponse(status=200)
 

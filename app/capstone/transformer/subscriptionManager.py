@@ -17,11 +17,13 @@ def has_valid_subscription(user_id: int) -> bool:
         return False
 
 
-def give_subscription_to_user(user: User, start_date: date, end_date: date) -> None:
+def give_subscription_to_user(user: User, start_date: date, end_date: date, product_id: int) -> None:
     subscription, created = Subscription.objects.get_or_create(user=user)
     subscription.has_subscription = True
     subscription.start_date = start_date
     subscription.end_date = end_date
+    if product_id == 6:
+        subscription.is_premium = True
     subscription.save()
 
 
