@@ -213,7 +213,7 @@ def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
         user.save()
         start_date = date.today()
         end_date = start_date + timedelta(days=3)
-        give_subscription_to_user(user, start_date, end_date)
+        give_subscription_to_user(user, start_date, end_date, None)
         messages.success(request, "Email verified. You can now log into your account.")
         messages.success(request, "Enjoy a complimentary 3 day trial!")
         return redirect("login")
