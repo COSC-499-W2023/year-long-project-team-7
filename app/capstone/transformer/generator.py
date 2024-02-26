@@ -24,7 +24,7 @@ def pptx_to_pdf(pptx_filename: str) -> str:
     return f"{base_name}.pdf"
 
 
-def generate_output(files: list[File], conversion: Conversion, OPENAI_MODEL) -> None:
+def generate_output(files: list[File], conversion: Conversion, OPENAI_MODEL: str) -> None:
     pres_manager = PresentationGenerator([f.file.path for f in files], conversion, OPENAI_MODEL)
 
     output_file_path = pres_manager.build_presentation()

@@ -347,7 +347,7 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         start_date = date.today()
         length_days = subscription_product.length_days
         end_date = start_date + timedelta(days=length_days)
-        give_subscription_to_user(subscription_user, start_date, end_date, product_id)
+        give_subscription_to_user(subscription_user, start_date, end_date, subscription_product)
     # Passed signature verification
     return HttpResponse(status=200)
 
@@ -393,8 +393,8 @@ def profile(request: HttpRequest) -> HttpResponse:
             logout(request)  # Log out the user after account deletion
             messages.success(request, f"Your account has been deleted.")
             return redirect("login")
-        if subscription_form.is_valid() and subscription_form.cleaned_data["delete"] and has_valid_subscription(request.user.id):
-            user = User.objects.get(id=request.user.id)
+        if subscription_form.is_valid() and subscription_form.cleaned_data["delete"] and has_valid_subscription(request.user.id): # type: ignore
+            user = User.objects.get(id=request.user.id) # type: ignore
             delete_subscription(user)
             messages.success(request, f"Your subscription has been deleted.")
         return redirect("profile")
