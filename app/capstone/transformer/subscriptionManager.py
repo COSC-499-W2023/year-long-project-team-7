@@ -1,4 +1,4 @@
-from .models import Subscription
+from .models import Subscription, Product
 from datetime import date
 from django.contrib.auth.models import User
 
@@ -22,7 +22,8 @@ def give_subscription_to_user(user: User, start_date: date, end_date: date, prod
     subscription.has_subscription = True
     subscription.start_date = start_date
     subscription.end_date = end_date
-    if product_id == 6:
+    product = Product.objects.get(id=product_id)
+    if product.name == "Premium Subscription":
         subscription.is_premium = True
     subscription.save()
 
