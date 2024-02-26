@@ -50,6 +50,7 @@ class TransformViewTestCase(TestCase):
                 "complexity": 1,
                 "num_slides": 1,
                 "image_frequency": 0,
+                "model": "GPT-3",
                 "template": 1,
                 "files": file,
             }
@@ -68,6 +69,7 @@ class TransformViewTestCase(TestCase):
                 "num_slides": 1,
                 "image_frequency": 0,
                 "template": 1,
+                "model": "GPT-3",
             }
             saved_files = list(File.objects.filter(conversion=conversion))
 
@@ -75,7 +77,7 @@ class TransformViewTestCase(TestCase):
             expected_user_params = json.dumps(expected_user_params_dict)
             self.assertEqual(conversion.user_parameters, expected_user_params)
             self.assertEqual(File.objects.count(), 1)
-            mock_generate_output.assert_called_once_with(saved_files, conversion)
+            mock_generate_output.assert_called_once_with(saved_files, conversion, settings.OPENAI_MODEL_GPT3)
 
     def test_transform_view_post_request_invalid_form(self):
         self.client.login(username="test", password="testpassword123")
