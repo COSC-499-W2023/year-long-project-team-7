@@ -191,3 +191,10 @@ class AccountDeletionForm(forms.Form):
         required=True,
         widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
+
+class SubscriptionDeletionForm(forms.Form):
+    delete = forms.BooleanField(
+        label = "Confirm Delete",
+        required=True,
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
+    )

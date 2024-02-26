@@ -19,8 +19,9 @@ from .forms import (
     UpdatePasswordForm,
     ProfileUpdateForm,
     AccountDeletionForm,
+    SubscriptionDeletionForm,
 )
-from .models import Conversion, File, Product
+from .models import Conversion, File, Product, Subscription
 from .tokens import account_activation_token
 from typing import List, Dict
 import json
@@ -31,7 +32,7 @@ import stripe
 from django.conf import settings
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from .subscriptionManager import has_valid_subscription, give_subscription_to_user, has_premium_subscription
+from .subscriptionManager import has_valid_subscription, give_subscription_to_user, has_premium_subscription, delete_subscription
 from django.contrib.auth.models import User
 from datetime import date, timedelta
 
@@ -359,6 +360,8 @@ def profile(request: HttpRequest) -> HttpResponse:
         )
         # Delete profile form
         delete_form = AccountDeletionForm(request.POST)
+        # Delete subscription form
+        subscription_form = SubscriptionDeletionForm(request.POST)
         if e_form.is_valid():
             e_form.save()
             messages.success(request, f"Your email has been updated!")
@@ -386,16 +389,22 @@ def profile(request: HttpRequest) -> HttpResponse:
             logout(request)  # Log out the user after account deletion
             messages.success(request, f"Your account has been deleted.")
             return redirect("login")
+        if subscription_form.is_valid() and subscription_form.cleaned_data["delete"] and has_valid_subscription(request.user.id):
+            user = User.objects.get(id=request.user.id)
+            delete_subscription(user)
+            messages.success(request, f"Your subscription has been deleted.")
         return redirect("profile")
     else:
         e_form = UpdateEmailForm(instance=request.user)
         p_form = UpdatePasswordForm(user=request.user)  # type: ignore
         pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
         delete_form = AccountDeletionForm()
+        subscription_form = SubscriptionDeletionForm()
     context = {
         "e_form": e_form,
         "p_form": p_form,
         "pic_form": pic_form,
         "delete_form": delete_form,
+        "subscription_form": subscription_form,
     }
     return render(request, "profile.html", context)
