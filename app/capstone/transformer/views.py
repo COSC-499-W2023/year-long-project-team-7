@@ -21,7 +21,7 @@ from .forms import (
     AccountDeletionForm,
     SubscriptionDeletionForm,
 )
-from .models import Conversion, File, Product, Subscription
+from .models import Conversion, File, Product
 from .tokens import account_activation_token
 from typing import List, Dict
 import json
@@ -211,7 +211,11 @@ def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
+        start_date = date.today()
+        end_date = start_date + timedelta(days=3)
+        give_subscription_to_user(user, start_date, end_date)
         messages.success(request, "Email verified. You can now log into your account.")
+        messages.success(request, "Enjoy a complimentary 3 day trial!")
         return redirect("login")
     else:
         messages.error(request, "Activation link is invalid!")
