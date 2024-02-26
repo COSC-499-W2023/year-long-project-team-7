@@ -130,7 +130,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                     if has_premium_subscription(request.user.id):  # type: ignore
                         OPENAI_MODEL = settings.OPENAI_MODEL_GPT4 # type: ignore
                     else:
-                        messages.error(request, "You must have a premium subscription to use GPT-4 model.")
+                        messages.error(request, "You must have a premium subscription to use the GPT-4 model.")
                         return render(request, "transform.html", {"form": TransformerForm()})
                 else:
                     OPENAI_MODEL = settings.OPENAI_MODEL_GPT3 # type: ignore
