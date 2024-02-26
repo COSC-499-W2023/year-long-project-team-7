@@ -389,7 +389,7 @@ I unfortunately became sick during the weekend, so I was not able to get started
 
 Since a lot of my work was done this week in person with the team, it is not reflected in the GitHub Project.
 
-## Jan 6 2024 -> Feb 12 2024
+## Feb 6 2024 -> Feb 12 2024
 
 ![evaluation-screenshot](../../img/esteban-eval-18.png)
 <br>
@@ -421,3 +421,45 @@ _Team Evaluation Screenshot_
 This week I worked on some peer feedback we got from our evaluation. These changes were focused on improving the user experience of the site. As part of this, I added a new FAQ section to the site and renamed the "Transform Page" to "Create". I also added tooltips to the presentation creation tool and made the results page communicate what elements are clicklable more clearly. I also fixed some issues our PDF previews were having when displayed in smaller screens and restyled the results. I've gotten started with the work of making our site more accessible by implementing WCAG development practices and begun testing with a screenreader. 
 
 A lot of the time I spent this week was in troubleshooting the bootstrap "tooltip" plugin. Due to an obscure conflicting rule in our styling, the tooltips were not working as needed. This halted progress for about a day and was a difficult problem to solve as it involved thorough reading of the Bootstrap documentation and manually working through our styling rules to locate the problem.
+
+## Feb 13 2024 -> Feb 18 2024
+
+![evaluation-screenshot](../../img/esteban-eval-19.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-19.png)
+
+### Goals
+
+- [x] WCAG
+	- [x] Axe DevTools Auto Errors
+	- [x] Contrast
+	- [x] Screen Reader + Keyboard Accessibility
+		- [x] Homepage
+		- [x] About/FAQ
+		- [x] Create
+			- [x] Input
+				- [x] Enter key choose file
+			- [x] Options
+				- [x] Sliders
+				- [x] Combobox enter key selection
+			- [x] Template
+				- [x] Enter key selection
+				- [x] Tab highlighting and labels
+			- [x] Generate button
+		- [x] History
+		- [x] Login + Register
+		- [x] Logout
+- [x] Code review + merge
+- [x] Profile page light mode bug
+
+### Self Reflection and Learning
+
+This week I was able to complete our WCAG accessibility features. This was a challenging and rewarding task that involved getting deep into the documentation of the `aria` family of HTML properties as well as using a screen reader and keyboard only navigation to access the accessibility of our site. Some semantic and layout reworking was needed, particularly for our main "Create" page. This involved rethinking our approach to how our elements are presented and styled. I needed to end up with the same visual style and functionality as well as maintain our responsiveness while making the form understandable for visually impaired users and keyboard only users. 
+
+This process helped me understand the way that proper semantic layouts and elements are imperative for users who depend on accessibility features. This ultimately resulted in layouts which are more semantically correct, readable, and better for users and from a maintainablility standpoint. I now think that adhering to these best practices in general and considering all types of users from the start actually results in better code from the start and I am happy we implemented these features.
