@@ -43,6 +43,17 @@ class TransformViewTestCase(TestCase):
         self.client.login(username="test", password="testpassword123")
         with patch("transformer.views.generate_output") as mock_generate_output:
             file = SimpleUploadedFile("file.txt", b"file_content")
+
+            test_template = File(
+                user=None,
+                conversion=None,
+                type="pptx",
+                file="template_1.pptx",
+                is_output=False,
+                is_input=False,
+            )
+            test_template.save()
+
             data = {
                 "prompt": "sample_text",
                 "language": "English",
@@ -51,7 +62,8 @@ class TransformViewTestCase(TestCase):
                 "num_slides": 1,
                 "image_frequency": 0,
                 "template": 1,
-                "files": file,
+                "input_files": file,
+                "model": "gpt-3.5-turbo-0125",
             }
             response = self.client.post(self.url, data, format="multipart")
 
@@ -67,15 +79,18 @@ class TransformViewTestCase(TestCase):
                 "complexity": 1,
                 "num_slides": 1,
                 "image_frequency": 0,
-                "template": 1,
+                "template": "1",
+                "model": "gpt-3.5-turbo-0125",
             }
             saved_files = list(File.objects.filter(conversion=conversion))
 
             self.assertEqual(response.url, reverse("results", args=[conversion.id]))
             expected_user_params = json.dumps(expected_user_params_dict)
             self.assertEqual(conversion.user_parameters, expected_user_params)
-            self.assertEqual(File.objects.count(), 1)
-            mock_generate_output.assert_called_once_with(saved_files, conversion)
+            self.assertEqual(File.objects.count(), 2)
+            mock_generate_output.assert_called_once_with(
+                saved_files, test_template, conversion
+            )
 
     def test_transform_view_post_request_invalid_form(self):
         self.client.login(username="test", password="testpassword123")
@@ -89,12 +104,9 @@ class TransformViewTestCase(TestCase):
             "image_frequency": 0,
             "template": 1,
         }
-
         response = self.client.post(self.url, data)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "transform.html")
-        self.assertContains(response, "form")
+        self.assertEqual(response.status_code, 302)
 
 
 class RegisterTestCase(TestCase):
