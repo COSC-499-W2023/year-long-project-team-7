@@ -89,8 +89,8 @@ class TransformerForm(forms.Form):
     model = forms.ChoiceField(
         label="Model",
         choices=[
-            ("GPT-3", "GPT-3"),
-            ("GPT-4", "GPT-4"),
+            ("gpt-3.5-turbo-1106", "GPT-3"),
+            ("gpt-4-1106-preview", "GPT-4"),
         ],
         widget=forms.Select(attrs={"class": "form-control dropdown"}),
     )

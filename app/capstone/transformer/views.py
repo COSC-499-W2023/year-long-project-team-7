@@ -126,14 +126,11 @@ def transform(request: HttpRequest) -> HttpResponse:
                         request, "transform.html", {"form": TransformerForm()}
                     )
                 
-                if user_params["model"] == "GPT-4":
-                    if has_premium_subscription(request.user.id):  # type: ignore
-                        OPENAI_MODEL = settings.OPENAI_MODEL_GPT4 # type: ignore
-                    else:
+                print(user_params["model"])
+                if user_params["model"] == "gpt-4-1106-preview":
+                    if not has_premium_subscription(request.user.id):  # type: ignore
                         messages.error(request, "You must have a premium subscription to use the GPT-4 model.")
                         return render(request, "transform.html", {"form": TransformerForm()})
-                else:
-                    OPENAI_MODEL = settings.OPENAI_MODEL_GPT3 # type: ignore
 
 
                 for uploaded_file in request.FILES.getlist("files"):
@@ -148,7 +145,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                     new_file.save()
                     files.append(new_file)
 
-                generate_output(files, conversion, OPENAI_MODEL)
+                generate_output(files, conversion)
 
                 return redirect("results", conversion_id=conversion.id)
             else:

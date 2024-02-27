@@ -34,7 +34,7 @@ class SlideContent:
 
 
 class PresentationGenerator:
-    def __init__(self, input_file_paths: list[str], conversion: Conversion, OPENAI_MODEL: str):
+    def __init__(self, input_file_paths: list[str], conversion: Conversion):
         with open(os.path.join(settings.BASE_DIR, "prompts.json"), "r") as file:
             self.prompts = json.load(file)
 
@@ -47,6 +47,7 @@ class PresentationGenerator:
         self.image_frequency = json.loads(conversion.user_parameters).get(
             "image_frequency", 3
         )
+        self.model = json.loads(conversion.user_parameters).get("model")
         self.template = json.loads(conversion.user_parameters).get("template", 1)
 
         self.client = OpenAI(api_key=settings.OPENAI_API_KEY, organization="org-hYPJO2WKqFAN1o75AdfdfeBx")  # type: ignore
@@ -86,7 +87,7 @@ class PresentationGenerator:
         self.assistant = self.client.beta.assistants.create(
             instructions=instructions,
             tools=[{"type": "retrieval"}],
-            model=OPENAI_MODEL,
+            model=self.model,
             file_ids=[file.id for file in self.openai_files],
         )
 

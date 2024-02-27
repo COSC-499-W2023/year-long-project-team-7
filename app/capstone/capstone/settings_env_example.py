@@ -2,8 +2,6 @@ from .settings import *
 
 
 OPENAI_API_KEY = "your open ai api key here"
-OPENAI_MODEL_GPT3 = "gpt-3.5-turbo-1106"
-OPENAI_MODEL_GPT4 = "gpt-4-1106-preview"# WARNING! EXPENSIVE!
 
 
 STRIPE_SECRET_KEY = "stripe secret key here"
