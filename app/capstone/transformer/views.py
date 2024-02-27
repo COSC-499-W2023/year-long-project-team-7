@@ -27,6 +27,7 @@ import json
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+import traceback
 import stripe
 from django.conf import settings
 from django.views import View
@@ -98,84 +99,120 @@ def transform(request: HttpRequest) -> HttpResponse:
         if request.method == "POST":
             form = TransformerForm(request.POST)
 
-        if form.is_valid():
-            conversion = Conversion()
-            user_params = {
-                "prompt": form.cleaned_data["prompt"],
-                "language": form.cleaned_data["language"],
-                "tone": form.cleaned_data["tone"],
-                "complexity": form.cleaned_data["complexity"],
-                "num_slides": form.cleaned_data["num_slides"],
-                "image_frequency": form.cleaned_data["image_frequency"],
-                "template": form.cleaned_data["template"],
-                "model": form.cleaned_data["model"],
-            }
-            conversion.user_parameters = json.dumps(user_params)
-            conversion.user = request.user  # type: ignore
+            if form.is_valid():
+                try:
+                    conversion = Conversion()
+                    user_params = {
+                        "prompt": form.cleaned_data["prompt"],
+                        "language": form.cleaned_data["language"],
+                        "tone": form.cleaned_data["tone"],
+                        "complexity": form.cleaned_data["complexity"],
+                        "num_slides": form.cleaned_data["num_slides"],
+                        "image_frequency": form.cleaned_data["image_frequency"],
+                        "template": form.cleaned_data["template"],
+                        "model": form.cleaned_data["model"],
+                    }
+                    conversion.user_parameters = json.dumps(user_params)
+                    conversion.user = request.user  # type: ignore
 
-            conversion.save()
+                    conversion.save()
 
-            input_files = []
+                    input_files = []
 
-            has_prompt = len(user_params["prompt"]) > 0
-            has_file = len(request.FILES.getlist("input_files"))
+                    has_prompt = len(user_params["prompt"]) > 0
+                    has_file = len(request.FILES.getlist("input_files"))
 
-            if not has_prompt and not has_file:
-                return render(
-                    request,
-                    "transform.html",
-                    {"form": TransformerForm(), "errors": ["No input provided"]},
-                )
+                    if not has_prompt and not has_file:
+                        messages.error(request, "No input provided.")
 
-            for uploaded_file in request.FILES.getlist("input_files"):
-                new_file = File()
-                new_file.user = request.user  # type: ignore
-                new_file.conversion = conversion
-                if uploaded_file.content_type is not None:
-                    new_file.type = uploaded_file.content_type
-                new_file.file = uploaded_file
-                new_file.is_input = True
-                new_file.save()
-                input_files.append(new_file)
+                        return render(
+                            request,
+                            "transform.html",
+                            {
+                                "form": TransformerForm(),
+                            },
+                        )
 
-            has_template_selection = user_params["template"] != ""
-            has_template_file = len(request.FILES.getlist("template_file"))
-            if not has_template_selection and not has_template_file:
-                return render(
-                    request,
-                    "transform.html",
-                    {"form": TransformerForm(), "errors": ["No template provided"]},
-                )
+                    for uploaded_file in request.FILES.getlist("input_files"):
+                        new_file = File()
+                        new_file.user = request.user  # type: ignore
+                        new_file.conversion = conversion
+                        if uploaded_file.content_type is not None:
+                            new_file.type = uploaded_file.content_type
+                        new_file.file = uploaded_file
+                        new_file.is_input = True
+                        new_file.save()
+                        input_files.append(new_file)
 
-            if has_template_file:
-                uploaded_template_file = request.FILES.getlist("template_file")[0]
-                template_file = File()
-                template_file.user = request.user  # type: ignore
-                template_file.conversion = conversion
-                template_file.type = str(uploaded_template_file.content_type)
-                template_file.file = template_file
-                template_file.is_input = False
-                template_file.save()
+                    has_template_selection = user_params["template"] != ""
+                    has_template_file = len(request.FILES.getlist("template_file"))
+                    if not has_template_selection and not has_template_file:
+                        return render(
+                            request,
+                            "transform.html",
+                            {
+                                "form": TransformerForm(),
+                                "errors": ["No template provided"],
+                            },
+                        )
+
+                    if has_template_file:
+                        uploaded_template_file = request.FILES.getlist("template_file")[
+                            0
+                        ]
+                        template_file = File()
+                        template_file.user = request.user  # type: ignore
+                        template_file.conversion = conversion
+                        template_file.type = str(uploaded_template_file.content_type)
+                        template_file.file = uploaded_template_file
+                        template_file.is_input = False
+                        template_file.is_output = False
+                        template_file.save()
+                    else:
+                        template_file = File.objects.get(
+                            file=f"template_{user_params['template']}.pptx"
+                        )
+
+                    result = generate_output(input_files, template_file, conversion)
+
+                    if "Error" in result:
+                        conversion.delete()
+
+                        for file in input_files:
+                            file.delete()
+
+                        if has_template_file:
+                            template_file.delete()
+
+                        return render(
+                            request,
+                            "transform.html",
+                            {"form": TransformerForm(), "errors": [result]},
+                        )
+
+                    return redirect("results", conversion_id=conversion.id)
+
+                except:
+                    # print traceback for developers
+                    print(traceback.format_exc())
+                    conversion.delete()
+                    for file in input_files:
+                        file.delete()
+                    messages.error(
+                        request,
+                        "We encountered an unexpected error while generating your content please try again.",
+                    )
+                    return render(
+                        request, "transform.html", {"form": TransformerForm()}
+                    )
             else:
-                template_file = File.objects.get(
-                    file=f"template_{user_params['template']}.pptx"
-                )
-
-            result = generate_output(input_files, template_file, conversion)
-
-            if "Error" in result:
-                return render(
-                    request,
-                    "transform.html",
-                    {"form": TransformerForm(), "errors": [result]},
-                )
-
-            return redirect("results", conversion_id=conversion.id)
+                messages.error(request, "Invalid form data.")
+                return redirect("transform")
         else:
             return render(
                 request,
                 "transform.html",
-                {"form": TransformerForm(), "errors": form.errors},
+                {"form": TransformerForm()},
             )
     else:
         messages.error(request, "You must have an active subscription to use Create.")
