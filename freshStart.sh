@@ -7,7 +7,7 @@ source venv/bin/activate
 cd app
 pip install -r requirements.txt
 cd capstone
-python seed.py
 python manage.py migrate
+python seed.py
 python manage.py runserver
 

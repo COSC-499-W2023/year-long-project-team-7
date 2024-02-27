@@ -89,8 +89,21 @@
     python manage.py makemigrations
     python manage.py migrate
     ```
+6. **Seeding the database**
+    
+    Run the following command to seed the database with example data
+    ```
+    /year-long-project-team-7/app/capstone$
 
-6. **Create a Django superuser (Optional)**
+    python seed.py
+    ``` 
+    This will reset the database with test data. You can use the credentials below to login.
+
+    Email:`user@email.com`
+
+    Password:`password`
+
+7. **Create a Django superuser (Optional)**
 
     This will allow you to log into the admin page of the django app.
 
@@ -104,7 +117,7 @@
     python manage.py createsuperuser
     ```
 
-7. **Start Django server**
+8. **Start Django server**
 
     ```
     /year-long-project-team-7/app/capstone$
@@ -112,28 +125,22 @@
     python manage.py runserver
     ```
 
-8. **Setting up Stripe**
+9. **Setting up Stripe**
 
-    ```
-    /year-long-project-team-7/app/capstone$
 
-    Setting up Stripe:
+    1. Update your `settings_env.py` with the stripe keys
 
-    0. Update your settings_env with the stripe keys
+    2. Install using instructions in the "apt" tab https://stripe.com/docs/stripe-cli
 
-    1. Install using instructions in the "apt" tab https://stripe.com/docs/stripe-cli
+    3. Log in with API webhook key (found in accounts sheet) `stripe login --interactive`
 
-    2. Log in with API webhook key (found in accounts sheet) ```stripe login --interactive```
-
-    3. Run ```stripe listen --forward-to localhost:8000/webhook```
-
-    4. Run migrations
+    4. Run `stripe listen --forward-to localhost:8000/webhook`
 
     5. At this point you should be able to test buying a subscription with a fake credit card. (card number 4242 4242 4242 4242).
-    ```
+    
     
 
-9. **All done!**
+10. **All done!**
 
     You can now access the site through your browser.
 

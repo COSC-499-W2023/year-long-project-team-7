@@ -123,8 +123,9 @@ def transform(request: HttpRequest) -> HttpResponse:
                     has_file = len(request.FILES.getlist("input_files"))
 
                     if not has_prompt and not has_file:
-                        messages.error(request, "No input provided.")
-
+                        messages.error(
+                            request, "Input must include a prompt and/or a file."
+                        )
                         return render(
                             request,
                             "transform.html",
