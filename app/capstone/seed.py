@@ -67,8 +67,8 @@ def main() -> None:
         get_display_price_cents=999,
         get_display_price=9.99,
         length_days=30,
-        phrase="Get access to Platonix for 1 month",
-        description="Unlock the power of GPT-4!",
+        description="Get access to Platonix for 1 month",
+        phrase="Unlock the power of GPT-4!",
     ).save()
 
     Subscription.objects.create(
