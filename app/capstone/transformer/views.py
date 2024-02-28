@@ -122,6 +122,9 @@ def transform(request: HttpRequest) -> HttpResponse:
                     has_file = len(request.FILES.getlist("files"))
 
                     if not has_prompt and not has_file:
+                        messages.error(
+                            request, "Input must include a prompt and/or a file."
+                        )
                         return render(
                             request, "transform.html", {"form": TransformerForm()}
                         )
@@ -140,18 +143,26 @@ def transform(request: HttpRequest) -> HttpResponse:
 
                     generate_output(files, conversion)
                 except:
-                    #print traceback for developers
+                    # print traceback for developers
                     print(traceback.format_exc())
                     conversion.delete()
                     for file in files:
                         file.delete()
-                    messages.error(request, "We encountered an unexpected error while generating your content please try again.")
-                    return render(request, "transform.html", {"form": TransformerForm()})
-                
+                    messages.error(
+                        request,
+                        "We encountered an unexpected error while generating your content please try again.",
+                    )
+                    return render(
+                        request, "transform.html", {"form": TransformerForm()}
+                    )
+
                 return redirect("results", conversion_id=conversion.id)
             else:
+                messages.error(
+                    request, "You must select a template to create a presentation."
+                )
                 return render(request, "transform.html", {"form": TransformerForm()})
-        else: 
+        else:
             return render(request, "transform.html", {"form": TransformerForm()})
     else:
         messages.error(request, "You must have an active subscription to use Create.")
