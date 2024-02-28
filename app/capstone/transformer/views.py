@@ -402,9 +402,8 @@ def profile(request: HttpRequest) -> HttpResponse:
         delete_form = AccountDeletionForm()
         subscription_form = SubscriptionDeletionForm()
         try:
-            subscription = Subscription.objects.get(
-                user=User.objects.get(id=request.user.id)
-                ) # type: ignore
+            user=User.objects.get(id=request.user.id) # type: ignore
+            subscription = Subscription.objects.get(user=user) 
             has_subscription = subscription.has_subscription
             premium = "Premium Subscription" if subscription.is_premium else None
             subscription_start = subscription.start_date
