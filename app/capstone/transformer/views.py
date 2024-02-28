@@ -404,7 +404,7 @@ def profile(request: HttpRequest) -> HttpResponse:
         try:
             subscription = Subscription.objects.get(
                 user=User.objects.get(id=request.user.id)
-                )
+                ) # type: ignore
             has_subscription = subscription.has_subscription
             premium = "Premium Subscription" if subscription.is_premium else None
             subscription_start = subscription.start_date
@@ -412,8 +412,8 @@ def profile(request: HttpRequest) -> HttpResponse:
         except:
             has_subscription = False
             premium = "No active subscription"
-            subscription_start = "N/A"
-            subscription_expiry = "N/A"
+            subscription_start = "N/A"  # type: ignore
+            subscription_expiry = "N/A"  # type: ignore
         
     context = {
         "e_form": e_form,
