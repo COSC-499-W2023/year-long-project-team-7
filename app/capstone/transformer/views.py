@@ -21,7 +21,7 @@ from .forms import (
     AccountDeletionForm,
     SubscriptionDeletionForm,
 )
-from .models import Conversion, File, Product
+from .models import Conversion, File, Product, Subscription
 from .tokens import account_activation_token
 from typing import List, Dict
 import json
@@ -344,6 +344,7 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         start_date = date.today()
         length_days = subscription_product.length_days
         end_date = start_date + timedelta(days=length_days)
+        print(length_days)
         give_subscription_to_user(subscription_user, start_date, end_date, subscription_product)
     # Passed signature verification
     return HttpResponse(status=200)
@@ -401,11 +402,29 @@ def profile(request: HttpRequest) -> HttpResponse:
         pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
         delete_form = AccountDeletionForm()
         subscription_form = SubscriptionDeletionForm()
+        try:
+            subscription = Subscription.objects.get(
+                user=User.objects.get(id=request.user.id)
+                )
+            has_subscription = subscription.has_subscription
+            premium = "Premium Subscription" if subscription.is_premium else None
+            subscription_start = subscription.start_date
+            subscription_expiry = subscription.end_date
+        except:
+            has_subscription = False
+            premium = "No active subscription"
+            subscription_start = "N/A"
+            subscription_expiry = "N/A"
+        
     context = {
         "e_form": e_form,
         "p_form": p_form,
         "pic_form": pic_form,
         "delete_form": delete_form,
         "subscription_form": subscription_form,
+        "has_subscription": has_subscription,
+        "premium": premium,
+        "subscription_start": subscription_start,
+        "subscription_expiry": subscription_expiry,
     }
     return render(request, "profile.html", context)

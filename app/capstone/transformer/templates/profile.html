@@ -68,17 +68,24 @@
                 </fieldset>
             </form>
             <br>
-            <!-- Subscription Deletion Form -->
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Subscription</legend>
-                    <div class="form-group">{{ subscription_form.as_p }}</div>
-                    <div class="form-group mt-3">
-                        <button class="btn btn-danger" type="submit">Delete Subscription</button>
-                    </div>
-                </fieldset>
-            </form>
+            {% if has_subscription %}
+                <legend class="border-bottom mb-4">Subscription</legend>
+                {% if premium %}
+                    <p>{{ premium }}</p>
+                {% endif %}
+                <p>Start date: {{ subscription_start }}</p>
+                <p>Expiry date: {{ subscription_expiry }}</p>
+                <!-- Subscription Deletion Form -->
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <div class="form-group">{{ subscription_form.as_p }}</div>
+                        <div class="form-group mt-3">
+                            <button class="btn btn-danger" type="submit">Delete Subscription</button>
+                        </div>
+                    </fieldset>
+                </form>
+            {% endif %}
         </div>
     </div>
 {% endblock content %}
