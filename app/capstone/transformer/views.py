@@ -19,8 +19,9 @@ from .forms import (
     UpdatePasswordForm,
     ProfileUpdateForm,
     AccountDeletionForm,
+    SubscriptionDeletionForm,
 )
-from .models import Conversion, File, Product
+from .models import Conversion, File, Product, Subscription
 from .tokens import account_activation_token
 from typing import List, Dict
 import json
@@ -32,7 +33,7 @@ import stripe
 from django.conf import settings
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from .subscriptionManager import has_valid_subscription, give_subscription_to_user
+from .subscriptionManager import has_valid_subscription, give_subscription_to_user, has_premium_subscription, delete_subscription
 from django.contrib.auth.models import User
 from datetime import date, timedelta
 
@@ -110,6 +111,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                         "num_slides": form.cleaned_data["num_slides"],
                         "image_frequency": form.cleaned_data["image_frequency"],
                         "template": int(form.cleaned_data["template"]),
+                        "model": form.cleaned_data["model"],
                     }
                     conversion.user_parameters = json.dumps(user_params)
                     conversion.user = request.user  # type: ignore
@@ -155,6 +157,12 @@ def transform(request: HttpRequest) -> HttpResponse:
                     return render(
                         request, "transform.html", {"form": TransformerForm()}
                     )
+                
+                if user_params["model"] == "gpt-4-1106-preview":
+                    if not has_premium_subscription(request.user.id):  # type: ignore
+                        messages.error(request, "You must have a premium subscription to use the GPT-4 model.")
+                        return render(request, "transform.html", {"form": TransformerForm()})
+
 
                 return redirect("results", conversion_id=conversion.id)
             else:
@@ -220,7 +228,11 @@ def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
+        start_date = date.today()
+        end_date = start_date + timedelta(days=3)
+        give_subscription_to_user(user, start_date, end_date, None)
         messages.success(request, "Email verified. You can now log into your account.")
+        messages.success(request, "Enjoy a complimentary 3 day trial!")
         return redirect("login")
     else:
         messages.error(request, "Activation link is invalid!")
@@ -352,13 +364,9 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         start_date = date.today()
         length_days = subscription_product.length_days
         end_date = start_date + timedelta(days=length_days)
-        give_subscription_to_user(subscription_user, start_date, end_date)
+        give_subscription_to_user(subscription_user, start_date, end_date, subscription_product)
     # Passed signature verification
     return HttpResponse(status=200)
-
-
-def payments(request: HttpRequest) -> HttpResponse:
-    return render(request, "payments.html")
 
 
 @login_required
@@ -373,6 +381,8 @@ def profile(request: HttpRequest) -> HttpResponse:
         )
         # Delete profile form
         delete_form = AccountDeletionForm(request.POST)
+        # Delete subscription form
+        subscription_form = SubscriptionDeletionForm(request.POST)
         if e_form.is_valid():
             e_form.save()
             messages.success(request, f"Your email has been updated!")
@@ -400,16 +410,39 @@ def profile(request: HttpRequest) -> HttpResponse:
             logout(request)  # Log out the user after account deletion
             messages.success(request, f"Your account has been deleted.")
             return redirect("login")
+        if subscription_form.is_valid() and subscription_form.cleaned_data["delete"] and has_valid_subscription(request.user.id): # type: ignore
+            user = User.objects.get(id=request.user.id) # type: ignore
+            delete_subscription(user)
+            messages.success(request, f"Your subscription has been deleted.")
         return redirect("profile")
     else:
         e_form = UpdateEmailForm(instance=request.user)
         p_form = UpdatePasswordForm(user=request.user)  # type: ignore
         pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
         delete_form = AccountDeletionForm()
+        subscription_form = SubscriptionDeletionForm()
+        try:
+            user=User.objects.get(id=request.user.id) # type: ignore
+            subscription = Subscription.objects.get(user=user) 
+            has_subscription = subscription.has_subscription
+            premium = "Premium Subscription" if subscription.is_premium else None
+            subscription_start = subscription.start_date
+            subscription_expiry = subscription.end_date
+        except:
+            has_subscription = False
+            premium = "No active subscription"
+            subscription_start = "N/A"  # type: ignore
+            subscription_expiry = "N/A"  # type: ignore
+        
     context = {
         "e_form": e_form,
         "p_form": p_form,
         "pic_form": pic_form,
         "delete_form": delete_form,
+        "subscription_form": subscription_form,
+        "has_subscription": has_subscription,
+        "premium": premium,
+        "subscription_start": subscription_start,
+        "subscription_expiry": subscription_expiry,
     }
     return render(request, "profile.html", context)
