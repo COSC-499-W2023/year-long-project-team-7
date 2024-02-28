@@ -31,7 +31,7 @@ class TransformViewTestCase(TestCase):
             email="testuser@email.com", password="testpassword123", username="test"
         )
         give_subscription_to_user(
-            self.user, date.today(), (date.today() + timedelta(days=1))
+            self.user, date.today(), (date.today() + timedelta(days=1)), None
         )
 
     def test_transform_view_get_request(self):
@@ -50,7 +50,7 @@ class TransformViewTestCase(TestCase):
                 "complexity": 1,
                 "num_slides": 1,
                 "image_frequency": 0,
-                "model": "GPT-3",
+                "model": "gpt-3.5-turbo-1106",
                 "template": 1,
                 "files": file,
             }
@@ -69,7 +69,7 @@ class TransformViewTestCase(TestCase):
                 "num_slides": 1,
                 "image_frequency": 0,
                 "template": 1,
-                "model": "GPT-3",
+                "model": "gpt-3.5-turbo-1106",
             }
             saved_files = list(File.objects.filter(conversion=conversion))
 
@@ -77,7 +77,7 @@ class TransformViewTestCase(TestCase):
             expected_user_params = json.dumps(expected_user_params_dict)
             self.assertEqual(conversion.user_parameters, expected_user_params)
             self.assertEqual(File.objects.count(), 1)
-            mock_generate_output.assert_called_once_with(saved_files, conversion, settings.OPENAI_MODEL_GPT3)
+            mock_generate_output.assert_called_once_with(saved_files, conversion)
 
     def test_transform_view_post_request_invalid_form(self):
         self.client.login(username="test", password="testpassword123")
@@ -153,7 +153,7 @@ class UserSignInTestCase(TestCase):
             username="testuser@email.com",
         )
         give_subscription_to_user(
-            self.user, date.today(), (date.today() + timedelta(days=1))
+            self.user, date.today(), (date.today() + timedelta(days=1)), None
         )
 
     def test_user_signin_valid_credentials(self):
