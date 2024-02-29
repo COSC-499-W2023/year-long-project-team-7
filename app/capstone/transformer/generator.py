@@ -51,6 +51,7 @@ def generate_output(files: list[File], template: File, conversion: Conversion) -
     pres_manager = PresentationGenerator(input_file_text, conversion, template)
 
     output_file_name = pres_manager.build_presentation()
+
     file_name, file_extension = os.path.splitext(output_file_name)
 
     user = None

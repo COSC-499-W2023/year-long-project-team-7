@@ -5,12 +5,13 @@ from django.contrib.auth import logout as auth_logout, get_user_model
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
-from django.core.files.storage import FileSystemStorage
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
+
+from .presentationManager import MissingPlaceholderError
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
@@ -23,12 +24,10 @@ from .forms import (
 )
 from .models import Conversion, File, Product, Subscription
 from .tokens import account_activation_token
-from typing import List, Dict
 import json
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-import traceback
 import stripe
 from django.conf import settings
 from django.views import View
@@ -37,7 +36,6 @@ from .subscriptionManager import (
     has_valid_subscription,
     give_subscription_to_user,
     has_premium_subscription,
-    delete_subscription,
 )
 from django.contrib.auth.models import User
 from datetime import date, timedelta
@@ -191,26 +189,11 @@ def transform(request: HttpRequest) -> HttpResponse:
 
                     result = generate_output(input_files, template_file, conversion)
 
-                    if "Error" in result:
-                        conversion.delete()
-
-                        for file in input_files:
-                            file.delete()
-
-                        if has_template_file:
-                            template_file.delete()
-
-                        return render(
-                            request,
-                            "transform.html",
-                            {"form": TransformerForm(), "errors": [result]},
-                        )
-
                     return redirect("results", conversion_id=conversion.id)
 
-                except:
+                except Exception as e:
                     # print traceback for developers
-                    print(traceback.format_exc())
+                    print(e)
 
                     conversion.delete()
                     for file in input_files:
@@ -219,10 +202,14 @@ def transform(request: HttpRequest) -> HttpResponse:
                     if has_template_file:
                         template_file.delete()
 
-                    messages.error(
-                        request,
-                        "We encountered an unexpected error while generating your content please try again.",
-                    )
+                    if type(e) is MissingPlaceholderError:
+                        messages.error(request, e.message)
+                    else:
+                        messages.error(
+                            request,
+                            "We encountered an unexpected error while generating your content please try again.",
+                        )
+
                     return render(
                         request, "transform.html", {"form": TransformerForm()}
                     )
@@ -484,7 +471,6 @@ def profile(request: HttpRequest) -> HttpResponse:
                     request, "Invalid password form data. Please check and try again."
                 )
         elif "confirm_delete" in request.POST:
-
             delete_form = AccountDeletionForm(request.POST)
             if delete_form.is_valid() and delete_form.cleaned_data.get(
                 "confirm_delete"
