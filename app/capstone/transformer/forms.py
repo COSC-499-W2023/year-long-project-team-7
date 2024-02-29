@@ -15,6 +15,15 @@ class TransformerForm(forms.Form):
         self.fields["num_slides"].initial = 10
         self.fields["image_frequency"].initial = 3
 
+    model = forms.ChoiceField(
+        label="Model",
+        choices=[
+            ("gpt-3.5-turbo-0125", "GPT-3.5"),
+            ("gpt-4-0125-preview", "GPT-4"),
+        ],
+        widget=forms.Select(attrs={"class": "form-control dropdown"}),
+    )
+
     prompt = forms.CharField(
         label="Prompt",
         required=False,
@@ -24,6 +33,7 @@ class TransformerForm(forms.Form):
                 "cols": 40,
                 "placeholder": "Enter your prompt here (optional)",
                 "class": "form-control rounded custom-text-area",
+                "aria-label": "Optional prompt text input",
             }
         ),
     )
@@ -36,7 +46,12 @@ class TransformerForm(forms.Form):
             ("French", "French"),
             ("Spanish", "Spanish"),
         ],
-        widget=forms.Select(attrs={"class": "form-control dropdown"}),
+        widget=forms.Select(
+            attrs={
+                "class": "form-control dropdown",
+                "aria-label": "Presentation language selection",
+            }
+        ),
     )
 
     tone = forms.ChoiceField(
@@ -49,7 +64,12 @@ class TransformerForm(forms.Form):
             ("Professional", "Professional"),
             ("Formal", "Formal"),
         ],
-        widget=forms.Select(attrs={"class": "form-control dropdown"}),
+        widget=forms.Select(
+            attrs={
+                "class": "form-control dropdown",
+                "aria-label": "Presentation tone selection",
+            }
+        ),
     )
 
     complexity = forms.IntegerField(
@@ -60,6 +80,7 @@ class TransformerForm(forms.Form):
                 "min": 0,
                 "max": 6,
                 "class": "custom-slider",
+                "aria-label": "Presentation information complexity selection",
             }
         ),
     )
@@ -72,6 +93,7 @@ class TransformerForm(forms.Form):
                 "min": 1,
                 "max": 40,
                 "class": "custom-slider",
+                "aria-label": "Number of presentation slides",
             }
         ),
     )
@@ -84,6 +106,7 @@ class TransformerForm(forms.Form):
                 "min": 0,
                 "max": 6,
                 "class": "custom-slider",
+                "aria-label": "Presentation image generation frequency",
             }
         ),
     )
@@ -99,6 +122,7 @@ class TransformerForm(forms.Form):
             (6, "Template 6"),
         ],
         widget=RadioSelect(),
+        required=False,
     )
 
 
@@ -145,11 +169,15 @@ class RegisterForm(UserCreationForm):  # type: ignore
 class LoginForm(forms.Form):
     email = forms.EmailField(
         label="Email",
-        widget=forms.EmailInput(attrs={"class": "form-control form-control-lg"}),
+        widget=forms.EmailInput(
+            attrs={"class": "form-control form-control-lg", "aria-label": "Email"}
+        ),
     )
     password = forms.CharField(
         label="Password",
-        widget=forms.PasswordInput(attrs={"class": "form-control form-control-lg"}),
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control form-control-lg", "aria-label": "Password"}
+        ),
     )
 
 
@@ -205,6 +233,14 @@ class ProfileUpdateForm(forms.ModelForm):  # type: ignore
 
 class AccountDeletionForm(forms.Form):
     confirm_delete = forms.BooleanField(
+        required=True,
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
+    )
+
+
+class SubscriptionDeletionForm(forms.Form):
+    delete = forms.BooleanField(
+        label="Confirm Delete",
         required=True,
         widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )

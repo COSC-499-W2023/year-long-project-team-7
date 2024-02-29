@@ -19,19 +19,26 @@ from .forms import (
     UpdatePasswordForm,
     ProfileUpdateForm,
     AccountDeletionForm,
+    SubscriptionDeletionForm,
 )
-from .models import Conversion, File, Product
+from .models import Conversion, File, Product, Subscription
 from .tokens import account_activation_token
 from typing import List, Dict
 import json
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+import traceback
 import stripe
 from django.conf import settings
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from .subscriptionManager import has_valid_subscription, give_subscription_to_user
+from .subscriptionManager import (
+    has_valid_subscription,
+    give_subscription_to_user,
+    has_premium_subscription,
+    delete_subscription,
+)
 from django.contrib.auth.models import User
 from datetime import date, timedelta
 
@@ -97,52 +104,154 @@ def transform(request: HttpRequest) -> HttpResponse:
     if has_valid_subscription(request.user.id):  # type: ignore
         if request.method == "POST":
             form = TransformerForm(request.POST)
+            input_files: list[File] = []
 
             if form.is_valid():
-                conversion = Conversion()
-                user_params = {
-                    "prompt": form.cleaned_data["prompt"],
-                    "language": form.cleaned_data["language"],
-                    "tone": form.cleaned_data["tone"],
-                    "complexity": form.cleaned_data["complexity"],
-                    "num_slides": form.cleaned_data["num_slides"],
-                    "image_frequency": form.cleaned_data["image_frequency"],
-                    "template": int(form.cleaned_data["template"]),
-                }
-                conversion.user_parameters = json.dumps(user_params)
-                conversion.user = request.user  # type: ignore
+                try:
+                    conversion = Conversion()
+                    user_params = {
+                        "prompt": form.cleaned_data["prompt"],
+                        "language": form.cleaned_data["language"],
+                        "tone": form.cleaned_data["tone"],
+                        "complexity": form.cleaned_data["complexity"],
+                        "num_slides": form.cleaned_data["num_slides"],
+                        "image_frequency": form.cleaned_data["image_frequency"],
+                        "template": form.cleaned_data["template"],
+                        "model": form.cleaned_data["model"],
+                    }
+                    conversion.user_parameters = json.dumps(user_params)
+                    conversion.user = request.user  # type: ignore
 
-                conversion.save()
+                    has_prompt = len(user_params["prompt"]) > 0
+                    has_file = len(request.FILES.getlist("input_files"))
 
-                files = []
+                    has_template_selection = user_params["template"] != ""
+                    has_template_file = len(request.FILES.getlist("template_file"))
+                    if not has_template_selection and not has_template_file:
+                        messages.error(request, "No template provided.")
+                        return render(
+                            request,
+                            "transform.html",
+                            {
+                                "form": TransformerForm(),
+                            },
+                        )
 
-                has_prompt = len(user_params["prompt"]) > 0
-                has_file = len(request.FILES.getlist("files"))
+                    if user_params["model"] == "gpt-4-0125-preview":
+                        if not has_premium_subscription(request.user.id):  # type: ignore
+                            messages.error(
+                                request,
+                                "You must have a premium subscription to use the GPT-4 model.",
+                            )
+                            return render(
+                                request, "transform.html", {"form": TransformerForm()}
+                            )
 
-                if not has_prompt and not has_file:
+                    if not has_prompt and not has_file:
+                        messages.error(
+                            request, "Input must include a prompt and/or a file."
+                        )
+                        return render(
+                            request,
+                            "transform.html",
+                            {
+                                "form": TransformerForm(),
+                            },
+                        )
+
+                    conversion.save()
+
+                    for uploaded_file in request.FILES.getlist("input_files"):
+                        new_file = File()
+                        new_file.user = request.user  # type: ignore
+                        new_file.conversion = conversion
+                        if uploaded_file.content_type is not None:
+                            new_file.type = uploaded_file.content_type
+                        new_file.file = uploaded_file
+                        new_file.is_input = True
+                        new_file.save()
+                        input_files.append(new_file)
+
+                    if has_template_file:
+                        uploaded_template_file = request.FILES.getlist("template_file")[
+                            0
+                        ]
+                        template_file = File()
+                        template_file.user = request.user  # type: ignore
+                        template_file.conversion = conversion
+                        template_file.type = str(uploaded_template_file.content_type)
+                        template_file.file = uploaded_template_file
+                        template_file.is_input = False
+                        template_file.is_output = False
+                        template_file.save()
+                    else:
+                        template_file = File.objects.get(
+                            file=f"template_{user_params['template']}.pptx"
+                        )
+
+                    result = generate_output(input_files, template_file, conversion)
+
+                    if "Error" in result:
+                        conversion.delete()
+
+                        for file in input_files:
+                            file.delete()
+
+                        if has_template_file:
+                            template_file.delete()
+
+                        return render(
+                            request,
+                            "transform.html",
+                            {"form": TransformerForm(), "errors": [result]},
+                        )
+
+                    return redirect("results", conversion_id=conversion.id)
+
+                except:
+                    # print traceback for developers
+                    print(traceback.format_exc())
+
+                    conversion.delete()
+                    for file in input_files:
+                        file.delete()
+
+                    if has_template_file:
+                        template_file.delete()
+
+                    messages.error(
+                        request,
+                        "We encountered an unexpected error while generating your content please try again.",
+                    )
                     return render(
                         request, "transform.html", {"form": TransformerForm()}
                     )
-
-                for uploaded_file in request.FILES.getlist("files"):
-                    new_file = File()
-                    new_file.user = (
-                        request.user if request.user.is_authenticated else None
-                    )
-                    new_file.conversion = conversion
-                    if uploaded_file.content_type is not None:
-                        new_file.type = uploaded_file.content_type
-                    new_file.file = uploaded_file
-                    new_file.save()
-                    files.append(new_file)
-
-                generate_output(files, conversion)
-
-                return redirect("results", conversion_id=conversion.id)
             else:
-                return render(request, "transform.html", {"form": TransformerForm()})
+                for field, errors in form.errors.items():
+                    if field != "__all__":
+                        field_name = (
+                            form.fields[field].label
+                            if form.fields[field].label
+                            else field
+                        )
+                        error_messages = "; ".join(
+                            [force_str(error) for error in errors]
+                        )
+                        error_message = f"{field_name}: {error_messages}"
+                    else:
+                        error_messages = "; ".join(
+                            [force_str(error) for error in errors]
+                        )
+                        error_message = error_messages
+
+                    messages.error(request, error_message)
+                return redirect("transform")
         else:
-            return render(request, "transform.html", {"form": TransformerForm()})
+            return render(
+                request,
+                "transform.html",
+                {"form": TransformerForm()},
+            )
     else:
         messages.error(request, "You must have an active subscription to use Create.")
         return redirect("store")
@@ -199,7 +308,11 @@ def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
+        start_date = date.today()
+        end_date = start_date + timedelta(days=3)
+        give_subscription_to_user(user, start_date, end_date, None)
         messages.success(request, "Email verified. You can now log into your account.")
+        messages.success(request, "Enjoy a complimentary 3 day trial!")
         return redirect("login")
     else:
         messages.error(request, "Activation link is invalid!")
@@ -331,13 +444,11 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         start_date = date.today()
         length_days = subscription_product.length_days
         end_date = start_date + timedelta(days=length_days)
-        give_subscription_to_user(subscription_user, start_date, end_date)
+        give_subscription_to_user(
+            subscription_user, start_date, end_date, subscription_product
+        )
     # Passed signature verification
     return HttpResponse(status=200)
-
-
-def payments(request: HttpRequest) -> HttpResponse:
-    return render(request, "payments.html")
 
 
 @login_required
@@ -392,10 +503,28 @@ def profile(request: HttpRequest) -> HttpResponse:
         e_form = UpdateEmailForm(instance=request.user)
         p_form = UpdatePasswordForm(user=request.user)  # type: ignore
         delete_form = AccountDeletionForm()
+        subscription_form = SubscriptionDeletionForm()
+        try:
+            user = User.objects.get(id=request.user.id)  # type: ignore
+            subscription = Subscription.objects.get(user=user)
+            has_subscription = subscription.has_subscription
+            premium = "Premium Subscription" if subscription.is_premium else None
+            subscription_start = subscription.start_date
+            subscription_expiry = subscription.end_date
+        except:
+            has_subscription = False
+            premium = "No active subscription"
+            subscription_start = "N/A"  # type: ignore
+            subscription_expiry = "N/A"  # type: ignore
     context = {
         "pic_form": pic_form,
         "e_form": e_form,
         "p_form": p_form,
         "delete_form": delete_form,
+        "subscription_form": subscription_form,
+        "has_subscription": has_subscription,
+        "premium": premium,
+        "subscription_start": subscription_start,
+        "subscription_expiry": subscription_expiry,
     }
     return render(request, "profile.html", context)

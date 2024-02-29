@@ -18,7 +18,7 @@
              alt
              width="90"
              height="90" />
-        <h1 class="h3 mb-3 mt-3 font-weight-normal">{{ form_title }}</h1>
+        <h1 class="h3 mb-3 mt-3 font-weight-normal" tabindex="0">{{ form_title }}</h1>
         <form action="{{ form_action }}" method="post">
             {% csrf_token %}
             {% for field in form %}

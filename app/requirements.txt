@@ -5,7 +5,6 @@ anyio==3.7.1
 asgiref==3.7.2
 async-timeout==4.0.3
 attrs==23.1.0
-beautifulsoup4==4.12.2
 black==23.10.1
 certifi==2023.7.22
 cffi==1.16.0
@@ -37,7 +36,6 @@ idna==3.4
 jsbeautifier==1.14.9
 json5==0.9.14
 lxml==4.9.3
-markdownify==0.11.6
 multidict==6.0.4
 mypy==1.6.1
 mypy-extensions==1.0.0
@@ -54,9 +52,10 @@ psycopg2==2.9.7
 pycparser==2.21
 pydantic==2.4.2
 pydantic_core==2.10.1
+PyMuPDF==1.23.25
+PyMuPDFb==1.23.22
 PyPDF2==3.0.1
 pypdfium2==4.21.0
-python-docx==1.1.0
 python-dotenv==1.0.0
 python-pptx==0.6.22
 PyYAML==6.0.1
