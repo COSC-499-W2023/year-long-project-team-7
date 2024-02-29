@@ -117,7 +117,8 @@ class RegisterTestCase(TestCase):
             reverse("register"),
             {
                 "email": "testuser@example.com",
-                "password": "testpassword123",
+                "password1": "testpassword123",
+                "password2": "testpassword123",
             },
         )
         # Check if the user was created and logged in successfully
@@ -134,7 +135,8 @@ class RegisterTestCase(TestCase):
             reverse("register"),
             {
                 "email": "invalidemail",
-                "password": "testpassword123",
+                "password1": "testpassword123",
+                "password2": "testpassword123",
             },
         )
         # Check if the form is not valid and no user was created
@@ -280,7 +282,8 @@ class EmailVerificationTest(TestCase):
             reverse("register"),
             {
                 "email": "testuser@example.com",
-                "password": "testpassword123",
+                "password1": "testpassword123",
+                "password2": "testpassword123",
             },
         )
         # Check if the user was created and logged in successfully
@@ -317,7 +320,8 @@ class EmailVerificationTest(TestCase):
             reverse("register"),
             {
                 "email": "testuser@example.com",
-                "password": "testpassword123",
+                "password1": "testpassword123",
+                "password2": "testpassword123",
             },
         )
         self.user = get_user_model().objects.first()
