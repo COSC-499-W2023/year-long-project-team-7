@@ -372,7 +372,8 @@ def profile(request: HttpRequest) -> HttpResponse:
                 messages.error(
                     request, "Invalid password form data. Please check and try again."
                 )
-        elif "delete_submit" in request.POST:
+        elif "confirm_delete" in request.POST:
+
             delete_form = AccountDeletionForm(request.POST)
             if delete_form.is_valid() and delete_form.cleaned_data.get(
                 "confirm_delete"
