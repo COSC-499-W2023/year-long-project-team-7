@@ -53,8 +53,7 @@ class TransformViewTestCase(TestCase):
                 "complexity": 1,
                 "num_slides": 1,
                 "image_frequency": 0,
-                "model": "gpt-3.5-turbo-1106",
-                "template": 1,
+                "template": "1",
                 "input_files": file,
                 "model": "gpt-3.5-turbo-0125",
             }
