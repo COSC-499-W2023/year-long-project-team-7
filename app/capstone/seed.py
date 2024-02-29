@@ -5,7 +5,14 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "capstone.settings_env")
 django.setup()
 
 
-from transformer.models import Conversion, File, Product, Subscription, Transaction, Profile
+from transformer.models import (
+    Conversion,
+    File,
+    Product,
+    Profile,
+    Subscription,
+    Transaction,
+)
 from django.contrib.auth.models import User
 
 
@@ -14,8 +21,8 @@ def main() -> None:
     File.objects.all().delete()
     Transaction.objects.all().delete()
     Product.objects.all().delete()
-    User.objects.all().delete()
     Profile.objects.all().delete()
+    User.objects.all().delete()
 
     test_user = User.objects.create_user(
         username="user@email.com",

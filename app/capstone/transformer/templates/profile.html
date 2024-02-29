@@ -70,9 +70,7 @@
             <br>
             {% if has_subscription %}
                 <legend class="border-bottom mb-4">Subscription</legend>
-                {% if premium %}
-                    <p>{{ premium }}</p>
-                {% endif %}
+                {% if premium %}<p>{{ premium }}</p>{% endif %}
                 <p>Start date: {{ subscription_start }}</p>
                 <p>Expiry date: {{ subscription_expiry }}</p>
                 <!-- Subscription Deletion Form -->

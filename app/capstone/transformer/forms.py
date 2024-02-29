@@ -13,6 +13,15 @@ class TransformerForm(forms.Form):
         self.fields["num_slides"].initial = 10
         self.fields["image_frequency"].initial = 3
 
+    model = forms.ChoiceField(
+        label="Model",
+        choices=[
+            ("gpt-3.5-turbo-0125", "GPT-3.5"),
+            ("gpt-4-0125-preview", "GPT-4"),
+        ],
+        widget=forms.Select(attrs={"class": "form-control dropdown"}),
+    )
+
     prompt = forms.CharField(
         label="Prompt",
         required=False,
@@ -100,15 +109,6 @@ class TransformerForm(forms.Form):
         ),
     )
 
-    model = forms.ChoiceField(
-        label="Model",
-        choices=[
-            ("gpt-3.5-turbo-1106", "GPT-3"),
-            ("gpt-4-1106-preview", "GPT-4"),
-        ],
-        widget=forms.Select(attrs={"class": "form-control dropdown", "aria-label": "AI Model selection"}),
-    )
-
     template = forms.ChoiceField(
         label="Templates",
         choices=[
@@ -120,6 +120,7 @@ class TransformerForm(forms.Form):
             (6, "Template 6"),
         ],
         widget=RadioSelect(),
+        required=False,
     )
 
 
@@ -214,9 +215,10 @@ class AccountDeletionForm(forms.Form):
         widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
 
+
 class SubscriptionDeletionForm(forms.Form):
     delete = forms.BooleanField(
-        label = "Confirm Delete",
+        label="Confirm Delete",
         required=True,
         widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
