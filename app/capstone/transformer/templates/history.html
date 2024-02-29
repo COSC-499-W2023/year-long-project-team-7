@@ -4,22 +4,22 @@
 {% block content %}
     <div class="container d-flex justify-content-center">
         <div class="col-8">
-            <h1 class="text-center title">Transformation History</h1>
+            <h1 class="text-center title" tabindex="0">Transformation History</h1>
             <br />
             <div id="accordion">
                 {% for conversion, files in history.items %}
                     <div class="card mb-3 border-light">
-                        <div class="card-header accordion-header"
-                             id="heading{{ forloop.counter }}"
-                             data-toggle="collapse"
-                             data-target="#collapse{{ forloop.counter }}"
-                             aria-expanded="true"
-                             aria-controls="collapse{{ forloop.counter }}">
-                            <div style="clear: both; cursor: pointer;">
-                                <h3 class="card-title" style="float: left">{{ conversion.date }} UTC</h3>
-                                <h2 style="float: right">&#x2304</h2>
-                            </div>
-                        </div>
+                        <button class="card-header accordion-button d-flex flex-row"
+                                aria-label="History entry for date: {{ conversion.date }}"
+                                role="tree"
+                                aria-expanded="false"
+                                aria-controls="collapse{{ forloop.counter }}"
+                                id="heading{{ forloop.counter }}"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse{{ forloop.counter }}">
+                            <h3 class="entry-date">{{ conversion.date }} UTC</h3>
+                            <img class="entry-dropdown" src="{% static 'img/dropdown.svg' %}">
+                        </button>
                         <div id="collapse{{ forloop.counter }}"
                              class="collapse"
                              aria-labelledby="heading{{ forloop.counter }}"
@@ -27,42 +27,44 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <p class="accordion-text">
+                                        <p class="accordion-text" tabindex="0">
                                             <strong>Prompt:</strong> {{ conversion.user_parameters|get_item:"prompt" }}
                                         </p>
-                                        <p class="accordion-text">
+                                        <p class="accordion-text" tabindex="0">
                                             <strong>Language:</strong> {{ conversion.user_parameters|get_item:"language" }}
                                         </p>
-                                        <p class="accordion-text">
+                                        <p class="accordion-text" tabindex="0">
                                             <strong>Tone:</strong> {{ conversion.user_parameters|get_item:"tone" }}
                                         </p>
-                                        <p class="accordion-text">
+                                        <p class="accordion-text" tabindex="0">
                                             <strong>Complexity:</strong> {{ conversion.user_parameters|get_item:"complexity" }}/6
                                         </p>
-                                        <p class="accordion-text">
+                                        <p class="accordion-text" tabindex="0">
                                             <strong>Number of Slides:</strong> {{ conversion.user_parameters|get_item:"num_slides" }}
                                         </p>
-                                        <p class="accordion-text">
+                                        <p class="accordion-text" tabindex="0">
                                             <strong>Image Frequency:</strong> {{ conversion.user_parameters|get_item:"image_frequency" }}/6
                                         </p>
                                     </div>
                                     <div class="col-md-6">
                                         {% if files.input_files %}
-                                            <h4 class="card-subtitle mb-2">Input Files</h4>
+                                            <h4 class="card-subtitle mb-2" tabindex="0">Input Files</h4>
                                             {% for file in files.input_files %}
                                                 <p class="accordion-text">
                                                     <a class="btn btn-primary history-download"
                                                        href="{% url 'download_file' file.id %}"
-                                                       download>{{ file.file }}</a>
+                                                       download
+                                                       aria-label="Download {{ file.file }}">{{ file.file }}</a>
                                                 </p>
                                             {% endfor %}
                                         {% endif %}
-                                        <h4 class="card-subtitle mb-2">Output Files</h4>
+                                        <h4 class="card-subtitle mb-2" tabindex="0">Output Files</h4>
                                         {% for file in files.output_files %}
                                             <p class="accordion-text">
                                                 <a class="btn btn-primary history-download"
                                                    href="{% url 'download_file' file.id %}"
-                                                   download>{{ file.file }}</a>
+                                                   download
+                                                   aria-label="Download {{ file.file }}">{{ file.file }}</a>
                                             </p>
                                         {% endfor %}
                                     </div>

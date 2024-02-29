@@ -19,8 +19,9 @@ from .forms import (
     UpdatePasswordForm,
     ProfileUpdateForm,
     AccountDeletionForm,
+    SubscriptionDeletionForm,
 )
-from .models import Conversion, File, Product
+from .models import Conversion, File, Product, Subscription
 from .tokens import account_activation_token
 from typing import List, Dict
 import json
@@ -32,7 +33,12 @@ import stripe
 from django.conf import settings
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from .subscriptionManager import has_valid_subscription, give_subscription_to_user
+from .subscriptionManager import (
+    has_valid_subscription,
+    give_subscription_to_user,
+    has_premium_subscription,
+    delete_subscription,
+)
 from django.contrib.auth.models import User
 from datetime import date, timedelta
 
@@ -98,6 +104,7 @@ def transform(request: HttpRequest) -> HttpResponse:
     if has_valid_subscription(request.user.id):  # type: ignore
         if request.method == "POST":
             form = TransformerForm(request.POST)
+            input_files: list[File] = []
 
             if form.is_valid():
                 try:
@@ -115,12 +122,30 @@ def transform(request: HttpRequest) -> HttpResponse:
                     conversion.user_parameters = json.dumps(user_params)
                     conversion.user = request.user  # type: ignore
 
-                    conversion.save()
-
-                    input_files = []
-
                     has_prompt = len(user_params["prompt"]) > 0
                     has_file = len(request.FILES.getlist("input_files"))
+
+                    has_template_selection = user_params["template"] != ""
+                    has_template_file = len(request.FILES.getlist("template_file"))
+                    if not has_template_selection and not has_template_file:
+                        messages.error(request, "No template provided.")
+                        return render(
+                            request,
+                            "transform.html",
+                            {
+                                "form": TransformerForm(),
+                            },
+                        )
+
+                    if user_params["model"] == "gpt-4-0125-preview":
+                        if not has_premium_subscription(request.user.id):  # type: ignore
+                            messages.error(
+                                request,
+                                "You must have a premium subscription to use the GPT-4 model.",
+                            )
+                            return render(
+                                request, "transform.html", {"form": TransformerForm()}
+                            )
 
                     if not has_prompt and not has_file:
                         messages.error(
@@ -134,6 +159,8 @@ def transform(request: HttpRequest) -> HttpResponse:
                             },
                         )
 
+                    conversion.save()
+
                     for uploaded_file in request.FILES.getlist("input_files"):
                         new_file = File()
                         new_file.user = request.user  # type: ignore
@@ -144,18 +171,6 @@ def transform(request: HttpRequest) -> HttpResponse:
                         new_file.is_input = True
                         new_file.save()
                         input_files.append(new_file)
-
-                    has_template_selection = user_params["template"] != ""
-                    has_template_file = len(request.FILES.getlist("template_file"))
-                    if not has_template_selection and not has_template_file:
-                        return render(
-                            request,
-                            "transform.html",
-                            {
-                                "form": TransformerForm(),
-                                "errors": ["No template provided"],
-                            },
-                        )
 
                     if has_template_file:
                         uploaded_template_file = request.FILES.getlist("template_file")[
@@ -196,9 +211,14 @@ def transform(request: HttpRequest) -> HttpResponse:
                 except:
                     # print traceback for developers
                     print(traceback.format_exc())
+
                     conversion.delete()
                     for file in input_files:
                         file.delete()
+
+                    if has_template_file:
+                        template_file.delete()
+
                     messages.error(
                         request,
                         "We encountered an unexpected error while generating your content please try again.",
@@ -207,7 +227,24 @@ def transform(request: HttpRequest) -> HttpResponse:
                         request, "transform.html", {"form": TransformerForm()}
                     )
             else:
-                messages.error(request, "Invalid form data.")
+                for field, errors in form.errors.items():
+                    if field != "__all__":
+                        field_name = (
+                            form.fields[field].label
+                            if form.fields[field].label
+                            else field
+                        )
+                        error_messages = "; ".join(
+                            [force_str(error) for error in errors]
+                        )
+                        error_message = f"{field_name}: {error_messages}"
+                    else:
+                        error_messages = "; ".join(
+                            [force_str(error) for error in errors]
+                        )
+                        error_message = error_messages
+
+                    messages.error(request, error_message)
                 return redirect("transform")
         else:
             return render(
@@ -271,7 +308,11 @@ def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
+        start_date = date.today()
+        end_date = start_date + timedelta(days=3)
+        give_subscription_to_user(user, start_date, end_date, None)
         messages.success(request, "Email verified. You can now log into your account.")
+        messages.success(request, "Enjoy a complimentary 3 day trial!")
         return redirect("login")
     else:
         messages.error(request, "Activation link is invalid!")
@@ -403,13 +444,11 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         start_date = date.today()
         length_days = subscription_product.length_days
         end_date = start_date + timedelta(days=length_days)
-        give_subscription_to_user(subscription_user, start_date, end_date)
+        give_subscription_to_user(
+            subscription_user, start_date, end_date, subscription_product
+        )
     # Passed signature verification
     return HttpResponse(status=200)
-
-
-def payments(request: HttpRequest) -> HttpResponse:
-    return render(request, "payments.html")
 
 
 @login_required
@@ -424,6 +463,8 @@ def profile(request: HttpRequest) -> HttpResponse:
         )
         # Delete profile form
         delete_form = AccountDeletionForm(request.POST)
+        # Delete subscription form
+        subscription_form = SubscriptionDeletionForm(request.POST)
         if e_form.is_valid():
             e_form.save()
             messages.success(request, f"Your email has been updated!")
@@ -451,16 +492,39 @@ def profile(request: HttpRequest) -> HttpResponse:
             logout(request)  # Log out the user after account deletion
             messages.success(request, f"Your account has been deleted.")
             return redirect("login")
+        if subscription_form.is_valid() and subscription_form.cleaned_data["delete"] and has_valid_subscription(request.user.id):  # type: ignore
+            user = User.objects.get(id=request.user.id)  # type: ignore
+            delete_subscription(user)
+            messages.success(request, f"Your subscription has been deleted.")
         return redirect("profile")
     else:
         e_form = UpdateEmailForm(instance=request.user)
         p_form = UpdatePasswordForm(user=request.user)  # type: ignore
         pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
         delete_form = AccountDeletionForm()
+        subscription_form = SubscriptionDeletionForm()
+        try:
+            user = User.objects.get(id=request.user.id)  # type: ignore
+            subscription = Subscription.objects.get(user=user)
+            has_subscription = subscription.has_subscription
+            premium = "Premium Subscription" if subscription.is_premium else None
+            subscription_start = subscription.start_date
+            subscription_expiry = subscription.end_date
+        except:
+            has_subscription = False
+            premium = "No active subscription"
+            subscription_start = "N/A"  # type: ignore
+            subscription_expiry = "N/A"  # type: ignore
+
     context = {
         "e_form": e_form,
         "p_form": p_form,
         "pic_form": pic_form,
         "delete_form": delete_form,
+        "subscription_form": subscription_form,
+        "has_subscription": has_subscription,
+        "premium": premium,
+        "subscription_start": subscription_start,
+        "subscription_expiry": subscription_expiry,
     }
     return render(request, "profile.html", context)

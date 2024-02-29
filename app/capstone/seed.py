@@ -52,21 +52,30 @@ def main() -> None:
         ).save()
 
     Product.objects.create(
-        name="Basic",
-        get_display_price_cents=500,
-        get_display_price=5.00,
-        length_days=30,
-        phrase="1 month",
-        description="1 month of access to the service",
+        name="Daily Subscription",
+        get_display_price_cents=99,
+        get_display_price=0.99,
+        description="Get access to Platonix for 1 day",
+        phrase="Most Flexible!",
+        length_days=1,
     ).save()
 
     Product.objects.create(
-        name="Longer",
-        get_display_price_cents=2500,
-        get_display_price=25.00,
-        length_days=180,
-        phrase="6 month",
-        description="6 months of access to the service",
+        name="Monthly Subscription",
+        get_display_price_cents=499,
+        get_display_price=4.99,
+        description="Get access to Platonix for 1 month",
+        phrase="Most Popular!",
+        length_days=30,
+    ).save()
+
+    Product.objects.create(
+        name="Premium Subscription",
+        get_display_price_cents=999,
+        get_display_price=9.99,
+        length_days=30,
+        description="Get access to Platonix for 1 month",
+        phrase="Unlock the power of GPT-4!",
     ).save()
 
     Subscription.objects.create(

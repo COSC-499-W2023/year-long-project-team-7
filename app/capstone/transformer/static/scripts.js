@@ -26,8 +26,9 @@ $(document).ready(function () {
         window.location.href = fileUrl;
     });
 
-    $("#transform-input-file-upload").on("change", function (event) {
-        $("#selected-input-file-names").empty();
+    
+    $("#transform-file-upload").on("change", function (event) {
+        $("#selected-file-names").empty();
 
         Array.from(event.target.files).forEach((file) => {
             $("#selected-input-file-names").append(`<p>${file.name}</p>`);
@@ -38,6 +39,8 @@ $(document).ready(function () {
         $("#selected-template-file-name").empty();
         $("#selected-template-file-name").append(`<p>${event.target.files[0].name}</p>`);
     })
+
+    $("input[name=template]:first").attr('checked', true);
 
     $("#id_complexity").on("input change", function () {
         var value = $(this).val();
@@ -88,4 +91,11 @@ $(document).ready(function () {
         }
         lightMode = localStorage.getItem("lightMode");
     });
+
+    $('.template-choice input[type="radio"]').on('keydown', function(event) {
+        if (event.keyCode === 13) {
+            $(this).click();
+        }
+    });
+
 });

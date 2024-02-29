@@ -1,4 +1,3 @@
-import os
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -7,18 +6,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.db import models
-from django.conf import settings
-from os import path, mkdir
-from shutil import rmtree
 from .models import Conversion, File
-from .models import Conversion, File, Product
-from .forms import TransformerForm
+from .models import Conversion, File
 from .tokens import account_activation_token
 import json
-from urllib.parse import urlencode
 from unittest.mock import patch
-import tempfile
 from .subscriptionManager import give_subscription_to_user
 from datetime import date, timedelta
 
@@ -31,7 +23,7 @@ class TransformViewTestCase(TestCase):
             email="testuser@email.com", password="testpassword123", username="test"
         )
         give_subscription_to_user(
-            self.user, date.today(), (date.today() + timedelta(days=1))
+            self.user, date.today(), (date.today() + timedelta(days=1)), None
         )
 
     def test_transform_view_get_request(self):
@@ -163,7 +155,7 @@ class UserSignInTestCase(TestCase):
             username="testuser@email.com",
         )
         give_subscription_to_user(
-            self.user, date.today(), (date.today() + timedelta(days=1))
+            self.user, date.today(), (date.today() + timedelta(days=1)), None
         )
 
     def test_user_signin_valid_credentials(self):

@@ -1,5 +1,6 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-custom">
+<nav class="navbar navbar-expand-lg navbar-custom"
+     aria-label="Navigation bar">
     <div class="container-fluid">
         <div class="title-logo">
             <!-- Navbar toggler button -->
@@ -13,8 +14,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <!-- Title/logo -->
-            <a class="navbar-brand" href="{% url 'index' %}"><b>PLATONIX</b></a>
-            <a href="{% url 'index' %}" class="homepage-nav" aria="homepage">
+            <a class="navbar-brand" href="{% url 'index' %}" tabindex="-1"><b>PLATONIX</b></a>
+            <a href="{% url 'index' %}" class="homepage-nav" aria-label="homepage">
                 <img class="logo"
                      width="50"
                      height="50"
@@ -45,7 +46,9 @@
             </ul>
         </div>
         <div class="navbar-right">
-            <button id="light-mode-toggle" class="light-mode-toggle">
+            <button id="light-mode-toggle"
+                    class="light-mode-toggle"
+                    aria-label="Light mode toggle button">
                 <svg width="100%" viewBox="0 0 496 496">
                     <path fill="var(--foreground)" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)" />
                 </svg>
@@ -55,11 +58,12 @@
                 <a href="{% url 'profile' %}">
                     <img src="{{ user.profile.image.url }}"
                          alt="Profile Picture"
+                         aria-label="My Profile"
                          class="profile-picture"
                          width="40"
                          height="40">
                 </a>
-                <a class="nav-link logout-nav;" href="{% url "logout" %}"><b>Logout</b></a>
+                <a class="nav-link logout-nav;" href="{% url "logout" %}">Logout</a>
             {% endif %}
         </div>
     </div>
