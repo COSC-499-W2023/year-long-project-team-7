@@ -515,7 +515,6 @@ def profile(request: HttpRequest) -> HttpResponse:
             premium = "No active subscription"
             subscription_start = "N/A"  # type: ignore
             subscription_expiry = "N/A"  # type: ignore
-
     context = {
         "e_form": e_form,
         "p_form": p_form,

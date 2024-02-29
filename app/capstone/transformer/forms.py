@@ -109,6 +109,17 @@ class TransformerForm(forms.Form):
         ),
     )
 
+    model = forms.ChoiceField(
+        label="Model",
+        choices=[
+            ("gpt-3.5-turbo-1106", "GPT-3"),
+            ("gpt-4-1106-preview", "GPT-4"),
+        ],
+        widget=forms.Select(
+            attrs={"class": "form-control dropdown", "aria-label": "AI Model selection"}
+        ),
+    )
+
     template = forms.ChoiceField(
         label="Templates",
         choices=[
