@@ -5,12 +5,13 @@ from django.contrib.auth import logout as auth_logout, get_user_model
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
-from django.core.files.storage import FileSystemStorage
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
+
+from .presentationManager import MissingPlaceholderError
 from .forms import TransformerForm
 from .forms import RegisterForm
 from .forms import LoginForm
@@ -23,12 +24,10 @@ from .forms import (
 )
 from .models import Conversion, File, Product, Subscription
 from .tokens import account_activation_token
-from typing import List, Dict
 import json
 from .generator import generate_output
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-import traceback
 import stripe
 from django.conf import settings
 from django.views import View
@@ -37,7 +36,6 @@ from .subscriptionManager import (
     has_valid_subscription,
     give_subscription_to_user,
     has_premium_subscription,
-    delete_subscription,
 )
 from django.contrib.auth.models import User
 from datetime import date, timedelta
@@ -191,26 +189,11 @@ def transform(request: HttpRequest) -> HttpResponse:
 
                     result = generate_output(input_files, template_file, conversion)
 
-                    if "Error" in result:
-                        conversion.delete()
-
-                        for file in input_files:
-                            file.delete()
-
-                        if has_template_file:
-                            template_file.delete()
-
-                        return render(
-                            request,
-                            "transform.html",
-                            {"form": TransformerForm(), "errors": [result]},
-                        )
-
                     return redirect("results", conversion_id=conversion.id)
 
-                except:
+                except Exception as e:
                     # print traceback for developers
-                    print(traceback.format_exc())
+                    print(e)
 
                     conversion.delete()
                     for file in input_files:
@@ -219,10 +202,14 @@ def transform(request: HttpRequest) -> HttpResponse:
                     if has_template_file:
                         template_file.delete()
 
-                    messages.error(
-                        request,
-                        "We encountered an unexpected error while generating your content please try again.",
-                    )
+                    if type(e) is MissingPlaceholderError:
+                        messages.error(request, e.message)
+                    else:
+                        messages.error(
+                            request,
+                            "We encountered an unexpected error while generating your content please try again.",
+                        )
+
                     return render(
                         request, "transform.html", {"form": TransformerForm()}
                     )
@@ -454,53 +441,53 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
 @login_required
 def profile(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        # User forms for changing username and password
-        e_form = UpdateEmailForm(request.POST, instance=request.user)
-        p_form = UpdatePasswordForm(user=request.user, data=request.POST)  # type: ignore
-        # Profile form for changing profile picture
-        pic_form = ProfileUpdateForm(
-            request.POST, request.FILES, instance=request.user.profile  # type: ignore
-        )
-        # Delete profile form
-        delete_form = AccountDeletionForm(request.POST)
-        # Delete subscription form
-        subscription_form = SubscriptionDeletionForm(request.POST)
-        if e_form.is_valid():
-            e_form.save()
-            messages.success(request, f"Your email has been updated!")
-        else:
-            messages.error(
-                request, f"Invalid email form data. Please check and try again."
-            )
-        if p_form.is_valid():
-            p_form.save()
-            messages.success(request, f"Your password has been updated!")
-        else:
-            messages.error(
-                request, f"Invalid password form data. Please check and try again."
-            )
-        if pic_form.is_valid():
-            pic_form.save()
-            # messages.success(request, f'Your profile picture has been updated!')   #For some reason this message always sends even when the field is blank
-        else:
-            messages.error(
-                request,
-                f"Invalid profile picture form data. Please check and try again.",
-            )
-        if delete_form.is_valid() and delete_form.cleaned_data["confirm_delete"]:
-            request.user.delete()
-            logout(request)  # Log out the user after account deletion
-            messages.success(request, f"Your account has been deleted.")
-            return redirect("login")
-        if subscription_form.is_valid() and subscription_form.cleaned_data["delete"] and has_valid_subscription(request.user.id):  # type: ignore
-            user = User.objects.get(id=request.user.id)  # type: ignore
-            delete_subscription(user)
-            messages.success(request, f"Your subscription has been deleted.")
+        if "profile_pic_submit" in request.POST:
+            pic_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)  # type: ignore
+            if pic_form.is_valid():
+                pic_form.save()
+                messages.success(request, "Your profile picture has been updated!")
+            else:
+                messages.error(
+                    request,
+                    "Invalid profile picture form data. Please check and try again.",
+                )
+        elif "email_submit" in request.POST:
+            e_form = UpdateEmailForm(request.POST, instance=request.user)
+            if e_form.is_valid():
+                e_form.save()
+                messages.success(request, "Your email has been updated!")
+            else:
+                messages.error(
+                    request, "Invalid email form data. Please check and try again."
+                )
+        elif "password_submit" in request.POST:
+            p_form = UpdatePasswordForm(user=request.user, data=request.POST)  # type: ignore
+            if p_form.is_valid():
+                p_form.save()
+                messages.success(request, "Your password has been updated!")
+                return redirect("profile")
+            else:
+                messages.error(
+                    request, "Invalid password form data. Please check and try again."
+                )
+        elif "confirm_delete" in request.POST:
+            delete_form = AccountDeletionForm(request.POST)
+            if delete_form.is_valid() and delete_form.cleaned_data.get(
+                "confirm_delete"
+            ):
+                request.user.delete()
+                messages.success(request, "Your account has been deleted.")
+                return redirect("login")
+            else:
+                messages.error(
+                    request,
+                    "Account could not be deleted. Please confirm your deletion request.",
+                )
         return redirect("profile")
     else:
+        pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
         e_form = UpdateEmailForm(instance=request.user)
         p_form = UpdatePasswordForm(user=request.user)  # type: ignore
-        pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
         delete_form = AccountDeletionForm()
         subscription_form = SubscriptionDeletionForm()
         try:
@@ -516,9 +503,9 @@ def profile(request: HttpRequest) -> HttpResponse:
             subscription_start = "N/A"  # type: ignore
             subscription_expiry = "N/A"  # type: ignore
     context = {
+        "pic_form": pic_form,
         "e_form": e_form,
         "p_form": p_form,
-        "pic_form": pic_form,
         "delete_form": delete_form,
         "subscription_form": subscription_form,
         "has_subscription": has_subscription,

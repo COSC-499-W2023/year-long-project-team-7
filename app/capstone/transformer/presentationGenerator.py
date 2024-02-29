@@ -97,15 +97,11 @@ class PresentationGenerator:
         slide_contents: list[SlideContent] = []
 
         # Fetch slide content in parallel for speed
-        try:
-            with ThreadPoolExecutor() as executor:
-                future_slides = executor.map(
-                    self.build_slide, range(1, self.num_slides + 1)
-                )
-                slide_contents = list(future_slides)
-        except MissingPlaceholderError as e:
-            print(e.message)
-            return e.message
+        with ThreadPoolExecutor() as executor:
+            future_slides = executor.map(
+                self.build_slide, range(1, self.num_slides + 1)
+            )
+            slide_contents = list(future_slides)
 
         # Sort and add slides to presentation
         sorted_slide_contents = sorted(

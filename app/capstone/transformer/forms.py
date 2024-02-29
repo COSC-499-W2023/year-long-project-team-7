@@ -1,8 +1,10 @@
+import os
 from django import forms
 from django.forms import Textarea, NumberInput, RadioSelect, TextInput, Select
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from .models import Profile
 
 
@@ -124,23 +126,30 @@ class TransformerForm(forms.Form):
     )
 
 
-class RegisterForm(forms.Form):
+class RegisterForm(UserCreationForm):  # type: ignore
     email = forms.EmailField(
         label="Email",
-        widget=forms.EmailInput(
-            attrs={"class": "form-control form-control-lg", "aria-label": "Email"}
-        ),
+        widget=forms.EmailInput(attrs={"class": "form-control form-control-lg"}),
+        required=True,
     )
-    password = forms.CharField(
+    password1 = forms.CharField(
         label="Password",
-        widget=forms.PasswordInput(
-            attrs={"class": "form-control form-control-lg", "aria-label": "Password"}
-        ),
+        widget=forms.PasswordInput(attrs={"class": "form-control form-control-lg"}),
+        required=True,
+    )
+    password2 = forms.CharField(
+        label="Confirm password",
+        widget=forms.PasswordInput(attrs={"class": "form-control form-control-lg"}),
+        required=True,
     )
 
     class Meta:
         model = User
-        fields = ("email", "password")
+        fields = (
+            "email",
+            "password1",
+            "password2",
+        )
 
     def clean_email(self):  # type: ignore
         email = self.cleaned_data.get("email")
@@ -149,10 +158,9 @@ class RegisterForm(forms.Form):
         return email
 
     def save(self, commit=True):  # type: ignore
-        user = User()
+        user = super().save(commit=False)
         user.username = self.cleaned_data["email"]
         user.email = self.cleaned_data["email"]
-        user.set_password(self.cleaned_data["password"])
         if commit:
             user.save()
         return user
@@ -207,6 +215,20 @@ class ProfileUpdateForm(forms.ModelForm):  # type: ignore
     class Meta:
         model = Profile
         fields = ["image"]
+
+    def clean_image(self):  # type: ignore
+        image = self.cleaned_data.get("image")
+        if image:  # Proceed if there's an image
+            valid_extensions = [".jpg", ".jpeg", ".png"]
+            # Check file extension
+            ext = os.path.splitext(image.name)[1]
+            if ext.lower() not in valid_extensions:
+                raise ValidationError(_("Unsupported file extension."))
+            # Define max file size
+            max_size = 5 * 1024 * 1024
+            if image.size > max_size:
+                raise ValidationError(_("Please keep filesize under 5MB."))
+        return image
 
 
 class AccountDeletionForm(forms.Form):
