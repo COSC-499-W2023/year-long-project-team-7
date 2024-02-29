@@ -31,7 +31,7 @@ class TransformViewTestCase(TestCase):
             email="testuser@email.com", password="testpassword123", username="test"
         )
         give_subscription_to_user(
-            self.user, date.today(), (date.today() + timedelta(days=1))
+            self.user, date.today(), (date.today() + timedelta(days=1)), None
         )
 
     def test_transform_view_get_request(self):
@@ -50,6 +50,7 @@ class TransformViewTestCase(TestCase):
                 "complexity": 1,
                 "num_slides": 1,
                 "image_frequency": 0,
+                "model": "gpt-3.5-turbo-1106",
                 "template": 1,
                 "files": file,
             }
@@ -68,6 +69,7 @@ class TransformViewTestCase(TestCase):
                 "num_slides": 1,
                 "image_frequency": 0,
                 "template": 1,
+                "model": "gpt-3.5-turbo-1106",
             }
             saved_files = list(File.objects.filter(conversion=conversion))
 
@@ -151,7 +153,7 @@ class UserSignInTestCase(TestCase):
             username="testuser@email.com",
         )
         give_subscription_to_user(
-            self.user, date.today(), (date.today() + timedelta(days=1))
+            self.user, date.today(), (date.today() + timedelta(days=1)), None
         )
 
     def test_user_signin_valid_credentials(self):
