@@ -37,7 +37,27 @@
                 {% csrf_token %}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4">Password</legend>
-                    <div class="form-group">{{ p_form }}</div>
+                    <div class="form-group">
+                        {{ p_form.old_password.label_tag }}
+                        {{ p_form.old_password }}
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            {{ p_form.new_password1.label_tag }}
+                            {{ p_form.new_password1 }}
+                        </div>
+                        <div class="form-group col">
+                            {{ p_form.new_password2.label_tag }}
+                            {{ p_form.new_password2 }}
+                        </div>
+                        <br>
+                        <ul>
+                            <li>Your password can’t be too similar to your other personal information.</li>
+                            <li>Your password must contain at least 8 characters.</li>
+                            <li>Your password can’t be a commonly used password.</li>
+                            <li>Your password can’t be entirely numeric.</li>
+                        </ul>
+                    </div>
                     <div class="form-group mt-3">
                         <button name="password_submit" class="btn btn-primary" type="submit">Update Password</button>
                     </div>
@@ -49,7 +69,10 @@
                 {% csrf_token %}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4">Profile Picture</legend>
-                    <div class="form-group">{{ pic_form }}</div>
+                    <div class="form-group">
+                        <label for="{{ pic_form.image.id_for_label }}">Image is</label>
+                        {{ pic_form.image }}
+                    </div>
                     <div class="form-group mt-3">
                         <button name="profile_pic_submit" class="btn btn-primary" type="submit">Update Profile Picture</button>
                     </div>
