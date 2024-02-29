@@ -4,16 +4,16 @@
     <link rel="stylesheet" href="{% static 'grad-background.css' %}" />
     <div class="homepage-container container-fluid d-flex flex-column justify-content-center align-items-center gap-5">
         <div class="container-fluid d-flex flex-column justify-content-center align-items-center">
-            <h1 class="title fade-in-first bigger-h1 gap-3">Welcome to Platonix</h1>
-            <p class="fade-in-second bigger-p">Your personal AI driven educational assistant</p>
+            <h1 class="title fade-in-first bigger-h1 gap-3" tabindex="0">Welcome to Platonix</h1>
+            <p class="fade-in-second bigger-p" tabindex="0">Your personal AI driven educational assistant</p>
         </div>
         <div class="container-fluid d-flex flex-column justify-content-center align-items-center fade-in-second mb-5">
-            <p class="bigger-p">
+            <p class="bigger-p" tabindex="0">
                 Turn your texts into beautiful slide presentations, using
-                <a href="{% url 'transform' %}">the latest AI technology</a>.
+                <a href="{% url 'transform' %}" aria-labelledby="Create presentation">the latest AI technology</a>.
             </p>
-            <p class="bigger-p">
-                Learn what makes us <a href="{% url 'about' %}">tick</a>.
+            <p class="bigger-p" tabindex="0">
+                Learn what makes us <a href="{% url 'about' %}" aria-labelledby="About Us/FAQ">tick</a>.
             </p>
             {% if not user.is_authenticated %}
                 <button class="btn btn-primary mt-3" onclick="window.location.href='/login'">Login to get started</button>

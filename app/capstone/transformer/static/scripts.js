@@ -26,6 +26,11 @@ $(document).ready(function () {
         window.location.href = fileUrl;
     });
 
+    $("#transform-file-btn").on("click", function() {
+        $("#transform-file-upload").trigger("click");
+        console.log("File upload triggered")
+    })
+
     $("#transform-file-upload").on("change", function (event) {
         $("#selected-file-names").empty();
 
@@ -34,6 +39,8 @@ $(document).ready(function () {
             $("#selected-file-names").append(`<p>${file.name}</p>`);
         });
     });
+
+    $("input[name=template]:first").attr('checked', true);
 
     $("#id_complexity").on("input change", function () {
         var value = $(this).val();
@@ -84,4 +91,11 @@ $(document).ready(function () {
         }
         lightMode = localStorage.getItem("lightMode");
     });
+
+    $('.template-choice input[type="radio"]').on('keydown', function(event) {
+        if (event.keyCode === 13) {
+            $(this).click();
+        }
+    });
+
 });

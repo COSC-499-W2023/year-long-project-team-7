@@ -4,16 +4,18 @@
 /* Global */
 
 :root {
-    --clr-primary: #7b68ee;
-    --clr-primary-lighter: #c6bdff;
+    --clr-primary: #745eed;
+    --clr-link: #9483f1;
+    --clr-primary-lighter: #a496ff;
     --clr-primary-darker: #5344a7;
     --clr-gray: #cccccc;
     --clr-link: #9181ed;
     --clr-nav-hover: #eed1ff;
-    --clr-nav: #222222;
+    --clr-nav: #000000;
     --clr-deep: #053a5f;
+    --clr-gray: #919191;
     --clr-warn: #bf4e30;
-    --clr-light: #fdf0ff;
+    --clr-light: #ffffff;
     --clr-dark: #252a2e;
     --clr-card: #434c54;
 
@@ -34,17 +36,19 @@
 }
 
 .lightmode {
-    --clr-primary: #7b68ee;
-    --clr-primary-lighter: #654fee;
+    --clr-primary: #745eed;
+    --clr-link: #583eea;
+    --clr-primary-lighter: #a496ff;
     --clr-primary-darker: #5344a7;
     --clr-gray: #e8e8e8;
     --clr-link: #4c30eb;
     --clr-nav-hover: #eed1ff;
-    --clr-nav: #222222;
+    --clr-nav: #000000;
     --clr-deep: #2f89ca95;
+    --clr-gray: #5c5c5c;
     --clr-warn: #bf4e30;
-    --clr-light: #f7ebeb;
-    --clr-dark: #1c1c1c;
+    --clr-light: #dbdbdb;
+    --clr-dark: #000000;
     --clr-card: #a59be2;
 
     --background: var(--clr-light);
@@ -79,12 +83,12 @@ footer {
 }
 
 footer p {
-    color: grey;
+    color: var(--clr-gray);
 }
 
 footer a {
     text-decoration: underline;
-    color: grey;
+    color: var(--clr-gray);
     text-underline-offset: 5px;
     text-decoration-thickness: 1px;
 }
@@ -198,6 +202,7 @@ a:hover {
 }
 
 .faq-title {
+    font-weight: bold;
     font-family: var(--ff-heading);
 }
 
@@ -354,41 +359,19 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* File upload */
-.file-upload-btn {
-    width: max-content;
-}
 
 .custom-file-upload {
-    text-align: center;
-    position: relative;
-    display: inline-block;
-    overflow: hidden;
-    border: 2px solid var(--clr-primary);
-    background-color: var(--clr-primary);
-    color: white;
-    border-radius: 1.25em;
-    padding: 0.625em 1.25em;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    position: absolute;
+    top: -1000px;
+    left: -1000px;
 }
 
-.custom-file-input {
-    display: none;
+#transform-file-btn label {
+    cursor: pointer;
 }
 
 .custom-text-area {
     height: 8em;
-}
-
-.file-upload-text {
-    position: relative;
-    z-index: 1;
-}
-
-.custom-file-upload:hover {
-    background-color: white;
-    color: var(--clr-primary);
-    border-color: var(--clr-primary);
 }
 
 /* Buttons */
@@ -446,7 +429,10 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .template-choice input[type="radio"] {
-    display: none !important;
+    position: relative; /* This ensures the radio input is hidden behind images but remains accessible for aria */
+    left: 1.5em;
+    top: 1.5em;
+    z-index: -2;
 }
 
 .template-choice input[type="radio"]:checked + img {
@@ -592,17 +578,20 @@ input[type="range"]::-moz-range-thumb {
 
 /* History */
 
-.card-title {
-    padding-top: 0.3em;
-    float: left;
+.entry-date {
+    flex: 1;
+}
+
+.entry-dropdown {
+    margin-left: auto;
 }
 
 .history-download {
     width: 100%;
 }
 
-.accordion-header {
-    cursor: pointer;
+.accordion-button {
+    clear: both;
 }
 
 /* Store */

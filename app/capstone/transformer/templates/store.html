@@ -14,18 +14,23 @@
                             aria-label="Close"></button>
                 </div>
             {% endfor %}
-            <h1 class="title h1 mt-3">Choose your product:</h1>
+            <h1 class="title h1 mt-3"
+                tabindex="0"
+                aria-label="Store Page. Choose your product.">Choose your product:</h1>
         </div>
         <div class="store-card-container mb-5">
             {% for p in products %}
                 <div class="card align-items-center mt-5">
-                    <div class="card-title fw-bold mt-3 h3">{{ p.name }}</div>
-                    <div class="card-subtitle fw-bold mt-2">{{ p.description }}</div>
-                    <div class="h3 mt-5">${{ p.get_display_price }}</div>
-                    <div class="card-subtitle mt-1 mb-5">{{ p.phrase }}</div>
+                    <div class="card-title fw-bold mt-3 h3" tabindex="0">{{ p.name }}</div>
+                    <div class="card-subtitle fw-bold mt-2" tabindex="0">{{ p.description }}</div>
+                    <div class="h3 mt-5" tabindex="0">${{ p.get_display_price }}</div>
+                    <div class="card-subtitle mt-1 mb-5" tabindex="0">{{ p.phrase }}</div>
                     <form action="{% url 'create-checkout-session' p.id %}" method="POST">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary mb-3" id="checkout-button">Checkout</button>
+                        <button type="submit"
+                                class="btn btn-primary mb-3"
+                                id="checkout-button"
+                                aria-label="{{ p.name }} checkout">Checkout</button>
                     </form>
                 </div>
             {% endfor %}
