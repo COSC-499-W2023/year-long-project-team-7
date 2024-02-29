@@ -36,6 +36,7 @@ from .subscriptionManager import (
     has_valid_subscription,
     give_subscription_to_user,
     has_premium_subscription,
+    delete_subscription,
 )
 from django.contrib.auth.models import User
 from datetime import date, timedelta
@@ -483,6 +484,12 @@ def profile(request: HttpRequest) -> HttpResponse:
                     request,
                     "Account could not be deleted. Please confirm your deletion request.",
                 )
+        elif "delete" in request.POST:
+            subscription_form = SubscriptionDeletionForm(request.POST)
+            if subscription_form.is_valid() and subscription_form.cleaned_data.get("delete") and has_valid_subscription(request.user.id): # type: ignore
+                user = User.objects.get(id=request.user.id) # type: ignore
+                delete_subscription(user)
+                messages.success(request, f"Your subscription has been deleted.")
         return redirect("profile")
     else:
         pic_form = ProfileUpdateForm(instance=request.user.profile)  # type: ignore
