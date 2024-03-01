@@ -14,7 +14,7 @@
                 </div>
             {% endfor %}
             <div class="media">
-                <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" />
+                <img class="rounded-circle account-img" src="{% url 'download_profile_pic' user.id %}" />
                 <div class="media-body">
                     <h2 class="account-heading">{{ user.username }}</h2>
                     <p class="account-email">{{ user.email }}</p>

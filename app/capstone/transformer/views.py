@@ -22,7 +22,7 @@ from .forms import (
     AccountDeletionForm,
     SubscriptionDeletionForm,
 )
-from .models import Conversion, File, Product, Subscription
+from .models import Conversion, File, Product, Profile, Subscription
 from .tokens import account_activation_token
 import json
 from .generator import generate_output
@@ -282,6 +282,27 @@ def download_file(request: HttpRequest, file_id: int) -> HttpResponse:
 
     response = HttpResponse(file.file, content_type=file.type)
     response["Content-Disposition"] = f'attachment; filename="{file.file.name}"'
+    return response
+
+@login_required(login_url="login")
+def download_profile_pic(request: HttpRequest, user_id: int) -> HttpResponse:
+    user = get_object_or_404(User, id=user_id)
+    
+    profile = get_object_or_404(Profile, user=user)
+
+    if request.user.is_authenticated:
+        if profile.user != request.user:
+            return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+            )
+    else:
+        return HttpResponseForbidden(
+            "You do not have permission to access this resource."
+        )
+        
+    image = profile.image
+    response = HttpResponse(image.file, content_type="image/jpeg")
+    response["Content-Disposition"] = f'attachment; filename="{image.file.name}"'
     return response
 
 
