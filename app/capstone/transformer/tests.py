@@ -64,25 +64,36 @@ class TransformViewTestCase(TestCase):
             self.assertEqual(Conversion.objects.count(), 1)
             conversion = Conversion.objects.first()
 
-            expected_user_params_dict = {
-                "prompt": "sample_text",
-                "language": "English",
-                "tone": "Fun",
-                "complexity": 1,
-                "num_slides": 1,
-                "image_frequency": 0,
-                "template": "1",
-                "model": "gpt-3.5-turbo-0125",
-            }
+            expected_conversion = Conversion(
+                user=self.user,
+                prompt=data["prompt"],
+                num_slides=data["num_slides"],
+                template=test_template,
+                language=data["language"],
+                tone=data["tone"],
+                model=data["model"],
+                complexity=data["complexity"],
+                image_frequency=data["image_frequency"],
+            )
+
             saved_files = list(File.objects.filter(conversion=conversion))
 
             self.assertEqual(response.url, reverse("results", args=[conversion.id]))
-            expected_user_params = json.dumps(expected_user_params_dict)
-            self.assertEqual(conversion.user_parameters, expected_user_params)
-            self.assertEqual(File.objects.count(), 2)
-            mock_generate_output.assert_called_once_with(
-                saved_files, test_template, conversion
+
+            self.assertEqual(conversion.user, expected_conversion.user)
+            self.assertEqual(conversion.prompt, expected_conversion.prompt)
+            self.assertEqual(conversion.num_slides, expected_conversion.num_slides)
+            self.assertEqual(conversion.template, expected_conversion.template)
+            self.assertEqual(conversion.language, expected_conversion.language)
+            self.assertEqual(conversion.tone, expected_conversion.tone)
+            self.assertEqual(conversion.model, expected_conversion.model)
+            self.assertEqual(conversion.complexity, expected_conversion.complexity)
+            self.assertEqual(
+                conversion.image_frequency, expected_conversion.image_frequency
             )
+
+            self.assertEqual(File.objects.count(), 2)
+            mock_generate_output.assert_called_once_with(saved_files, conversion)
 
     def test_transform_view_post_request_invalid_form(self):
         self.client.login(username="test", password="testpassword123")

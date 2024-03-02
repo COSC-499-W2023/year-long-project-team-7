@@ -107,16 +107,16 @@ def transform(request: HttpRequest) -> HttpResponse:
 
             if form.is_valid():
                 try:
-                    conversion = Conversion()
-                    conversion.prompt = form.cleaned_data["prompt"]
-                    conversion.language = form.cleaned_data["language"]
-                    conversion.tone = form.cleaned_data["tone"]
-                    conversion.complexity = form.cleaned_data["complexity"]
-                    conversion.num_slides = form.cleaned_data["num_slides"]
-                    conversion.image_frequency = form.cleaned_data["image_frequency"]
-                    conversion.model = form.cleaned_data["model"]
-
-                    conversion.user = request.user  # type: ignore
+                    conversion = Conversion.objects.create(
+                        prompt=form.cleaned_data["prompt"],
+                        language=form.cleaned_data["language"],
+                        tone=form.cleaned_data["tone"],
+                        complexity=form.cleaned_data["complexity"],
+                        num_slides=form.cleaned_data["num_slides"],
+                        image_frequency=form.cleaned_data["image_frequency"],
+                        model=form.cleaned_data["model"],
+                        user=request.user,  # type: ignore
+                    )
 
                     has_prompt = len(conversion.prompt) > 0
                     has_file = len(request.FILES.getlist("input_files"))
@@ -156,27 +156,31 @@ def transform(request: HttpRequest) -> HttpResponse:
                         )
 
                     for uploaded_file in request.FILES.getlist("input_files"):
-                        new_file = File()
-                        new_file.user = request.user  # type: ignore
-                        new_file.conversion = conversion
+                        new_file = File.objects.create(
+                            user=request.user,  # type: ignore
+                            conversion=conversion,
+                            is_output=False,
+                            is_input=True,
+                            file=uploaded_file,
+                        )
+
                         if uploaded_file.content_type is not None:
                             new_file.type = uploaded_file.content_type
-                        new_file.file = uploaded_file
-                        new_file.is_input = True
-                        new_file.save()
+
                         input_files.append(new_file)
 
                     if has_template_file:
                         uploaded_template_file = request.FILES.getlist("template_file")[
                             0
                         ]
-                        template_file = File()
-                        template_file.user = request.user  # type: ignore
-                        template_file.conversion = conversion
-                        template_file.type = str(uploaded_template_file.content_type)
-                        template_file.file = uploaded_template_file
-                        template_file.is_input = False
-                        template_file.is_output = False
+                        template_file = File.objects.create(
+                            user=request.user,  # type: ignore
+                            conversion=conversion,
+                            is_input=False,
+                            is_output=False,
+                            file=uploaded_template_file,
+                            type=str(uploaded_template_file.content_type),
+                        )
                     else:
                         temp = form.cleaned_data["template"]
                         template_file = File.objects.get(file=f"template_{temp}.pptx")
