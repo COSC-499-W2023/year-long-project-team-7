@@ -22,7 +22,7 @@ from .forms import (
     AccountDeletionForm,
     SubscriptionDeletionForm,
 )
-from .models import Conversion, File, Product, Subscription
+from .models import Conversion, File, ModelChoice, Product, Subscription
 from .tokens import account_activation_token
 import json
 from .generator import generate_output
@@ -108,23 +108,20 @@ def transform(request: HttpRequest) -> HttpResponse:
             if form.is_valid():
                 try:
                     conversion = Conversion()
-                    user_params = {
-                        "prompt": form.cleaned_data["prompt"],
-                        "language": form.cleaned_data["language"],
-                        "tone": form.cleaned_data["tone"],
-                        "complexity": form.cleaned_data["complexity"],
-                        "num_slides": form.cleaned_data["num_slides"],
-                        "image_frequency": form.cleaned_data["image_frequency"],
-                        "template": form.cleaned_data["template"],
-                        "model": form.cleaned_data["model"],
-                    }
-                    conversion.user_parameters = json.dumps(user_params)
+                    conversion.prompt = form.cleaned_data["prompt"]
+                    conversion.language = form.cleaned_data["language"]
+                    conversion.tone = form.cleaned_data["tone"]
+                    conversion.complexity = form.cleaned_data["complexity"]
+                    conversion.num_slides = form.cleaned_data["num_slides"]
+                    conversion.image_frequency = form.cleaned_data["image_frequency"]
+                    conversion.model = form.cleaned_data["model"]
+
                     conversion.user = request.user  # type: ignore
 
-                    has_prompt = len(user_params["prompt"]) > 0
+                    has_prompt = len(conversion.prompt) > 0
                     has_file = len(request.FILES.getlist("input_files"))
 
-                    has_template_selection = user_params["template"] != ""
+                    has_template_selection = form.cleaned_data["template"] != ""
                     has_template_file = len(request.FILES.getlist("template_file"))
                     if not has_template_selection and not has_template_file:
                         messages.error(request, "No template provided.")
@@ -136,7 +133,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                             },
                         )
 
-                    if user_params["model"] == "gpt-4-0125-preview":
+                    if conversion.model == ModelChoice.GPT_4:
                         if not has_premium_subscription(request.user.id):  # type: ignore
                             messages.error(
                                 request,
@@ -157,8 +154,6 @@ def transform(request: HttpRequest) -> HttpResponse:
                                 "form": TransformerForm(),
                             },
                         )
-
-                    conversion.save()
 
                     for uploaded_file in request.FILES.getlist("input_files"):
                         new_file = File()
@@ -182,13 +177,15 @@ def transform(request: HttpRequest) -> HttpResponse:
                         template_file.file = uploaded_template_file
                         template_file.is_input = False
                         template_file.is_output = False
-                        template_file.save()
                     else:
-                        template_file = File.objects.get(
-                            file=f"template_{user_params['template']}.pptx"
-                        )
+                        temp = form.cleaned_data["template"]
+                        template_file = File.objects.get(file=f"template_{temp}.pptx")
 
-                    result = generate_output(input_files, template_file, conversion)
+                    conversion.template = template_file
+
+                    conversion.save()
+                    template_file.save()
+                    result = generate_output(input_files, conversion)
 
                     return redirect("results", conversion_id=conversion.id)
 
@@ -235,6 +232,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                     messages.error(request, error_message)
                 return redirect("transform")
         else:
+            form = TransformerForm()
             return render(
                 request,
                 "transform.html",
@@ -486,8 +484,8 @@ def profile(request: HttpRequest) -> HttpResponse:
                 )
         elif "delete" in request.POST:
             subscription_form = SubscriptionDeletionForm(request.POST)
-            if subscription_form.is_valid() and subscription_form.cleaned_data.get("delete") and has_valid_subscription(request.user.id): # type: ignore
-                user = User.objects.get(id=request.user.id) # type: ignore
+            if subscription_form.is_valid() and subscription_form.cleaned_data.get("delete") and has_valid_subscription(request.user.id):  # type: ignore
+                user = User.objects.get(id=request.user.id)  # type: ignore
                 delete_subscription(user)
                 messages.success(request, f"Your subscription has been deleted.")
         return redirect("profile")

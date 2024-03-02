@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from .models import Profile
+from .models import *
 
 
 class TransformerForm(forms.Form):
@@ -17,10 +17,7 @@ class TransformerForm(forms.Form):
 
     model = forms.ChoiceField(
         label="Model",
-        choices=[
-            ("gpt-3.5-turbo-0125", "GPT-3.5"),
-            ("gpt-4-0125-preview", "GPT-4"),
-        ],
+        choices=ModelChoice.choices,
         widget=forms.Select(attrs={"class": "form-control dropdown"}),
     )
 
@@ -40,12 +37,7 @@ class TransformerForm(forms.Form):
 
     language = forms.ChoiceField(
         label="Language",
-        choices=[
-            ("Auto", "Auto"),
-            ("English", "English"),
-            ("French", "French"),
-            ("Spanish", "Spanish"),
-        ],
+        choices=LanguageChoice.choices,
         widget=forms.Select(
             attrs={
                 "class": "form-control dropdown",
@@ -56,14 +48,7 @@ class TransformerForm(forms.Form):
 
     tone = forms.ChoiceField(
         label="Tone",
-        choices=[
-            ("Auto", "Auto"),
-            ("Fun", "Fun"),
-            ("Creative", "Creative"),
-            ("Casual", "Casual"),
-            ("Professional", "Professional"),
-            ("Formal", "Formal"),
-        ],
+        choices=ToneChoice.choices,
         widget=forms.Select(
             attrs={
                 "class": "form-control dropdown",
@@ -113,14 +98,7 @@ class TransformerForm(forms.Form):
 
     template = forms.ChoiceField(
         label="Templates",
-        choices=[
-            (1, "Template 1"),
-            (2, "Template 2"),
-            (3, "Template 3"),
-            (4, "Template 4"),
-            (5, "Template 5"),
-            (6, "Template 6"),
-        ],
+        choices=TemplateChoice.choices,
         widget=RadioSelect(),
         required=False,
     )

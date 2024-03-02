@@ -18,17 +18,15 @@ from .prompts import *
 
 
 class PresentationGenerator:
-    def __init__(self, input_file_text: str, conversion: Conversion, template: File):
-        self.user_parameters = json.loads(conversion.user_parameters)
-
+    def __init__(self, input_file_text: str, conversion: Conversion):
         self.presentation_manager = PresentationManager()
 
-        self.openai_manager = OpenAiManager(input_file_text, self.user_parameters)
+        self.openai_manager = OpenAiManager(input_file_text, conversion)
         self.conversion = conversion
 
-        self.num_slides = self.user_parameters.get("num_slides", 10)
-        self.image_frequency = self.user_parameters.get("image_frequency", 3)
-        self.template = template
+        self.num_slides = conversion.num_slides
+        self.image_frequency = conversion.image_frequency
+        self.template = conversion.template
 
     def image_search(self, query: str) -> File:
         api_url = "https://api.unsplash.com/search/photos"
@@ -92,7 +90,8 @@ class PresentationGenerator:
         return slide_content
 
     def build_presentation(self) -> str:
-        self.presentation_manager.setup(self.template)
+        if self.template is not None:
+            self.presentation_manager.setup(self.template)
 
         slide_contents: list[SlideContent] = []
 

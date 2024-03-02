@@ -40,7 +40,6 @@ $(document).ready(function () {
         $("#selected-template-file-name").append(`<p>${event.target.files[0].name}</p>`);
     })
 
-    $("input[name=template]:first").attr('checked', true);
 
     $("#id_complexity").on("input change", function () {
         var value = $(this).val();
