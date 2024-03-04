@@ -320,6 +320,7 @@ def activateEmail(request: HttpRequest, user: User, to_email: str) -> None:
         },
     )
     email = EmailMessage(mail_subject, message, to=[to_email])
+    email.content_subtype = "html"
     if email.send():
         messages.success(
             request,
@@ -486,8 +487,8 @@ def profile(request: HttpRequest) -> HttpResponse:
                 )
         elif "delete" in request.POST:
             subscription_form = SubscriptionDeletionForm(request.POST)
-            if subscription_form.is_valid() and subscription_form.cleaned_data.get("delete") and has_valid_subscription(request.user.id): # type: ignore
-                user = User.objects.get(id=request.user.id) # type: ignore
+            if subscription_form.is_valid() and subscription_form.cleaned_data.get("delete") and has_valid_subscription(request.user.id):  # type: ignore
+                user = User.objects.get(id=request.user.id)  # type: ignore
                 delete_subscription(user)
                 messages.success(request, f"Your subscription has been deleted.")
         return redirect("profile")
