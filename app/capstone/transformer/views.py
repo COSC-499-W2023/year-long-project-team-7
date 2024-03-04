@@ -285,10 +285,11 @@ def download_file(request: HttpRequest, file_id: int) -> HttpResponse:
     response["Content-Disposition"] = f'attachment; filename="{file.file.name}"'
     return response
 
+
 @login_required(login_url="login")
 def download_profile_pic(request: HttpRequest, user_id: int) -> HttpResponse:
     user = get_object_or_404(User, id=user_id)
-    
+
     profile = get_object_or_404(Profile, user=user)
 
     if request.user.is_authenticated:
@@ -300,7 +301,7 @@ def download_profile_pic(request: HttpRequest, user_id: int) -> HttpResponse:
         return HttpResponseForbidden(
             "You do not have permission to access this resource."
         )
-        
+
     image = profile.image
     response = HttpResponse(image.file, content_type="image/jpeg")
     response["Content-Disposition"] = f'attachment; filename="{image.file.name}"'
@@ -507,8 +508,8 @@ def profile(request: HttpRequest) -> HttpResponse:
                 )
         elif "delete" in request.POST:
             subscription_form = SubscriptionDeletionForm(request.POST)
-            if subscription_form.is_valid() and subscription_form.cleaned_data.get("delete") and has_valid_subscription(request.user.id): # type: ignore
-                user = User.objects.get(id=request.user.id) # type: ignore
+            if subscription_form.is_valid() and subscription_form.cleaned_data.get("delete") and has_valid_subscription(request.user.id):  # type: ignore
+                user = User.objects.get(id=request.user.id)  # type: ignore
                 delete_subscription(user)
                 messages.success(request, f"Your subscription has been deleted.")
         return redirect("profile")
