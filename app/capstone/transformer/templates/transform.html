@@ -158,7 +158,11 @@
                                     </svg>
                                 </a>
                             </p>
-                            {{ form.model }}
+                            {% if premium %} 
+                                {{ form.premium_model }} 
+                            {% else %}    
+                                {{ form.model }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>

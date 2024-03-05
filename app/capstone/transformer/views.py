@@ -101,6 +101,7 @@ def logout(request: HttpRequest) -> HttpResponse:
 
 def transform(request: HttpRequest) -> HttpResponse:
     if has_valid_subscription(request.user.id):  # type: ignore
+        premium = has_premium_subscription(request.user.id) #type: ignore
         if request.method == "POST":
             form = TransformerForm(request.POST)
             input_files: list[File] = []
@@ -133,6 +134,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                             "transform.html",
                             {
                                 "form": TransformerForm(),
+                                "premium": premium,
                             },
                         )
 
@@ -143,7 +145,12 @@ def transform(request: HttpRequest) -> HttpResponse:
                                 "You must have a premium subscription to use the GPT-4 model.",
                             )
                             return render(
-                                request, "transform.html", {"form": TransformerForm()}
+                                request,
+                                "transform.html",
+                                {
+                                    "form": TransformerForm(),
+                                    "premium": premium,
+                                },
                             )
 
                     if not has_prompt and not has_file:
@@ -155,6 +162,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                             "transform.html",
                             {
                                 "form": TransformerForm(),
+                                "premium": premium,
                             },
                         )
 
@@ -212,7 +220,12 @@ def transform(request: HttpRequest) -> HttpResponse:
                         )
 
                     return render(
-                        request, "transform.html", {"form": TransformerForm()}
+                        request,
+                        "transform.html",
+                        {
+                            "form": TransformerForm(),
+                            "premium": premium,
+                        },
                     )
             else:
                 for field, errors in form.errors.items():
@@ -238,7 +251,10 @@ def transform(request: HttpRequest) -> HttpResponse:
             return render(
                 request,
                 "transform.html",
-                {"form": TransformerForm()},
+                {
+                    "form": TransformerForm(),
+                    "premium": premium,
+                },
             )
     else:
         messages.error(request, "You must have an active subscription to use Create.")
