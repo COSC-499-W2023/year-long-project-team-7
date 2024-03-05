@@ -36,11 +36,15 @@ $(document).ready(function () {
     });
 
     $("#transform-template-file-upload").on("change", function (event) {
+        $('input[name="template"]').prop('checked', false);
         $("#selected-template-file-name").empty();
         $("#selected-template-file-name").append(`<p>${event.target.files[0].name}</p>`);
     })
 
-    $("input[name=template]:first").attr('checked', true);
+    $('input[type=radio][name=template]').on("click", function (event) {
+        $("#selected-template-file-name").empty();
+        $('#transform-template-file-upload').val('');
+    });
 
     $("#id_complexity").on("input change", function () {
         var value = $(this).val();
