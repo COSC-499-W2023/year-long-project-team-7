@@ -310,3 +310,24 @@ Note: Will add forgot-password email feature this week. Plan on addressing peer 
 
 
 <br>
+
+## Feb 12 2023 -> Mar 3 2024
+
+![evaluation-screenshot](../../img/liam-eval-21.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w21-tasks.png)
+<br>
+Note: I forgot to do my log for week 20. I was working on implementing the forgot password system. I never got the chance to finish it that week but I made up for it during the reading break and finished that feature along with another peer review fixes issue. This week I prepared for our next upcoming peer review by addressing issues that came up with a file deletion system I added. I also reformmated our emails to look more professional.
+
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Milestone)
+<br>
+
+
+<br>
