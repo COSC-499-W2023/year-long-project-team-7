@@ -9,9 +9,10 @@ STRIPE_PUBLIC_KEY = "stripe public key here"
 STRIPE_WEBHOOK_SECRET = "stripe webhook secret"
 
 
-UNSPLASH_ACCESS_KEY = "unsplash access key here"
+SERP_API_KEY = "unsplash access key here"
 
 
+DOMAIN = "http://127.0.0.1:8000"
 EMAIL_HOST_PASSWORD = "email host password here"
 
 
@@ -29,5 +30,3 @@ DATABASES = {
         "PORT": "5432",
     }
 }
-
-DOMAIN = "http://127.0.0.1:8000"

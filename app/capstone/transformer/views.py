@@ -10,6 +10,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
+from .utils import error
 
 from .presentationManager import MissingPlaceholderError
 from .forms import TransformerForm
@@ -193,8 +194,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                     return redirect("results", conversion_id=conversion.id)
 
                 except Exception as e:
-                    # print traceback for developers
-                    print(e)
+                    error(e)
 
                     conversion.delete()
                     for file in input_files:

@@ -1,7 +1,6 @@
 from .openAiManager import OpenAiManager
 from .presentationManager import (
     FieldTypes,
-    MissingPlaceholderError,
     PresentationManager,
     SlideContent,
 )
@@ -15,6 +14,8 @@ import requests
 from .models import File
 from concurrent.futures import ThreadPoolExecutor
 from .prompts import *
+from serpapi import GoogleSearch  # type: ignore
+from .utils import error
 
 
 class PresentationGenerator:
@@ -31,17 +32,23 @@ class PresentationGenerator:
         self.template = template
 
     def image_search(self, query: str) -> File:
-        api_url = "https://api.unsplash.com/search/photos"
-        params = {"query": query, "client_id": settings.UNSPLASH_ACCESS_KEY}  # type: ignore
+        params = {
+            "engine": "google_images",
+            "q": query,
+            "location": "Austin, TX, Texas, United States",
+            "api_key": settings.SERP_API_KEY,  # type: ignore
+        }
 
-        response = requests.get(api_url, params=params).json()
+        search = GoogleSearch(params)
 
-        images = response["results"]
-        image_url = images[random.randint(0, len(images) - 1)]["urls"]["raw"]
+        results = search.get_dict()["images_results"]
+
+        image_url = results[random.randint(0, len(results) - 1)]["original"]
+
+        file_system = FileSystemStorage()
 
         image = requests.get(image_url).content
 
-        file_system = FileSystemStorage()
         rel_path = f"{query[:30]}.jpg"
         file_system.save(rel_path, ContentFile(image))
 
@@ -82,7 +89,7 @@ class PresentationGenerator:
         try:
             slide_content.update_from_json(response)
         except Exception as e:
-            print(e)
+            error(e)
 
         for field in slide_content.fields:
             if field.field_type == FieldTypes.IMAGE:
