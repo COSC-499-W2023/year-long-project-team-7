@@ -408,11 +408,13 @@ input[type="range"]::-moz-range-thumb {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    padding-right: 19px;
 }
 
 .template-choice {
     margin: 0.625em;
     cursor: pointer;
+    padding-right: 0em;
 }
 
 .template-choice img {
@@ -425,6 +427,10 @@ input[type="range"]::-moz-range-thumb {
 @media (min-width: 765px) {
     .template-choice img {
         width: 210px;
+    }
+
+    .template-picker {
+        padding-right: 1.1875rem;
     }
 }
 

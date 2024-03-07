@@ -24,6 +24,11 @@ urlpatterns = [
     path("activate/<uidb64>/<token>", views.activate, name="activate"),
     path("download_file/<int:file_id>/", views.download_file, name="download_file"),
     path(
+        "download_profile_pic/<int:user_id>/",
+        views.download_profile_pic,
+        name="download_profile_pic",
+    ),
+    path(
         "password_reset/",
         auth_views.PasswordResetView.as_view(
             template_name="password_reset_form.html",

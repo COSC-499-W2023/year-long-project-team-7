@@ -178,7 +178,7 @@
                         </a>
                     </h2>
                     <hr />
-                    <div class="col template-picker" role="radiogroup">
+                    <div class="template-picker" role="radiogroup">
                         {% for value, text in form.template.field.choices %}
                             <label class="template-choice" for="template_{{ value }}">
                                 <input type="radio"
@@ -192,7 +192,7 @@
                             </label>
                         {% endfor %}
                     </div>
-                    <div class="col-lg-4 mt-4 mx-auto mt-lg-0">
+                    <div class="d-flex justify-content-center mt-3">
                         <input id="transform-template-file-upload"
                                class="custom-file-upload"
                                name="template_file"
