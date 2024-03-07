@@ -346,6 +346,7 @@ def activateEmail(request: HttpRequest, user: User, to_email: str) -> None:
         },
     )
     email = EmailMessage(mail_subject, message, to=[to_email])
+    email.content_subtype = "html"
     if email.send():
         messages.success(
             request,

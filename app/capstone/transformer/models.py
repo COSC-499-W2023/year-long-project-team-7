@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.db.models import JSONField
 from django.contrib.auth.models import User
 from PIL import Image
+import os
 
 
 class TemplateChoice(models.IntegerChoices):
@@ -136,3 +137,10 @@ class Profile(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)  # Resize image
             img.save(self.image.path)  # Save it again and override the larger image
+
+    def delete(self, *args, **kwargs):
+        # Check if profile has an image other than the default
+        if self.image.name not in ["", "default_pfp.jpg"]:
+            if os.path.isfile(self.image.path):
+                os.remove(self.image.path)  # Delete the image file
+        super().delete(*args, **kwargs)
