@@ -37,7 +37,7 @@ def extract_text_from_pdf(filename: str) -> str:
     return text
 
 
-def generate_output(files: list[File], template: File, conversion: Conversion) -> str:
+def generate_output(files: list[File], conversion: Conversion) -> str:
     input_file_text = ""
 
     for file in files:
@@ -49,7 +49,7 @@ def generate_output(files: list[File], template: File, conversion: Conversion) -
             except Exception as e:
                 error(e)
 
-    pres_manager = PresentationGenerator(input_file_text, conversion, template)
+    pres_manager = PresentationGenerator(input_file_text, conversion)
 
     output_file_name = pres_manager.build_presentation()
 
