@@ -24,7 +24,7 @@ from .forms import (
     SubscriptionDeletionForm,
 )
 
-from .models import Conversion, File, ModelChoice, Product, Subscription
+from .models import Conversion, File, ModelChoice, Product, Profile, Subscription
 
 from .tokens import account_activation_token
 import json
