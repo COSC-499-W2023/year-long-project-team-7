@@ -109,16 +109,28 @@ def transform(request: HttpRequest) -> HttpResponse:
             if form.is_valid():
                 try:
                     conversion = Conversion()
-                    user_params = {
-                        "prompt": form.cleaned_data["prompt"],
-                        "language": form.cleaned_data["language"],
-                        "tone": form.cleaned_data["tone"],
-                        "complexity": form.cleaned_data["complexity"],
-                        "num_slides": form.cleaned_data["num_slides"],
-                        "image_frequency": form.cleaned_data["image_frequency"],
-                        "template": form.cleaned_data["template"],
-                        "model": form.cleaned_data["model"],
-                    }
+                    if premium:
+                        user_params = {
+                            "prompt": form.cleaned_data["prompt"],
+                            "language": form.cleaned_data["language"],
+                            "tone": form.cleaned_data["tone"],
+                            "complexity": form.cleaned_data["complexity"],
+                            "num_slides": form.cleaned_data["num_slides"],
+                            "image_frequency": form.cleaned_data["image_frequency"],
+                            "template": form.cleaned_data["template"],
+                            "model": form.cleaned_data["premium_model"],
+                        }
+                    else:
+                        user_params = {
+                            "prompt": form.cleaned_data["prompt"],
+                            "language": form.cleaned_data["language"],
+                            "tone": form.cleaned_data["tone"],
+                            "complexity": form.cleaned_data["complexity"],
+                            "num_slides": form.cleaned_data["num_slides"],
+                            "image_frequency": form.cleaned_data["image_frequency"],
+                            "template": form.cleaned_data["template"],
+                            "model": form.cleaned_data["model"],
+                        }
                     conversion.user_parameters = json.dumps(user_params)
                     conversion.user = request.user  # type: ignore
 
@@ -383,12 +395,15 @@ def store(request: HttpRequest) -> HttpResponse:
 class CreateCheckoutSessionView(View):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:  # type: ignore
         if request.user.is_authenticated:
-            if has_valid_subscription(request.user.id):
-                messages.error(request, "You already have an active subscription.")
+            product_id = self.kwargs["pk"]
+            product = Product.objects.get(id=product_id)
+            if has_valid_subscription(request.user.id) and has_premium_subscription(request.user.id) and product.name != "Premium Subscription":
+                messages.error(request, "Please purchase another premium subscription or cancel your existing subscription.")
+                return redirect("store")
+            elif has_valid_subscription(request.user.id) and has_premium_subscription(request.user.id) is False and product.name == "Premium Subscription":
+                messages.error(request, "Please cancel your existing subscription before purchasing a premium subscription.")
                 return redirect("store")
             else:
-                product_id = self.kwargs["pk"]
-                product = Product.objects.get(id=product_id)
                 stripe.api_key = settings.STRIPE_SECRET_KEY  # type: ignore
                 YOUR_DOMAIN = settings.DOMAIN  # type: ignore
                 checkout_session = stripe.checkout.Session.create(
