@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% load json_filter %}
 {% block content %}
     <div class="container d-flex justify-content-center">
         <div class="col-8">
@@ -28,22 +27,22 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <p class="accordion-text" tabindex="0">
-                                            <strong>Prompt:</strong> {{ conversion.user_parameters|get_item:"prompt" }}
+                                            <strong>Prompt:</strong> {{ conversion.prompt }}
                                         </p>
                                         <p class="accordion-text" tabindex="0">
-                                            <strong>Language:</strong> {{ conversion.user_parameters|get_item:"language" }}
+                                            <strong>Language:</strong> {{ conversion.language }}
                                         </p>
                                         <p class="accordion-text" tabindex="0">
-                                            <strong>Tone:</strong> {{ conversion.user_parameters|get_item:"tone" }}
+                                            <strong>Tone:</strong> {{ conversion.tone }}
                                         </p>
                                         <p class="accordion-text" tabindex="0">
-                                            <strong>Complexity:</strong> {{ conversion.user_parameters|get_item:"complexity" }}/6
+                                            <strong>Complexity:</strong> {{ conversion.complexity }}/6
                                         </p>
                                         <p class="accordion-text" tabindex="0">
-                                            <strong>Number of Slides:</strong> {{ conversion.user_parameters|get_item:"num_slides" }}
+                                            <strong>Number of Slides:</strong> {{ conversion.num_slides }}
                                         </p>
                                         <p class="accordion-text" tabindex="0">
-                                            <strong>Image Frequency:</strong> {{ conversion.user_parameters|get_item:"image_frequency" }}/6
+                                            <strong>Image Frequency:</strong> {{ conversion.image_frequency }}/6
                                         </p>
                                     </div>
                                     <div class="col-md-6">

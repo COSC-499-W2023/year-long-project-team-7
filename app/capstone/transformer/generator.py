@@ -6,6 +6,7 @@ import os
 import subprocess
 from django.conf import settings
 import fitz  # type: ignore
+from .utils import error
 
 
 def to_pdf(filename: str) -> str:
@@ -36,7 +37,7 @@ def extract_text_from_pdf(filename: str) -> str:
     return text
 
 
-def generate_output(files: list[File], template: File, conversion: Conversion) -> str:
+def generate_output(files: list[File], conversion: Conversion) -> str:
     input_file_text = ""
 
     for file in files:
@@ -46,9 +47,9 @@ def generate_output(files: list[File], template: File, conversion: Conversion) -
             try:
                 input_file_text += extract_text_from_pdf(to_pdf(file.file.name))
             except Exception as e:
-                print(e)
+                error(e)
 
-    pres_manager = PresentationGenerator(input_file_text, conversion, template)
+    pres_manager = PresentationGenerator(input_file_text, conversion)
 
     output_file_name = pres_manager.build_presentation()
 

@@ -10,6 +10,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
+from .utils import error
 
 from .presentationManager import MissingPlaceholderError
 from .forms import TransformerForm
@@ -22,7 +23,9 @@ from .forms import (
     AccountDeletionForm,
     SubscriptionDeletionForm,
 )
-from .models import Conversion, File, Product, Profile, Subscription
+
+from .models import Conversion, File, ModelChoice, Product, Profile, Subscription
+
 from .tokens import account_activation_token
 import json
 from .generator import generate_output
@@ -107,24 +110,21 @@ def transform(request: HttpRequest) -> HttpResponse:
 
             if form.is_valid():
                 try:
-                    conversion = Conversion()
-                    user_params = {
-                        "prompt": form.cleaned_data["prompt"],
-                        "language": form.cleaned_data["language"],
-                        "tone": form.cleaned_data["tone"],
-                        "complexity": form.cleaned_data["complexity"],
-                        "num_slides": form.cleaned_data["num_slides"],
-                        "image_frequency": form.cleaned_data["image_frequency"],
-                        "template": form.cleaned_data["template"],
-                        "model": form.cleaned_data["model"],
-                    }
-                    conversion.user_parameters = json.dumps(user_params)
-                    conversion.user = request.user  # type: ignore
+                    conversion = Conversion.objects.create(
+                        prompt=form.cleaned_data["prompt"],
+                        language=form.cleaned_data["language"],
+                        tone=form.cleaned_data["tone"],
+                        complexity=form.cleaned_data["complexity"],
+                        num_slides=form.cleaned_data["num_slides"],
+                        image_frequency=form.cleaned_data["image_frequency"],
+                        model=form.cleaned_data["model"],
+                        user=request.user,  # type: ignore
+                    )
 
-                    has_prompt = len(user_params["prompt"]) > 0
+                    has_prompt = len(conversion.prompt) > 0
                     has_file = len(request.FILES.getlist("input_files"))
 
-                    has_template_selection = user_params["template"] != ""
+                    has_template_selection = form.cleaned_data["template"] != ""
                     has_template_file = len(request.FILES.getlist("template_file"))
                     if not has_template_selection and not has_template_file:
                         messages.error(request, "No template provided.")
@@ -136,7 +136,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                             },
                         )
 
-                    if user_params["model"] == "gpt-4-0125-preview":
+                    if conversion.model == ModelChoice.GPT_4:
                         if not has_premium_subscription(request.user.id):  # type: ignore
                             messages.error(
                                 request,
@@ -158,43 +158,46 @@ def transform(request: HttpRequest) -> HttpResponse:
                             },
                         )
 
-                    conversion.save()
-
                     for uploaded_file in request.FILES.getlist("input_files"):
-                        new_file = File()
-                        new_file.user = request.user  # type: ignore
-                        new_file.conversion = conversion
+                        new_file = File.objects.create(
+                            user=request.user,  # type: ignore
+                            conversion=conversion,
+                            is_output=False,
+                            is_input=True,
+                            file=uploaded_file,
+                        )
+
                         if uploaded_file.content_type is not None:
                             new_file.type = uploaded_file.content_type
-                        new_file.file = uploaded_file
-                        new_file.is_input = True
-                        new_file.save()
+
                         input_files.append(new_file)
 
                     if has_template_file:
                         uploaded_template_file = request.FILES.getlist("template_file")[
                             0
                         ]
-                        template_file = File()
-                        template_file.user = request.user  # type: ignore
-                        template_file.conversion = conversion
-                        template_file.type = str(uploaded_template_file.content_type)
-                        template_file.file = uploaded_template_file
-                        template_file.is_input = False
-                        template_file.is_output = False
-                        template_file.save()
-                    else:
-                        template_file = File.objects.get(
-                            file=f"template_{user_params['template']}.pptx"
+                        template_file = File.objects.create(
+                            user=request.user,  # type: ignore
+                            conversion=conversion,
+                            is_input=False,
+                            is_output=False,
+                            file=uploaded_template_file,
+                            type=str(uploaded_template_file.content_type),
                         )
+                    else:
+                        temp = form.cleaned_data["template"]
+                        template_file = File.objects.get(file=f"template_{temp}.pptx")
 
-                    result = generate_output(input_files, template_file, conversion)
+                    conversion.template = template_file
+
+                    conversion.save()
+                    template_file.save()
+                    result = generate_output(input_files, conversion)
 
                     return redirect("results", conversion_id=conversion.id)
 
                 except Exception as e:
-                    # print traceback for developers
-                    print(e)
+                    error(e)
 
                     conversion.delete()
                     for file in input_files:
@@ -235,6 +238,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                     messages.error(request, error_message)
                 return redirect("transform")
         else:
+            form = TransformerForm()
             return render(
                 request,
                 "transform.html",
@@ -285,10 +289,11 @@ def download_file(request: HttpRequest, file_id: int) -> HttpResponse:
     response["Content-Disposition"] = f'attachment; filename="{file.file.name}"'
     return response
 
+
 @login_required(login_url="login")
 def download_profile_pic(request: HttpRequest, user_id: int) -> HttpResponse:
     user = get_object_or_404(User, id=user_id)
-    
+
     profile = get_object_or_404(Profile, user=user)
 
     if request.user.is_authenticated:
@@ -300,7 +305,7 @@ def download_profile_pic(request: HttpRequest, user_id: int) -> HttpResponse:
         return HttpResponseForbidden(
             "You do not have permission to access this resource."
         )
-        
+
     image = profile.image
     response = HttpResponse(image.file, content_type="image/jpeg")
     response["Content-Disposition"] = f'attachment; filename="{image.file.name}"'
@@ -341,6 +346,7 @@ def activateEmail(request: HttpRequest, user: User, to_email: str) -> None:
         },
     )
     email = EmailMessage(mail_subject, message, to=[to_email])
+    email.content_subtype = "html"
     if email.send():
         messages.success(
             request,

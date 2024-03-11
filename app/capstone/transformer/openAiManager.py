@@ -1,17 +1,17 @@
 import typing
 from openai import OpenAI
 from django.conf import settings
-from .models import File
+from .models import Conversion, File
 from tenacity import retry, stop_after_attempt, wait_random_exponential
 import re
 from .prompts import *
 
 
 class OpenAiManager:
-    def __init__(self, input_file_text: str, user_parameters: dict[str, str]) -> None:
+    def __init__(self, input_file_text: str, conversion: Conversion) -> None:
         self.client = OpenAI(api_key=settings.OPENAI_API_KEY, organization="org-hYPJO2WKqFAN1o75AdfdfeBx")  # type: ignore
 
-        self.model = user_parameters["model"]
+        self.model = conversion.model
 
         all_files = self.list_files()
         all_assistants = self.list_assistants()
@@ -22,10 +22,10 @@ class OpenAiManager:
             self.delete_assistant(assistant.id)
 
         self.instructions = SYSTEM_PROMPT.format(
-            tone=user_parameters["tone"],
-            language=user_parameters["language"],
-            complexity=user_parameters["complexity"],
-            prompt=user_parameters["prompt"],
+            tone=conversion.tone,
+            language=conversion.language,
+            complexity=conversion.complexity,
+            prompt=conversion.prompt,
             input_file_text=input_file_text,
         )
         self.messages = [{"role": "system", "content": self.instructions}]
