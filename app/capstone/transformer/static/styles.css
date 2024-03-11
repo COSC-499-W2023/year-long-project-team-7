@@ -569,15 +569,19 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* Results */
+.pdf-iframe {
+    width: 51.25em;
+    height: 35em;
+}
 
 @media (max-width: 992px) {
-    #pdf-canvas {
+    .pdf-iframe {
         width: 31.25em;
     }
 }
 
 @media (max-width: 720px) {
-    #pdf-canvas {
+    .pdf-iframe {
         width: 18.75em;
     }
 }

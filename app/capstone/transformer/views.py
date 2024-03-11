@@ -291,6 +291,28 @@ def download_file(request: HttpRequest, file_id: int) -> HttpResponse:
 
 
 @login_required(login_url="login")
+def serve_file(request: HttpRequest, file_id: int) -> HttpResponse:
+    file = get_object_or_404(File, id=file_id)
+
+    if request.user.is_authenticated:
+        if file.user != request.user:
+            return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+            )
+    else:
+        return HttpResponseForbidden(
+            "You do not have permission to access this resource."
+        )
+
+    response = HttpResponse(file.file, content_type=file.type)
+    response["Content-Disposition"] = f'inline; filename="{file.file.name}"'
+
+    response["X-Frame-Options"] = "ALLOWALL"
+
+    return response
+
+
+@login_required(login_url="login")
 def download_profile_pic(request: HttpRequest, user_id: int) -> HttpResponse:
     user = get_object_or_404(User, id=user_id)
 
