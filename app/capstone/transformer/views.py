@@ -159,7 +159,14 @@ def transform(request: HttpRequest) -> HttpResponse:
                             },
                         )
 
-                    valid_extensions = [".doc", ".docx", ".ppt", ".pptx", ".pdf"]
+                    valid_extensions = [
+                        ".doc",
+                        ".docx",
+                        ".ppt",
+                        ".pptx",
+                        ".pdf",
+                        ".txt",
+                    ]
                     for uploaded_file in request.FILES.getlist("input_files"):
                         # Extract file extension and check if it's a valid extension
                         ext = os.path.splitext(uploaded_file.name)[1].lower()  # type: ignore
@@ -178,7 +185,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                             # Invalid extension, return an error message
                             messages.error(
                                 request,
-                                "Invalid file type. Please upload only MS Word, MS PowerPoint, or .pdf files.",
+                                "Invalid file type. Please upload only MS Word, MS PowerPoint, .pdf, or .txt files.",
                             )
                             return render(
                                 request, "transform.html", {"form": TransformerForm()}
