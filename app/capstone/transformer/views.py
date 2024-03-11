@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -158,19 +159,30 @@ def transform(request: HttpRequest) -> HttpResponse:
                             },
                         )
 
+                    valid_extensions = [".doc", ".docx", ".ppt", ".pptx", ".pdf"]
                     for uploaded_file in request.FILES.getlist("input_files"):
-                        new_file = File.objects.create(
-                            user=request.user,  # type: ignore
-                            conversion=conversion,
-                            is_output=False,
-                            is_input=True,
-                            file=uploaded_file,
-                        )
-
-                        if uploaded_file.content_type is not None:
-                            new_file.type = uploaded_file.content_type
-
-                        input_files.append(new_file)
+                        # Extract file extension and check if it's a valid extension
+                        ext = os.path.splitext(uploaded_file.name)[1].lower()  # type: ignore
+                        if ext in valid_extensions:
+                            new_file = File.objects.create(
+                                user=request.user,  # type: ignore
+                                conversion=conversion,
+                                is_output=False,
+                                is_input=True,
+                                file=uploaded_file,
+                            )
+                            if uploaded_file.content_type is not None:
+                                new_file.type = uploaded_file.content_type
+                            input_files.append(new_file)
+                        else:
+                            # Invalid extension, return an error message
+                            messages.error(
+                                request,
+                                "Invalid file type. Please upload only MS Word, MS PowerPoint, or .pdf files.",
+                            )
+                            return render(
+                                request, "transform.html", {"form": TransformerForm()}
+                            )
 
                     if has_template_file:
                         uploaded_template_file = request.FILES.getlist("template_file")[
