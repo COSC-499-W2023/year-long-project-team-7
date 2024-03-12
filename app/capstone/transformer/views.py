@@ -10,18 +10,20 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
+from django.forms import formset_factory
 from .utils import error
 
 from .presentationManager import MissingPlaceholderError
-from .forms import TransformerForm
-from .forms import RegisterForm
-from .forms import LoginForm
 from .forms import (
+    LoginForm,
+    RegisterForm,
+    TransformerForm,
     UpdateEmailForm,
     UpdatePasswordForm,
     ProfileUpdateForm,
     AccountDeletionForm,
     SubscriptionDeletionForm,
+    RepromptForm,
 )
 
 from .models import Conversion, File, ModelChoice, Product, Profile, Subscription
@@ -252,6 +254,20 @@ def transform(request: HttpRequest) -> HttpResponse:
 @login_required(login_url="login")
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     conversion = get_object_or_404(Conversion, id=conversion_id)
+    output_files = File.objects.filter(conversion=conversion, is_output=True)
+    RepromptFormSet = formset_factory(RepromptForm, extra=1)
+
+    if request.method == "POST":
+        formset = RepromptFormSet(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                slide = form.cleaned_data.get("slide")
+                prompt = form.cleaned_data.get("prompt")
+                image_slide = form.cleaned_data.get("image_slide")
+                print(f'I am slide {slide} with the prompt "{prompt}"')
+    else:
+        formset = RepromptFormSet()
+
     if request.user.is_authenticated:
         if conversion.user != request.user:
             return HttpResponseForbidden(
@@ -262,12 +278,10 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
             "You do not have permission to access this resource."
         )
 
-    output_files = File.objects.filter(conversion=conversion, is_output=True)
-
     return render(
         request,
         "results.html",
-        {"output_files": output_files},
+        {"output_files": output_files, "formset": formset},
     )
 
 

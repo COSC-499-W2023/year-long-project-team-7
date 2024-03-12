@@ -586,6 +586,10 @@ input[type="range"]::-moz-range-thumb {
     }
 }
 
+.subtitle {
+    color: var(--clr-gray);
+}
+
 /* History */
 
 .entry-date {
