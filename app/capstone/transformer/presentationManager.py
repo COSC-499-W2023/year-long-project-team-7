@@ -221,10 +221,6 @@ class PresentationManager:
 
             elif field.field_type == FieldTypes.IMAGE:
                 if isinstance(field.value, File):
-                    try:
-                        file_system = FileSystemStorage()
-                        path = file_system.path(field.value.file.name)
-                        slide.shapes[field.field_index].insert_picture(path)
-                    except Exception as e:
-                        print(path)
-                        print(e)
+                    file_system = FileSystemStorage()
+                    path = file_system.path(field.value.file.name)
+                    slide.shapes[field.field_index].insert_picture(path)
