@@ -486,6 +486,32 @@ _Team Evaluation Screenshot_
 
 ### Self Reflection and Learning
 
-This week the team decided to foxus on merging the multiple large features that had been getting worked on over the break. We mostly focused on more intensive code review and fixing merge conflict with the master branch, as well as locating bugs that arose later as a result of the merging. We also had a couple of meetings to discuss the peer testing tasks for the upcoming session and prepare the deployed site.
+This week the team decided to focus on merging the multiple large features that had been getting worked on over the break. We mostly focused on more intensive code review and fixing merge conflict with the master branch, as well as locating bugs that arose later as a result of the merging. We also had a couple of meetings to discuss the peer testing tasks for the upcoming session and prepare the deployed site.
 
 I also took some time to reorganize the tasks we had set up in the Github Project and organize them into new milestones which cover progress up until the end of the project. I also added start and end dates to every issue in the project so we could best use the timeline feature of the board and follow a schedule which let us cover all the work we want by the end of the project. 
+
+## Feb 04 2024 -> Mar 10 2024
+
+![evaluation-screenshot](../../img/esteban-eval-21.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-21.png)
+
+### Goals
+
+
+- [x] Re-prompting tasks meeting
+- [x] Bug fixes
+- [x] Peer testing issues
+- [ ] Front-end Reprompt
+	- [x] PDF Rework (`iframe`)
+	- [ ] Slide selection form (WIP)
+
+### Self Reflection and Learning
+
+This week we focused on the second peer testing round, which included some new UI changes and bugfixes. I also continued work on the frontend of the re-prompting feature by reworking our PDF preview system to use an `<iframe>` element instead of the previous method with JavaScript. I will continue working on a method to specify which slides to re-prompt that will hopefully be part of the PDF preview system.
