@@ -1,4 +1,4 @@
-from .models import Conversion, File, User
+from .models import Conversion, File, User, Exercise
 from .presentationGenerator import PresentationGenerator
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
@@ -83,3 +83,56 @@ def generate_output(files: list[File], conversion: Conversion) -> str:
     new_pdf.save()
 
     return output_file_name
+
+
+def generate_exercise(files: list[File], exercise: Exercise) -> str:
+    input_file_text = ""
+
+    for file in files:
+        if "pdf" in file.type:
+            input_file_text += extract_text_from_pdf(file.file.name)
+        else:
+            try:
+                input_file_text += extract_text_from_pdf(to_pdf(file.file.name))
+            except Exception as e:
+                error(e)
+
+    # create exerciseGenerator class
+    # exercise_generator = exerciseGenerator(input_file_text, exercise)
+                
+    # use exerciseGenerator to build exercises
+    output_file_name = None
+                
+    file_name, file_extension = os.path.splitext(output_file_name)
+
+    user = None
+
+    if exercise.user_id is not None:
+        try:
+            user = User.objects.get(id=exercise.user_id)
+        except ObjectDoesNotExist:
+            user = None
+
+    new_pptx = File(
+        user=user,
+        conversion=None,
+        exercise=exercise,
+        type=file_extension,
+        file=output_file_name,
+        is_output=True,
+    )
+    new_pptx.save()
+
+    pdf_preview_path = to_pdf(output_file_name)
+    new_pdf = File(
+        user=user,
+        conversion=None,
+        exercise=exercise,
+        type="application/pdf",
+        file=pdf_preview_path,
+        is_output=True,
+    )
+    new_pdf.save()
+
+    return output_file_name
+    
