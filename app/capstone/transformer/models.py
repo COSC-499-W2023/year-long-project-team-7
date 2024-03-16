@@ -86,6 +86,7 @@ class File(models.Model):
     date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     conversion = models.ForeignKey(Conversion, null=True, on_delete=models.CASCADE)
+    exercise = models.ForeignKey(Exercise, null=True, on_delete=models.CASCADE)
     is_output = models.BooleanField(default=False)
     is_input = models.BooleanField(default=False)
     type = models.TextField()
