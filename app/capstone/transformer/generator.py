@@ -1,5 +1,6 @@
 from .models import Conversion, File, User, Exercise
 from .presentationGenerator import PresentationGenerator
+from .exerciseGenerator import ExerciseGenerator
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
 import os
@@ -97,8 +98,7 @@ def generate_exercise(files: list[File], exercise: Exercise) -> str:
             except Exception as e:
                 error(e)
 
-    # create exerciseGenerator class
-    # exercise_generator = exerciseGenerator(input_file_text, exercise)
+    exercise_generator = ExerciseGenerator(input_file_text, exercise)
                 
     # use exerciseGenerator to build exercises
     output_file_name = None
