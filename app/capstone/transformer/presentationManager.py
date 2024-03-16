@@ -9,6 +9,7 @@ import random
 from pptx.enum.shapes import PP_PLACEHOLDER  # type: ignore
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from .models import File
+from .utils import error
 
 
 class FieldTypes(Enum):
@@ -220,4 +221,6 @@ class PresentationManager:
 
             elif field.field_type == FieldTypes.IMAGE:
                 if isinstance(field.value, File):
-                    slide.shapes[field.field_index].insert_picture(field.value.file)
+                    file_system = FileSystemStorage()
+                    path = file_system.path(field.value.file.name)
+                    slide.shapes[field.field_index].insert_picture(path)

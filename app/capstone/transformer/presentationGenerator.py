@@ -16,6 +16,8 @@ from concurrent.futures import ThreadPoolExecutor
 from .prompts import *
 from serpapi import GoogleSearch  # type: ignore
 from .utils import error
+from urllib3.exceptions import MaxRetryError
+import re
 
 
 class PresentationGenerator:
@@ -30,6 +32,8 @@ class PresentationGenerator:
         self.template = conversion.template
 
     def image_search(self, query: str) -> File:
+        query = re.sub("<|>", "", query)
+
         params = {
             "engine": "google_images",
             "q": query,
@@ -41,20 +45,35 @@ class PresentationGenerator:
 
         results = search.get_dict()["images_results"]
 
-        image_url = results[random.randint(0, len(results) - 1)]["original"]
+        jpegs_results = [
+            result for result in results if str(result["original"]).endswith(".jpg")
+        ]
+
+        while True:
+            random_image_url = results[random.randint(0, len(jpegs_results) - 1)][
+                "original"
+            ]
+
+            try:
+                response = requests.head(random_image_url)
+
+                if "image/jpeg" in response.headers.get("content-type", ""):
+                    image = requests.get(random_image_url).content
+                    break
+
+            except MaxRetryError as e:
+                continue
 
         file_system = FileSystemStorage()
 
-        image = requests.get(image_url).content
-
-        rel_path = f"{query[:30]}.jpg"
-        file_system.save(rel_path, ContentFile(image))
+        name = f"{query[:30]}.jpg"
+        path = file_system.save(name, ContentFile(image))
 
         image_file = File(
             user=self.conversion.user,
             conversion=self.conversion,
             type=".jpg",
-            file=rel_path,
+            file=path,
             is_output=False,
         )
 
