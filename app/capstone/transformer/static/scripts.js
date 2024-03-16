@@ -91,11 +91,24 @@ $(document).ready(function () {
         $(".loading-overlay").show();
     });
 
-    $("#add-field").click(function (e) {
+    $("#add-form").click(function (e) {
         e.preventDefault();
-        var fieldGroup = $(".field-group").first().clone();
-        fieldGroup.find("input").val(""); // Clear input values if necessary
-        $(".fields-container").append(fieldGroup);
+        let formset = $("#reprompt-formset");
+        let totalForms = $("#id_form-TOTAL_FORMS");
+        let currentTotal = parseInt(totalForms.val());
+
+        let fieldGroup = formset.find(".field-group").first().clone();
+        let fields = formset.find(".fields").last();
+        fieldGroup.find(":input").each(function () {
+            let name = $(this)
+                .attr("name")
+                .replace("-0-", "-" + currentTotal + "-");
+            let id = "id_" + name;
+            $(this).attr({ name: name, id: id }).val("").removeAttr("checked");
+        });
+
+        fields.append(fieldGroup);
+        totalForms.val(currentTotal + 1);
     });
 
     $("#light-mode-toggle").on("click", function () {

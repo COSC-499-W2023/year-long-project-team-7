@@ -38,17 +38,17 @@
                 <div class="d-flex flex-column justify-content-center">
                     <div class="subtitle mt-3">Something's not right? Let us fix that for you.</div>
                     <form class="mt-5"
-                          id="reprompt-form"
+                          id="reprompt-formset"
                           method="post"
                           enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ formset.management_form }}
-                        <div class="fields-container">
-                            <div class="field-group">
-                                {% for form in formset %}{{ form.as_p }}{% endfor %}
+                        {% for form in formset %}
+                            <div class="fields">
+                                <div class="field-group">{{ form }}</div>
                             </div>
-                        </div>
-                        <button class="mt-3" id="add-field">Add</button>
+                        {% endfor %}
+                        <button class="mt-3" id="add-form">Add</button>
                         <button class="mt-5" type="submit">Submit</button>
                     </form>
                 </div>

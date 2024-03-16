@@ -255,6 +255,17 @@ def transform(request: HttpRequest) -> HttpResponse:
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     conversion = get_object_or_404(Conversion, id=conversion_id)
     output_files = File.objects.filter(conversion=conversion, is_output=True)
+
+    if request.user.is_authenticated:
+        if conversion.user != request.user:
+            return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+            )
+    else:
+        return HttpResponseForbidden(
+            "You do not have permission to access this resource."
+        )
+
     RepromptFormSet = formset_factory(RepromptForm, extra=1)
 
     if request.method == "POST":
@@ -267,16 +278,6 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
                 print(f'I am slide {slide} with the prompt "{prompt}"')
     else:
         formset = RepromptFormSet()
-
-    if request.user.is_authenticated:
-        if conversion.user != request.user:
-            return HttpResponseForbidden(
-                "You do not have permission to access this resource."
-            )
-    else:
-        return HttpResponseForbidden(
-            "You do not have permission to access this resource."
-        )
 
     return render(
         request,

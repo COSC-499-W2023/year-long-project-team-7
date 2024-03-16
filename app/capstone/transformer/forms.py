@@ -230,7 +230,7 @@ class SubscriptionDeletionForm(forms.Form):
 class RepromptForm(forms.Form):
     slide_choices = [(str(i), str(i)) for i in range(1, 11)]
     slide = forms.ChoiceField(choices=slide_choices, label="Slide")
-    prompt = forms.CharField(max_length=100, label="Prompt")
+    prompt = forms.CharField(required=False, max_length=100, label="Prompt")
     image_slide = forms.BooleanField(required=False, label="Image Slide")
 
 
