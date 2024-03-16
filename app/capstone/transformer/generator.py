@@ -37,7 +37,7 @@ def extract_text_from_pdf(filename: str) -> str:
     return text
 
 
-def extract_text_from_md(filename: str) -> str: # type: ignore
+def extract_text_from_md(filename: str) -> str:
     file_system = FileSystemStorage()
     file_path = file_system.path(filename)
     text = open(file_path, 'r').read()
@@ -47,7 +47,7 @@ def generate_output(files: list[File], conversion: Conversion) -> str:
     input_file_text = ""
     
     for file in files:
-        ext = os.path.splitext(file.file.name)[1].lower()  # type: ignore
+        ext = os.path.splitext(file.file.name)[1].lower()
         if "pdf" in file.type:
             input_file_text += extract_text_from_pdf(file.file.name)
         elif ext == ".md":
