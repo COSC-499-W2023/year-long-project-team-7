@@ -111,6 +111,32 @@ $(document).ready(function () {
         totalForms.val(currentTotal + 1);
     });
 
+    $("#remove-form").click(function (e) {
+        e.preventDefault();
+        let formset = $("#reprompt-formset");
+        let totalForms = $("#id_form-TOTAL_FORMS");
+        let currentTotal = parseInt(totalForms.val());
+
+        if (currentTotal > 1) {
+            let fieldGroup = formset.find(".field-group").last();
+            fieldGroup.remove();
+
+            totalForms.val(currentTotal - 1);
+
+            formset.find(".field-group").each(function (index) {
+                $(this)
+                    .find(":input")
+                    .each(function () {
+                        let name = $(this)
+                            .attr("name")
+                            .replace(/-\d+-/, "-" + index + "-");
+                        let id = "id_" + name;
+                        $(this).attr({ name: name, id: id });
+                    });
+            });
+        }
+    });
+
     $("#light-mode-toggle").on("click", function () {
         if (lightMode !== "enabled") {
             enableLightMode();
