@@ -144,3 +144,23 @@ class Profile(models.Model):
             if os.path.isfile(self.image.path):
                 os.remove(self.image.path)  # Delete the image file
         super().delete(*args, **kwargs)
+
+
+class Exercise(models.Model):
+    date = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    prompt = models.TextField(default="")
+    num_true_false = models.IntegerField(default=3)
+    num_multiple_choice = models.IntegerField(default=3)
+    num_short_ans = models.IntegerField(default=3)
+    num_long_ans = models.IntegerField(default=3)
+
+    template = models.ForeignKey(
+        "File", null=True, on_delete=models.CASCADE, related_name="template_conversions"
+    )
+    model = models.CharField(
+        max_length=50, choices=ModelChoice.choices, default=ModelChoice.GPT_3_5
+    )
+    complexity = models.IntegerField(
+        choices=ComplexityLevelChoice.choices, default=ComplexityLevelChoice.DEFAULT
+    )
