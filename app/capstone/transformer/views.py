@@ -12,6 +12,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 from django.forms import formset_factory
 from .utils import error
+import fitz
 
 from .presentationManager import MissingPlaceholderError
 from .forms import (
@@ -266,18 +267,32 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
             "You do not have permission to access this resource."
         )
 
-    RepromptFormSet = formset_factory(RepromptForm, extra=1)
+    num_slides = 10
+
+    for file in output_files:
+        if file.type == "application/pdf":
+            try:
+                doc = fitz.open(file.file.path)
+                num_slides = len(doc)
+                doc.close()
+                break
+            except Exception as e:
+                print(f"Failed to open PDF: {e}")
+
+    repromptFormSet = formset_factory(RepromptForm)
 
     if request.method == "POST":
-        formset = RepromptFormSet(request.POST)
+        formset = repromptFormSet(request.POST, form_kwargs={"num_slides": num_slides})
         if formset.is_valid():
             for form in formset:
                 slide = form.cleaned_data.get("slide")
                 prompt = form.cleaned_data.get("prompt")
                 image_slide = form.cleaned_data.get("image_slide")
-                print(f'I am slide {slide} with the prompt "{prompt}"')
+                print(
+                    f'I am slide {slide} with the prompt "{prompt}" and image {image_slide}'
+                )
     else:
-        formset = RepromptFormSet()
+        formset = repromptFormSet(form_kwargs={"num_slides": num_slides})
 
     return render(
         request,
