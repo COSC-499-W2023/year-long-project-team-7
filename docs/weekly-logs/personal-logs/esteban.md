@@ -488,27 +488,4 @@ _Team Evaluation Screenshot_
 
 This week the team decided to foxus on merging the multiple large features that had been getting worked on over the break. We mostly focused on more intensive code review and fixing merge conflict with the master branch, as well as locating bugs that arose later as a result of the merging. We also had a couple of meetings to discuss the peer testing tasks for the upcoming session and prepare the deployed site.
 
-I also took some time to reorganize the tasks we had set up in the Github Project and organize them into new milestones which cover progress up until the end of the project. I also added start and end dates to every issue in the project so we could best use the timeline feature of the board and follow a schedule which let us cover all the work we want by the end of the project.
-
-## Mar 04 2024 -> Mar 18 2024
-
-![evaluation-screenshot](../../img/esteban-eval-21.png)
-<br>
-_Team Evaluation Screenshot_
-
-<br>
-
-### Tasks
-
-![tasks-screenshot](../../img/esteban-tasks-21.png)
-
-### Goals
-
--   [x] Frontend Formset
-    -   [x] Variable form fields
-    -   [x] Variable form values (slide numbers)
--   [x] View routing
-
-### Self Reflection and Learning
-
-This week I completed work on the frontend to process the form we will use for the reprompting system. This entailed working with the Django FromSet to manage multiple forms in the frontend. The user will be able to add more forms to do multiple reprompts. I also had to read the appropriate PDF slides to generate a variable form value.
+I also took some time to reorganize the tasks we had set up in the Github Project and organize them into new milestones which cover progress up until the end of the project. I also added start and end dates to every issue in the project so we could best use the timeline feature of the board and follow a schedule which let us cover all the work we want by the end of the project. 
