@@ -354,3 +354,24 @@ Note: This week I added input validation for the transformer page.
 
 
 <br>
+
+
+## Mar 11 2024 -> Mar 17 2024
+
+![evaluation-screenshot](../../img/liam-eval-23.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w23-tasks.png)
+
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Milestone)
+<br>
+[Latest PR](https://github.com/COSC-499-W2023/year-long-project-team-7/pull/269)
+
+
+<br>
