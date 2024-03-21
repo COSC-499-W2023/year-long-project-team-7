@@ -68,20 +68,16 @@
                     </div>
                 </fieldset>
             </form>
-            <br>
             <!-- Profile Picture Update Form -->
-            <form method="POST" enctype="multipart/form-data">
+            <form id="profilePicForm"
+                  method="POST"
+                  enctype="multipart/form-data"
+                  style="display:none">
                 {% csrf_token %}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Profile Picture</legend>
-                    <div class="form-group">
-                        <label for="{{ pic_form.image.id_for_label }}" style="margin-bottom: 15px;">Image is</label>
-                        {{ pic_form.image }}
-                    </div>
-                    <div class="form-group mt-3">
-                        <button name="profile_pic_submit" class="btn btn-primary" type="submit">Update Profile Picture</button>
-                    </div>
-                </fieldset>
+                <input type="file"
+                       name="profile_picture"
+                       id="{{ pic_form.image.id_for_label }}"
+                       onchange="document.getElementById('profilePicForm').submit();" />
             </form>
             <br>
             {% if has_subscription %}
