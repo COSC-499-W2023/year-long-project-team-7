@@ -42,29 +42,13 @@
                           method="post"
                           enctype="multipart/form-data">
                         {% csrf_token %} {{ formset.management_form }}
-                        <div class="row">
-                            {% for form in formset %}
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="card mb-3" style="width: 20rem;">
-                                        <div class="card-header">Slide {{ forloop.counter }}</div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    {{ form.prompt.label_tag }}
-                                                    <br>
-                                                    {{ form.prompt }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                {{ form.image_slide.label_tag }}
-                                                <br>
-                                                {{ form.image_slide }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
+                        {% for form in formset %}
+                            <div class="fields">
+                                <div class="field-group mb-3">{{ form }}</div>
+                            </div>
+                        {% endfor %}
+                        <button class="mt-3" id="add-form">Add</button>
+                        <button class="mt-3" id="remove-form">Remove</button>
                         <button class="mt-5" type="submit">Submit</button>
                     </form>
                 </div>

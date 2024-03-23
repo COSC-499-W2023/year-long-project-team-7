@@ -12,7 +12,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 from django.forms import formset_factory
 from .utils import error
-import fitz  # type: ignore
+import fitz
 
 from .presentationManager import MissingPlaceholderError
 from .forms import (
@@ -277,12 +277,12 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
                 doc.close()
                 break
             except Exception as e:
-                error(e)
+                print(f"Failed to open PDF: {e}")
 
-    repromptFormSet = formset_factory(RepromptForm, extra=num_slides)
+    repromptFormSet = formset_factory(RepromptForm)
 
     if request.method == "POST":
-        formset = repromptFormSet(request.POST)
+        formset = repromptFormSet(request.POST, form_kwargs={"num_slides": num_slides})
         if formset.is_valid():
             for form in formset:
                 slide = form.cleaned_data.get("slide")
@@ -292,7 +292,7 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
                     f'I am slide {slide} with the prompt "{prompt}" and image {image_slide}'
                 )
     else:
-        formset = repromptFormSet()
+        formset = repromptFormSet(form_kwargs={"num_slides": num_slides})
 
     return render(
         request,
