@@ -68,13 +68,32 @@ class MissingPlaceholderError(Exception):
 
 
 class PresentationManager:
-    def setup(self, template: File) -> None:
+    def __init__(self, template: File) -> None:
         file_system = FileSystemStorage()
 
         self.template_path = file_system.path(template.file.name)
         self.presentation = Presentation(self.template_path)
 
-        self.delete_all_slides()
+    def get_layout(self, slide_num: int) -> typing.Any:
+        slide = self.presentation.slides[slide_num]
+        return slide.slide_layout
+
+    def update_slide(self, slide_content: SlideContent) -> None:
+        slide = self.presentation.slides[slide_content.slide_num]
+        fields = slide_content.fields
+
+        for field in fields:
+            if field.field_type == FieldTypes.TITLE:
+                slide.shapes[field.field_index].text = field.value
+
+            elif field.field_type == FieldTypes.TEXT:
+                slide.shapes[field.field_index].text = field.value
+
+            elif field.field_type == FieldTypes.IMAGE:
+                if isinstance(field.value, File):
+                    file_system = FileSystemStorage()
+                    path = file_system.path(field.value.file.name)
+                    slide.shapes[field.field_index].insert_picture(path)
 
     def delete_all_slides(self) -> None:
         # Delete all slides from template presentation

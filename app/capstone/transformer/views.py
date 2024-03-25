@@ -11,11 +11,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 from django.forms import formset_factory
-
-from .slideRegenerator import SlideToBeUpdated
+from .presentationGenerator import SlideToBeUpdated
 from .utils import error
 import fitz  # type: ignore
-
 from .presentationManager import MissingPlaceholderError
 from .forms import (
     LoginForm,
@@ -28,11 +26,9 @@ from .forms import (
     SubscriptionDeletionForm,
     RepromptForm,
 )
-
 from .models import Conversion, File, ModelChoice, Product, Profile, Subscription
-
 from .tokens import account_activation_token
-from .generator import generate_output, reprompt_slides
+from .generator import generate_presentation, reprompt_slides
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 import stripe
@@ -196,7 +192,7 @@ def transform(request: HttpRequest) -> HttpResponse:
 
                     conversion.save()
                     template_file.save()
-                    result = generate_output(input_files, conversion)
+                    result = generate_presentation(input_files, conversion)
 
                     return redirect("results", conversion_id=conversion.id)
 
@@ -297,9 +293,7 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
                     and is_image_slide is not None
                 ):
                     slides_to_update.append(
-                        SlideToBeUpdated(
-                            slide_number, prompt, is_image_slide, conversion
-                        )
+                        SlideToBeUpdated(slide_number, prompt, is_image_slide)
                     )
 
             new_conversion = reprompt_slides(slides_to_update, conversion)
@@ -463,11 +457,25 @@ class CreateCheckoutSessionView(View):
         if request.user.is_authenticated:
             product_id = self.kwargs["pk"]
             product = Product.objects.get(id=product_id)
-            if has_valid_subscription(request.user.id) and has_premium_subscription(request.user.id) and product.name != "Premium Subscription":
-                messages.error(request, "Please purchase another premium subscription or cancel your existing subscription.")
+            if (
+                has_valid_subscription(request.user.id)
+                and has_premium_subscription(request.user.id)
+                and product.name != "Premium Subscription"
+            ):
+                messages.error(
+                    request,
+                    "Please purchase another premium subscription or cancel your existing subscription.",
+                )
                 return redirect("store")
-            elif has_valid_subscription(request.user.id) and has_premium_subscription(request.user.id) is False and product.name == "Premium Subscription":
-                messages.error(request, "Please cancel your existing subscription before purchasing a premium subscription.")
+            elif (
+                has_valid_subscription(request.user.id)
+                and has_premium_subscription(request.user.id) is False
+                and product.name == "Premium Subscription"
+            ):
+                messages.error(
+                    request,
+                    "Please cancel your existing subscription before purchasing a premium subscription.",
+                )
                 return redirect("store")
             else:
                 stripe.api_key = settings.STRIPE_SECRET_KEY  # type: ignore
@@ -583,7 +591,9 @@ def profile(request: HttpRequest) -> HttpResponse:
                 )
         elif "delete" in request.POST:
             subscription_form = SubscriptionDeletionForm(request.POST)
-            if subscription_form.is_valid() and subscription_form.cleaned_data.get("delete"):
+            if subscription_form.is_valid() and subscription_form.cleaned_data.get(
+                "delete"
+            ):
                 user = User.objects.get(id=request.user.id)  # type: ignore
                 delete_subscription(user)
                 messages.success(request, f"Your subscription has been deleted.")

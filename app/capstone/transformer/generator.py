@@ -1,6 +1,5 @@
 from .models import Conversion, File, User
-from .slideRegenerator import SlideRegenerator, SlideToBeUpdated
-from .presentationGenerator import PresentationGenerator
+from .presentationGenerator import PresentationGenerator, SlideToBeUpdated
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
 import os
@@ -41,29 +40,35 @@ def extract_text_from_pdf(filename: str) -> str:
 def extract_text_from_md(filename: str) -> str:
     file_system = FileSystemStorage()
     file_path = file_system.path(filename)
-    text = open(file_path, 'r').read()
+    text = open(file_path, "r").read()
     return text
 
-def generate_output(files: list[File], conversion: Conversion) -> str:
-    input_file_text = ""
-    
+
+def extract_text_from_multiple_files(files: list[File]) -> str:
+    text = ""
+
     for file in files:
         ext = os.path.splitext(file.file.name)[1].lower()
         if "pdf" in file.type:
-            input_file_text += extract_text_from_pdf(file.file.name)
+            text += extract_text_from_pdf(file.file.name)
         elif ext == ".md":
-            input_file_text += extract_text_from_md(file.file.name)
+            text += extract_text_from_md(file.file.name)
         else:
             try:
-                input_file_text += extract_text_from_pdf(to_pdf(file.file.name))
+                text += extract_text_from_pdf(to_pdf(file.file.name))
             except Exception as e:
                 error(e)
+    return text
 
-    presentation_generator = PresentationGenerator(input_file_text, conversion)
 
-    output_file_name = presentation_generator.build_presentation()
+def generate_presentation(files: list[File], conversion: Conversion) -> str:
+    input_file_text = extract_text_from_multiple_files(files)
 
-    file_name, file_extension = os.path.splitext(output_file_name)
+    presentation_generator = PresentationGenerator(conversion)
+
+    new_presentation_path = presentation_generator.build_presentation(input_file_text)
+
+    file_name, file_extension = os.path.splitext(new_presentation_path)
 
     user = None
 
@@ -77,12 +82,12 @@ def generate_output(files: list[File], conversion: Conversion) -> str:
         user=user,
         conversion=conversion,
         type=file_extension,
-        file=output_file_name,
+        file=new_presentation_path,
         is_output=True,
     )
     new_pptx.save()
 
-    pdf_preview_path = to_pdf(output_file_name)
+    pdf_preview_path = to_pdf(new_presentation_path)
     new_pdf = File(
         user=user,
         conversion=conversion,
@@ -92,12 +97,62 @@ def generate_output(files: list[File], conversion: Conversion) -> str:
     )
     new_pdf.save()
 
-    return output_file_name
+    return new_presentation_path
 
 
 def reprompt_slides(
-    slides_to_be_updated: list[SlideToBeUpdated], conversion: Conversion
+    slides_to_be_updated: list[SlideToBeUpdated], old_conversion: Conversion
 ) -> Conversion:
-    slide_generator = SlideRegenerator()
-    slide_generator.regenerate_slides(slides_to_be_updated)
-    return conversion
+    new_conversion = Conversion.objects.create(
+        prompt=old_conversion.prompt,
+        language=old_conversion.language,
+        tone=old_conversion.tone,
+        complexity=old_conversion.complexity,
+        num_slides=old_conversion.num_slides,
+        image_frequency=old_conversion.image_frequency,
+        model=old_conversion.model,
+        user=user,  # type: ignore
+        template=old_conversion.template,
+    )
+
+    old_conversion_inputs = list(
+        File.objects.filter(conversion=old_conversion, is_input=True)
+    )
+    input_file_text = extract_text_from_multiple_files(old_conversion_inputs)
+
+    presentation_generator = PresentationGenerator(old_conversion)
+
+    new_presentation_path = presentation_generator.regenerate_slides(
+        slides_to_be_updated, input_file_text, new_conversion
+    )
+
+    file_name, file_extension = os.path.splitext(new_presentation_path)
+
+    user = None
+
+    if old_conversion.user_id is not None:
+        try:
+            user = User.objects.get(id=old_conversion.user_id)
+        except ObjectDoesNotExist:
+            user = None
+
+    new_pptx = File(
+        user=user,
+        conversion=new_conversion,
+        type=file_extension,
+        file=new_presentation_path,
+        is_output=True,
+    )
+    new_pptx.save()
+
+    pdf_preview_path = to_pdf(new_presentation_path)
+    new_pdf = File(
+        user=user,
+        conversion=new_conversion,
+        type="application/pdf",
+        file=pdf_preview_path,
+        is_output=True,
+    )
+    new_pdf.save()
+
+    return new_conversion
