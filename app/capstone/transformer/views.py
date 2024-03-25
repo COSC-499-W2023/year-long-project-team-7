@@ -11,8 +11,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 from django.forms import formset_factory
+
+from .slideRegenerator import SlideToBeUpdated
 from .utils import error
-import fitz
+import fitz  # type: ignore
 
 from .presentationManager import MissingPlaceholderError
 from .forms import (
@@ -30,8 +32,7 @@ from .forms import (
 from .models import Conversion, File, ModelChoice, Product, Profile, Subscription
 
 from .tokens import account_activation_token
-import json
-from .generator import generate_output
+from .generator import generate_output, reprompt_slides
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 import stripe
@@ -284,13 +285,27 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     if request.method == "POST":
         formset = repromptFormSet(request.POST, form_kwargs={"num_slides": num_slides})
         if formset.is_valid():
+            slides_to_update = []
             for form in formset:
-                slide = form.cleaned_data.get("slide")
+                slide_number = form.cleaned_data.get("slide")
                 prompt = form.cleaned_data.get("prompt")
-                image_slide = form.cleaned_data.get("image_slide")
-                print(
-                    f'I am slide {slide} with the prompt "{prompt}" and image {image_slide}'
-                )
+                is_image_slide = form.cleaned_data.get("image_slide")
+
+                if (
+                    slide_number is not None
+                    and prompt is not None
+                    and is_image_slide is not None
+                ):
+                    slides_to_update.append(
+                        SlideToBeUpdated(
+                            slide_number, prompt, is_image_slide, conversion
+                        )
+                    )
+
+            new_conversion = reprompt_slides(slides_to_update, conversion)
+
+            return redirect("results", conversion_id=new_conversion.id)
+
     else:
         formset = repromptFormSet(form_kwargs={"num_slides": num_slides})
 

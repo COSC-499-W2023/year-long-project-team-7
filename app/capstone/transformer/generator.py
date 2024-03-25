@@ -1,4 +1,5 @@
 from .models import Conversion, File, User
+from .slideRegenerator import SlideRegenerator, SlideToBeUpdated
 from .presentationGenerator import PresentationGenerator
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
@@ -49,9 +50,9 @@ def generate_output(files: list[File], conversion: Conversion) -> str:
             except Exception as e:
                 error(e)
 
-    pres_manager = PresentationGenerator(input_file_text, conversion)
+    presentation_generator = PresentationGenerator(input_file_text, conversion)
 
-    output_file_name = pres_manager.build_presentation()
+    output_file_name = presentation_generator.build_presentation()
 
     file_name, file_extension = os.path.splitext(output_file_name)
 
@@ -83,3 +84,11 @@ def generate_output(files: list[File], conversion: Conversion) -> str:
     new_pdf.save()
 
     return output_file_name
+
+
+def reprompt_slides(
+    slides_to_be_updated: list[SlideToBeUpdated], conversion: Conversion
+) -> Conversion:
+    slide_generator = SlideRegenerator()
+    slide_generator.regenerate_slides(slides_to_be_updated)
+    return conversion

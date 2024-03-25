@@ -228,7 +228,7 @@ class SubscriptionDeletionForm(forms.Form):
 
 
 class RepromptForm(forms.Form):
-    def __init__(self, *args, num_slides, **kwargs):
+    def __init__(self, *args, num_slides: int, **kwargs) -> None:  # type: ignore
         super().__init__(*args, **kwargs)
         slide_choices = [(str(i), str(i)) for i in range(1, num_slides + 1)]
         self.fields["slide"] = forms.ChoiceField(choices=slide_choices, label="Slide")
