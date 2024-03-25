@@ -31,6 +31,9 @@
             {% endfor %}
             <button class="btn btn-primary mt-3 mx-auto login-button" type="submit">{{ submit_text }}</button>
         </form>
+        <div class="text-center mt-3">
+            <a href="{% url 'password_reset' %}">Forgot Password?</a>
+        </div>
         <div class="line mb-3"></div>
         <a class="custom-signin" href="{{ form_alt_action }}">
             <button class="btn btn-primary mb-3" type="submit">{{ form_alt_text }}</button>
