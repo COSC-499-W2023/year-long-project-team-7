@@ -18,6 +18,13 @@ class TransformerForm(forms.Form):
         self.fields["num_slides"].initial = 10
         self.fields["image_frequency"].initial = 3
 
+    format = forms.ChoiceField(
+        label="Presentation Format",
+        choices=[("lecture", "Lecture"), ("exercises", "Exercises (Q&A)")],
+        widget=forms.Select(attrs={"class": "form-control dropdown"}),
+        initial="lecture",  # Default to lecture
+    )
+
     model = forms.ChoiceField(
         label="Model",
         choices=ModelChoice.choices,
