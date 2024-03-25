@@ -396,11 +396,25 @@ class CreateCheckoutSessionView(View):
         if request.user.is_authenticated:
             product_id = self.kwargs["pk"]
             product = Product.objects.get(id=product_id)
-            if has_valid_subscription(request.user.id) and has_premium_subscription(request.user.id) and product.name != "Premium Subscription":
-                messages.error(request, "Please purchase another premium subscription or cancel your existing subscription.")
+            if (
+                has_valid_subscription(request.user.id)
+                and has_premium_subscription(request.user.id)
+                and product.name != "Premium Subscription"
+            ):
+                messages.error(
+                    request,
+                    "Please purchase another premium subscription or cancel your existing subscription.",
+                )
                 return redirect("store")
-            elif has_valid_subscription(request.user.id) and has_premium_subscription(request.user.id) is False and product.name == "Premium Subscription":
-                messages.error(request, "Please cancel your existing subscription before purchasing a premium subscription.")
+            elif (
+                has_valid_subscription(request.user.id)
+                and has_premium_subscription(request.user.id) is False
+                and product.name == "Premium Subscription"
+            ):
+                messages.error(
+                    request,
+                    "Please cancel your existing subscription before purchasing a premium subscription.",
+                )
                 return redirect("store")
             else:
                 stripe.api_key = settings.STRIPE_SECRET_KEY  # type: ignore
@@ -516,7 +530,9 @@ def profile(request: HttpRequest) -> HttpResponse:
                 )
         elif "delete" in request.POST:
             subscription_form = SubscriptionDeletionForm(request.POST)
-            if subscription_form.is_valid() and subscription_form.cleaned_data.get("delete"):
+            if subscription_form.is_valid() and subscription_form.cleaned_data.get(
+                "delete"
+            ):
                 user = User.objects.get(id=request.user.id)  # type: ignore
                 delete_subscription(user)
                 messages.success(request, f"Your subscription has been deleted.")
