@@ -252,7 +252,12 @@ def transform(request: HttpRequest) -> HttpResponse:
 @login_required(login_url="login")
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     conversion = get_object_or_404(Conversion, id=conversion_id)
-    output_files = File.objects.filter(conversion=conversion, is_output=True)
+    # output_files = File.objects.filter(conversion=conversion, is_output=True)
+    output_files = File.objects.filter(conversion=conversion, is_output=True).order_by(
+        "-id"
+    )[
+        :2
+    ]  # This is very stupid but it works
 
     if request.user.is_authenticated:
         if conversion.user != request.user:
@@ -300,7 +305,12 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
             new_conversion = reprompt_slides(slides_to_update, conversion)
 
             return redirect("results", conversion_id=new_conversion.id)
-
+        else:
+            return render(
+                request,
+                "results.html",
+                {"output_files": output_files, "formset": formset},
+            )
     else:
         formset = repromptFormSet(form_kwargs={"num_slides": num_slides})
 

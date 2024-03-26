@@ -238,14 +238,14 @@ class RepromptForm(forms.Form):
     prompt = forms.CharField(required=False, max_length=100, label="Prompt")
     image_slide = forms.BooleanField(required=False, label="Image Slide")
 
-    def clean_prompt(self):
-        prompt = self.cleaned_data.get("prompt")
+    def clean_prompt(self) -> str:
+        prompt = str(self.cleaned_data.get("prompt", ""))
         if not prompt:
             raise forms.ValidationError("The prompt field is required.")
         return prompt
 
-    def clean_slide(self):
-        slide = self.cleaned_data.get("slide")
+    def clean_slide(self) -> str:
+        slide = str(self.cleaned_data.get("slide", ""))
         if not slide:
             raise forms.ValidationError("The slide number is required.")
         return slide
