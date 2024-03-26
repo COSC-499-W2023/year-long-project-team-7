@@ -284,7 +284,7 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
             slides_to_update = []
             for form in formset:
                 slide_number = form.cleaned_data.get("slide")
-                prompt = form.cleaned_data.get("prompt")
+                prompt = str(form.cleaned_data.get("prompt"))
                 is_image_slide = form.cleaned_data.get("image_slide")
 
                 if (
@@ -292,6 +292,7 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
                     and prompt is not None
                     and is_image_slide is not None
                 ):
+                    slide_number = int(slide_number)
                     slides_to_update.append(
                         SlideToBeUpdated(slide_number, prompt, is_image_slide)
                     )

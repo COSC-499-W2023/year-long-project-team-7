@@ -10,6 +10,7 @@ from pptx.enum.shapes import PP_PLACEHOLDER  # type: ignore
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from .models import File
 from .utils import error
+from typing import List, Optional, Dict, Any
 
 
 class FieldTypes(Enum):
@@ -19,9 +20,7 @@ class FieldTypes(Enum):
 
 
 class SlideField:
-    def __init__(
-        self, field_index: int, field_type: FieldTypes, value: typing.Union[str, File]
-    ):
+    def __init__(self, field_index: int, field_type: FieldTypes, value: str):
         self.field_index = field_index
         self.field_type = field_type
         self.value = value
@@ -30,28 +29,56 @@ class SlideField:
 class SlideContent:
     def __init__(
         self,
-        slide_num: int,
-        layout: typing.Any,
-        fields: list[SlideField],
+        slide_num: Optional[int] = None,
+        layout: Optional[str] = None,
+        fields: Optional[List[SlideField]] = None,
+        json: Optional[Dict[Any, Any]] = None,
     ):
-        self.slide_num = slide_num
-        self.layout = layout
-        self.fields = fields
+        if json is not None:
+            self.slide_num = json["SLIDE_NUM"]
+            self.layout = json["SLIDE_LAYOUT"]
+            self.fields = [
+                SlideField(
+                    field["FIELD_INDEX"],
+                    FieldTypes(field["FIELD_TYPE"]),
+                    field["FIELD_VALUE"],
+                )
+                for field in json["FIELDS"]
+            ]
+        else:
+            self.slide_num = slide_num or 0
+            self.layout = layout or ""
+            self.fields = fields or []
 
     def to_json_string(self) -> str:
         slide_json = {
             "SLIDE_NUM": self.slide_num,
-            "SLIDE_LAYOUT": self.layout.name,
+            "SLIDE_LAYOUT": self.layout,
             "FIELDS": [
                 {
                     "FIELD_INDEX": field.field_index,
-                    "FIELD_TYPE": field.field_type,
+                    "FIELD_TYPE": field.field_type.value,
                     "FIELD_VALUE": field.value,
                 }
                 for field in self.fields
             ],
         }
         return str(slide_json)
+
+    def to_json(self) -> dict[str, str]:
+        slide_json = {
+            "SLIDE_NUM": self.slide_num,
+            "SLIDE_LAYOUT": self.layout,
+            "FIELDS": [
+                {
+                    "FIELD_INDEX": field.field_index,
+                    "FIELD_TYPE": field.field_type.value,
+                    "FIELD_VALUE": field.value,
+                }
+                for field in self.fields
+            ],
+        }
+        return slide_json
 
     def update_from_json(self, response: str) -> None:
         object = json.loads(response)
@@ -73,27 +100,6 @@ class PresentationManager:
 
         self.template_path = file_system.path(template.file.name)
         self.presentation = Presentation(self.template_path)
-
-    def get_layout(self, slide_num: int) -> typing.Any:
-        slide = self.presentation.slides[slide_num]
-        return slide.slide_layout
-
-    def update_slide(self, slide_content: SlideContent) -> None:
-        slide = self.presentation.slides[slide_content.slide_num]
-        fields = slide_content.fields
-
-        for field in fields:
-            if field.field_type == FieldTypes.TITLE:
-                slide.shapes[field.field_index].text = field.value
-
-            elif field.field_type == FieldTypes.TEXT:
-                slide.shapes[field.field_index].text = field.value
-
-            elif field.field_type == FieldTypes.IMAGE:
-                if isinstance(field.value, File):
-                    file_system = FileSystemStorage()
-                    path = file_system.path(field.value.file.name)
-                    slide.shapes[field.field_index].insert_picture(path)
 
     def delete_all_slides(self) -> None:
         # Delete all slides from template presentation
@@ -228,7 +234,8 @@ class PresentationManager:
         return fields
 
     def add_slide_to_presentation(self, slide_content: SlideContent) -> None:
-        slide = self.presentation.slides.add_slide(slide_content.layout)
+        layout = self.presentation.slide_layouts.get_by_name(slide_content.layout)
+        slide = self.presentation.slides.add_slide(layout)
         fields = slide_content.fields
 
         for field in fields:
@@ -239,7 +246,4 @@ class PresentationManager:
                 slide.shapes[field.field_index].text = field.value
 
             elif field.field_type == FieldTypes.IMAGE:
-                if isinstance(field.value, File):
-                    file_system = FileSystemStorage()
-                    path = file_system.path(field.value.file.name)
-                    slide.shapes[field.field_index].insert_picture(path)
+                slide.shapes[field.field_index].insert_picture(field.value)

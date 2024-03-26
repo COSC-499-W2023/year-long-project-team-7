@@ -81,6 +81,8 @@ class Conversion(models.Model):
         choices=ImageFrequencyChoice.choices, default=ImageFrequencyChoice.DEFAULT
     )
 
+    slides_contents = JSONField(default=dict)
+
 
 class File(models.Model):
     date = models.DateTimeField(default=timezone.now)

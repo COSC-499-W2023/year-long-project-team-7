@@ -45,7 +45,7 @@ class PresentationGenerator:
         self.image_frequency = conversion.image_frequency
         self.template = conversion.template
 
-    def image_search(self, query: str) -> File:
+    def image_search(self, query: str) -> str:
         query = re.sub("<|>", "", query)
 
         params = {
@@ -92,7 +92,7 @@ class PresentationGenerator:
         )
 
         image_file.save()
-        return image_file
+        return file_system.path(image_file.file.name)
 
     def generate_slide_content(
         self,
@@ -112,7 +112,7 @@ class PresentationGenerator:
 
         fields = self.presentation_manager.get_slide_layout_fields(layout)
 
-        slide_content = SlideContent(slide_num, layout, fields)
+        slide_content = SlideContent(slide_num, layout.name, fields)
 
         slide_json = slide_content.to_json_string()
 
@@ -180,8 +180,14 @@ class PresentationGenerator:
             slide_contents, key=lambda slide: slide.slide_num
         )
 
+        json_contents = []
         for slide_content in sorted_slide_contents:
+            json_contents.append(slide_content.to_json())
             self.presentation_manager.add_slide_to_presentation(slide_content)
+
+        self.conversion.slides_contents = json.dumps(json_contents)
+
+        self.conversion.save()
 
         return self.presentation_manager.save_presentation(self.conversion.id)
 
@@ -201,21 +207,33 @@ class PresentationGenerator:
 
         self.openai_manager.set_system_prompt(system_prompt)
 
-        slide_contents: list[SlideContent] = []
+        existing_slides_contents = json.loads(self.conversion.slides_contents)
+        existing_slides_contents = [
+            SlideContent(json=content) for content in existing_slides_contents
+        ]
+
+        updated_slide_contents: list[SlideContent] = []
 
         # Fetch slide content in parallel for speed
         with ThreadPoolExecutor() as executor:
             future_slides = executor.map(
                 lambda slide: self.update_slide(slide), slides_to_be_updated
             )
-            slide_contents = list(future_slides)
+            updated_slide_contents = list(future_slides)
 
-        # Sort and add slides to presentation
+        combined_slides = []
+        for existing_slide in existing_slides_contents:
+            for updated_slide in updated_slide_contents:
+                if existing_slide.slide_num == updated_slide.slide_num:
+                    combined_slides.append(updated_slide)
+                else:
+                    combined_slides.append(existing_slide)
+
         sorted_slide_contents = sorted(
-            slide_contents, key=lambda slide: slide.slide_num
+            combined_slides, key=lambda slide: slide.slide_num
         )
 
         for slide_content in sorted_slide_contents:
-            self.presentation_manager.update_slide(slide_content)
+            self.presentation_manager.add_slide_to_presentation(slide_content)
 
-        return self.presentation_manager.save_presentation(self.conversion.id)
+        return self.presentation_manager.save_presentation(new_conversion.id)

@@ -110,10 +110,19 @@ def reprompt_slides(
         complexity=old_conversion.complexity,
         num_slides=old_conversion.num_slides,
         image_frequency=old_conversion.image_frequency,
-        model=old_conversion.model,
-        user=user,  # type: ignore
-        template=old_conversion.template,
+        user=old_conversion.user,
     )
+
+    old_conversion_files = list(File.objects.filter(conversion=old_conversion))
+    for file in old_conversion_files:
+        File.objects.create(
+            user=file.user,
+            conversion=new_conversion,
+            type=file.type,
+            file=file.file,
+            is_input=file.is_input,
+            is_output=file.is_output,
+        )
 
     old_conversion_inputs = list(
         File.objects.filter(conversion=old_conversion, is_input=True)
