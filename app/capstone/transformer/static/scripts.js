@@ -107,6 +107,8 @@ $(document).ready(function () {
             $(this).attr({ name: name, id: id }).val("").removeAttr("checked");
         });
 
+        fieldGroup.find('select[name$="-slide"]').val("1");
+
         fields.append(fieldGroup);
         totalForms.val(currentTotal + 1);
     });

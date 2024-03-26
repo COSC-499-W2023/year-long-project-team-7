@@ -231,10 +231,24 @@ class RepromptForm(forms.Form):
     def __init__(self, *args, num_slides: int, **kwargs) -> None:  # type: ignore
         super().__init__(*args, **kwargs)
         slide_choices = [(str(i), str(i)) for i in range(1, num_slides + 1)]
-        self.fields["slide"] = forms.ChoiceField(choices=slide_choices, label="Slide")
+        self.fields["slide"] = forms.ChoiceField(
+            choices=slide_choices, label="Slide", initial="1"
+        )
 
     prompt = forms.CharField(required=False, max_length=100, label="Prompt")
     image_slide = forms.BooleanField(required=False, label="Image Slide")
+
+    def clean_prompt(self):
+        prompt = self.cleaned_data.get("prompt")
+        if not prompt:
+            raise forms.ValidationError("The prompt field is required.")
+        return prompt
+
+    def clean_slide(self):
+        slide = self.cleaned_data.get("slide")
+        if not slide:
+            raise forms.ValidationError("The slide number is required.")
+        return slide
 
 
 # converts reset email from plain text to html
