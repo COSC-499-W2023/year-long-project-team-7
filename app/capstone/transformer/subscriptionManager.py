@@ -32,7 +32,7 @@ def give_subscription_to_user(
         subscription.save()
     else:
         old_end = subscription.end_date
-        subscription.end_date = old_end + timedelta(days=product.length_days) # type: ignore
+        subscription.end_date = old_end + timedelta(days=product.length_days)  # type: ignore
         subscription.save()
 
 
