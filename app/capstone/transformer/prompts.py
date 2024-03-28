@@ -203,3 +203,12 @@ SLIDE = """
 Fill in the content for the following json object:
 {slide_json}
 """
+
+EXERCISE_PROMPT = """
+put prompt here
+"""
+
+EXERCISE = """
+Fill in the content for the following json object:
+{exercise_json}
+"""
