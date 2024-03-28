@@ -375,3 +375,24 @@ _Team Evaluation Screenshot_
 
 
 <br>
+
+## Mar 18 2024 -> Mar 24 2024
+
+![evaluation-screenshot](../../img/liam-eval-24.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w24-tasks.png)
+Note: This week I'm hoping to finish the exercise feature frontend.
+
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Milestone)
+<br>
+[Latest PR](https://github.com/COSC-499-W2023/year-long-project-team-7/pull/278)
+
+
+<br>
