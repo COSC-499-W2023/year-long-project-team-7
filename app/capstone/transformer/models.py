@@ -165,3 +165,6 @@ class Exercise(models.Model):
     complexity = models.IntegerField(
         choices=ComplexityLevelChoice.choices, default=ComplexityLevelChoice.DEFAULT
     )
+    language = models.CharField(
+        max_length=50, choices=LanguageChoice.choices, default=LanguageChoice.AUTO
+    )
