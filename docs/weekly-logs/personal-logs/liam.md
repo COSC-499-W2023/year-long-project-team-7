@@ -387,6 +387,7 @@ _Team Evaluation Screenshot_
 ### Goals/Features this week
 
 ![tasks-screenshot](../../img/liam-w24-tasks.png)
+<br>
 Note: This week I'm hoping to finish the exercise feature frontend.
 
 <br>
