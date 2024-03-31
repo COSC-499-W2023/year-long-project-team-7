@@ -1,6 +1,5 @@
 from .models import Exercise
 from .exerciseManager import (
-    FieldTypes,
     ExerciseManager,
     ExerciseContent,
 )
