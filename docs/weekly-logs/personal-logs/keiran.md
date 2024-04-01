@@ -261,3 +261,17 @@ _Tasks Screenshot_
 1. Start exercise creation backend
 2. Add markdown input
 3. Finish subscription issues
+
+## Mar 18 - 24
+
+Missed this log.
+
+## Mar 25 - 31 
+![evaluation screenshot](../../img/keiran-eval-23.png)
+_Team evaluation Screenshot_
+
+![w17 tasks screenshot](../../img/keiran-w23-tasks.png)
+_Tasks Screenshot_
+
+### Goals this week
+1. Continue exercise creation backend
