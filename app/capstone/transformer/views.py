@@ -43,6 +43,7 @@ from .subscriptionManager import (
 )
 from django.contrib.auth.models import User
 from datetime import date, timedelta
+import sys
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -252,6 +253,8 @@ def transform(request: HttpRequest) -> HttpResponse:
 @login_required(login_url="login")
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     conversion = get_object_or_404(Conversion, id=conversion_id)
+    print(conversion.slides_contents, file=sys.stderr)
+
     # output_files = File.objects.filter(conversion=conversion, is_output=True)
     output_files = File.objects.filter(conversion=conversion, is_output=True).order_by(
         "-id"

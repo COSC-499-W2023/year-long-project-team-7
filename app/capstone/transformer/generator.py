@@ -106,12 +106,16 @@ def reprompt_slides(
     new_conversion = Conversion.objects.create(
         prompt=old_conversion.prompt,
         language=old_conversion.language,
+        template=old_conversion.template,
         tone=old_conversion.tone,
         complexity=old_conversion.complexity,
         num_slides=old_conversion.num_slides,
         image_frequency=old_conversion.image_frequency,
         user=old_conversion.user,
     )
+
+    new_conversion.slides_contents = old_conversion.slides_contents
+    new_conversion.save()
 
     old_conversion_files = list(File.objects.filter(conversion=old_conversion))
     for file in old_conversion_files:
