@@ -246,4 +246,10 @@ class PresentationManager:
                 slide.shapes[field.field_index].text = field.value
 
             elif field.field_type == FieldTypes.IMAGE:
-                slide.shapes[field.field_index].insert_picture(field.value)
+                try:
+                    slide.shapes[field.field_index].insert_picture(field.value)
+                except Exception as e:
+                    # ValueError: unsupported image format, expected one of: dict_keys(['BMP', 'GIF', 'JPEG', 'PNG', 'TIFF', 'WMF']), got 'WEBP'
+                    # Other random errors
+                    error(e)
+                    continue
