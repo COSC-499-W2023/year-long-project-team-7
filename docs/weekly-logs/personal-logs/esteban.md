@@ -537,3 +537,30 @@ _Team Evaluation Screenshot_
 ### Self Reflection and Learning
 
 This week I completed work on the frontend to process the form we will use for the reprompting system. This entailed working with the Django FromSet to manage multiple forms in the frontend. The user will be able to add more forms to do multiple reprompts. I also had to read the appropriate PDF slides to generate a variable form value.
+
+## Mar 25 2024 -> Mar 21 2024
+
+![evaluation-screenshot](../../img/esteban-eval-23.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-22.png)
+
+### Goals
+
+-   [x] Slide number validation
+-   [x] Can't send empty prompt
+-   [x] Multiple outputs
+-   [x] Delete `file-preview.js`
+-   [x] Slide 1 reprompt fails (template not found) after first reprompt
+    -   [x] Template bug
+    -   [x] JSON Slide Contents Bug
+-   [x] Duplicates
+
+### Self Reflection and Learning
+
+This week I focused on improving the validation for the re-prompt form, as well as work on multiple backend issues.
