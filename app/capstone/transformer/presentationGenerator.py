@@ -80,9 +80,14 @@ class PresentationGenerator:
         ]
 
         while True:
-            random_image_url = results[random.randint(0, len(jpegs_results) - 1)][
-                "original"
-            ]
+            try:
+                random_image_url = results[random.randint(0, len(jpegs_results) - 1)][
+                    "original"
+                ]
+            except KeyError as e:
+                print(random_image_url)
+                error(e)
+                continue
 
             try:
                 response = requests.head(random_image_url)
@@ -227,14 +232,17 @@ class PresentationGenerator:
             )
             updated_slide_contents = list(future_slides)
 
-        combined_slides = []
-        for existing_slide in existing_slides_contents:
-            for updated_slide in updated_slide_contents:
-                if existing_slide.slide_num == updated_slide.slide_num:
-                    combined_slides.append(updated_slide)
-                else:
-                    combined_slides.append(existing_slide)
+        combined_slides: dict[int, SlideContent] = {}
 
-        self.add_slides(combined_slides, new_conversion)
+        for existing_slide in existing_slides_contents:
+            combined_slides[existing_slide.slide_num] = existing_slide
+
+        for updated_slide in updated_slide_contents:
+            if updated_slide.slide_num in combined_slides:
+                combined_slides[updated_slide.slide_num] = updated_slide
+
+        # Now convert the dictionary values to a list
+        combined_slides_list = list(combined_slides.values())
+        self.add_slides(combined_slides_list, new_conversion)
 
         return self.presentation_manager.save_presentation(new_conversion.id)
