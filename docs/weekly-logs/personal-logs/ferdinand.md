@@ -226,11 +226,15 @@ _Team Evaluation Screenshot Week 22_
 _Tasks Screenshot_
 
 
-## Mar 3 2024 -> Mar 24 2024
+## Mar 3 2024 -> Mar 31 2024
 
 ![evaluation-screenshot](../../img/ferdinand-eval-26.png)
 <br>
 _Team Evaluation Screenshot Week 26_
+
+![evaluation-screenshot](../../img/ferdinand-eval-27.png)
+<br>
+_Team Evaluation Screenshot Week 27_
 
 
 ![tasks-screenshot](../../img/ferdinand-tasks-26.png)
