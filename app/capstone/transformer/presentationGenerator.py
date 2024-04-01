@@ -45,6 +45,22 @@ class PresentationGenerator:
         self.image_frequency = conversion.image_frequency
         self.template = conversion.template
 
+    def add_slides(
+        self, slide_contents: list[SlideContent], conversion: Conversion
+    ) -> None:
+        sorted_slide_contents = sorted(
+            slide_contents, key=lambda slide: slide.slide_num
+        )
+
+        json_contents = []
+        for slide_content in sorted_slide_contents:
+            json_contents.append(slide_content.to_json())
+            self.presentation_manager.add_slide_to_presentation(slide_content)
+
+        conversion.slides_contents = json.dumps(json_contents)
+
+        conversion.save()
+
     def image_search(self, query: str) -> str:
         query = re.sub("<|>", "", query)
 
@@ -175,19 +191,7 @@ class PresentationGenerator:
             future_slides = executor.map(self.new_slide, range(1, self.num_slides + 1))
             slide_contents = list(future_slides)
 
-        # Sort and add slides to presentation
-        sorted_slide_contents = sorted(
-            slide_contents, key=lambda slide: slide.slide_num
-        )
-
-        json_contents = []
-        for slide_content in sorted_slide_contents:
-            json_contents.append(slide_content.to_json())
-            self.presentation_manager.add_slide_to_presentation(slide_content)
-
-        self.conversion.slides_contents = json.dumps(json_contents)
-
-        self.conversion.save()
+        self.add_slides(slide_contents, self.conversion)
 
         return self.presentation_manager.save_presentation(self.conversion.id)
 
@@ -231,11 +235,6 @@ class PresentationGenerator:
                 else:
                     combined_slides.append(existing_slide)
 
-        sorted_slide_contents = sorted(
-            combined_slides, key=lambda slide: slide.slide_num
-        )
-
-        for slide_content in sorted_slide_contents:
-            self.presentation_manager.add_slide_to_presentation(slide_content)
+        self.add_slides(combined_slides, new_conversion)
 
         return self.presentation_manager.save_presentation(new_conversion.id)

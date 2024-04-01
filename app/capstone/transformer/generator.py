@@ -114,9 +114,6 @@ def reprompt_slides(
         user=old_conversion.user,
     )
 
-    new_conversion.slides_contents = old_conversion.slides_contents
-    new_conversion.save()
-
     old_conversion_files = list(File.objects.filter(conversion=old_conversion))
     for file in old_conversion_files:
         if file.is_output:
@@ -138,7 +135,9 @@ def reprompt_slides(
     presentation_generator = PresentationGenerator(old_conversion)
 
     new_presentation_path = presentation_generator.regenerate_slides(
-        slides_to_be_updated, input_file_text, new_conversion
+        slides_to_be_updated,
+        input_file_text,
+        new_conversion,
     )
 
     file_name, file_extension = os.path.splitext(new_presentation_path)
