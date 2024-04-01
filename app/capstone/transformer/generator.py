@@ -119,6 +119,8 @@ def reprompt_slides(
 
     old_conversion_files = list(File.objects.filter(conversion=old_conversion))
     for file in old_conversion_files:
+        if file.is_output:
+            continue
         File.objects.create(
             user=file.user,
             conversion=new_conversion,
