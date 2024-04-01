@@ -197,6 +197,8 @@ class PresentationGenerator:
         input_file_text: str,
         new_conversion: Conversion,
     ) -> str:
+        self.presentation_manager.delete_all_slides()
+
         system_prompt = Prompts.PRESENTATION.format(
             tone=self.conversion.tone,
             language=self.conversion.language,
