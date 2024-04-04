@@ -204,7 +204,7 @@ Fill in the content for the following json object:
 {slide_json}
 """
 
-EXERCISE_PROMPT = """
+MULTIPLE_CHOICE_PROMPT = """
 You will be given a json object that represents a slide in a slideshow.
 Do not change the structure of the json object.
 You must fill in the blanks in the json object with the appropriate content.
@@ -293,6 +293,211 @@ Example output 2:
             "FIELD_INDEX": "1",
             "FIELD_TYPE": "ANSWER",
             "FIELD_VALUE": "A) Apple  B) Banana  C) Spinach  D) Mango"
+        }}
+    ]
+}}
+
+
+You must always take into account the following user parameters:
+- Language: {language}
+- Complexity: {complexity}/6
+
+You must take the users input into account when generating the slides.
+- User prompt: {prompt}
+
+Use the following text to fill in the slides:
+{input_file_text}
+"""
+
+TRUE_FALSE_PROMPT = """
+You will be given a json object that represents a slide in a slideshow.
+Do not change the structure of the json object.
+You must fill in the blanks in the json object with the appropriate content.
+Only update the fields that have '<>' around them.
+You will create true false questions.
+You will create exactly one question.
+Only output the json object with the filled in content.
+Do not output anything other than the json object.
+Make the questions coherent and relevant to the input text.
+You must ALWAYS follow these rules:
+- The question should be less than 15 words.
+- Every question must have an answer that is either true or false.
+- There must be only one correct answer per question.
+- Do not make duplicate questions
+- Do not use markdown syntax in output.
+- Do not include slide number in output.
+
+Example input 1:
+{{
+    "SLIDE_NUM": "1",
+    "SLIDE_LAYOUT": "CONTENT",
+    "FIELDS":[
+        {{
+            "FIELD_INDEX": "0",
+            "FIELD_TYPE": "QUESTION",
+            "FIELD_VALUE": "<SLIDE QUESTION HERE>"
+        }},
+        {{
+            "FIELD_INDEX": "1",
+            "FIELD_TYPE": "ANSWER", 
+            "FIELD_VALUE": "A) TRUE  B) FALSE"
+        }}
+    ]
+}},
+
+Example output 1:
+{{
+    "SLIDE_NUM": "1",
+    "SLIDE_LAYOUT": "CONTENT",
+    "FIELDS":[
+        {{
+            "FIELD_INDEX": "0",
+            "FIELD_TYPE": "QUESTION",
+            "FIELD_VALUE": "Is an apple a fruit?"
+        }},
+        {{
+            "FIELD_INDEX": "1",
+            "FIELD_TYPE": "ANSWER",
+            "FIELD_VALUE": "A) TRUE  B) FALSE"
+        }}
+    ]
+}},
+
+
+Example input 2:
+{{
+    "SLIDE_NUM": "2",
+    "SLIDE_LAYOUT": "CONTENT",
+    "FIELDS":[
+        {{
+            "FIELD_INDEX": "0",
+            "FIELD_TYPE": "QUESTION",
+            "FIELD_VALUE": "<SLIDE QUESTION HERE>"
+        }},
+        {{
+            "FIELD_INDEX": "1",
+            "FIELD_TYPE": "ANSWER",
+            "FIELD_VALUE": "A) TRUE  B) FALSE"
+        }}
+    ]
+}},
+
+Example output 2:
+{{
+    "SLIDE_NUM": "2",
+    "SLIDE_LAYOUT": "CONTENT",
+    "FIELDS":[
+        {{
+            "FIELD_INDEX": "0",
+            "FIELD_TYPE": "QUESTION",
+            "FIELD_VALUE": "Is a carrot a vegetable?"
+        }},
+        {{
+            "FIELD_INDEX": "1",
+            "FIELD_TYPE": "ANSWER",
+            "FIELD_VALUE": "A) TRUE  B) FALSE"
+        }}
+    ]
+}}
+
+
+You must always take into account the following user parameters:
+- Language: {language}
+- Complexity: {complexity}/6
+
+You must take the users input into account when generating the slides.
+- User prompt: {prompt}
+
+Use the following text to fill in the slides:
+{input_file_text}
+"""
+
+SHORT_ANS_PROMPT = """
+You will be given a json object that represents a slide in a slideshow.
+Do not change the structure of the json object.
+You must fill in the blanks in the json object with the appropriate content.
+Only update the fields that have '<>' around them.
+You will create short answer questions and answers.
+You will create exactly one question and exactly one answer.
+Only output the json object with the filled in content.
+Do not output anything other than the json object.
+Make the questions coherent and relevant to the input text.
+You must ALWAYS follow these rules:
+- The question should be less than 15 words.
+- The answer should be less than 5 sentences.
+- Do not make duplicate questions
+- Do not use markdown syntax in output.
+- Do not include slide number in output.
+
+Example input 1:
+{{
+    "SLIDE_NUM": "1",
+    "SLIDE_LAYOUT": "CONTENT",
+    "FIELDS":[
+        {{
+            "FIELD_INDEX": "0",
+            "FIELD_TYPE": "QUESTION",
+            "FIELD_VALUE": "<SLIDE QUESTION HERE>"
+        }},
+        {{
+            "FIELD_INDEX": "1",
+            "FIELD_TYPE": "ANSWER", 
+            "FIELD_VALUE": "<SLIDE ANSWER HERE>"
+        }}
+    ]
+}},
+
+Example output 1:
+{{
+    "SLIDE_NUM": "1",
+    "SLIDE_LAYOUT": "CONTENT",
+    "FIELDS":[
+        {{
+            "FIELD_INDEX": "0",
+            "FIELD_TYPE": "QUESTION",
+            "FIELD_VALUE": "What is the difference between fruits and vegetables?"
+        }},
+        {{
+            "FIELD_INDEX": "1",
+            "FIELD_TYPE": "ANSWER",
+            "FIELD_VALUE": "Fruits are the mature ovaries of flowering plants and contain seeds, while vegetables encompass other parts of the plant, such as roots, stems, and leaves. Generally, fruits are sweet or sour due to their sugar content, whereas vegetables tend to have a more savory flavor profile. Additionally, fruits are typically eaten raw, while vegetables can be consumed raw or cooked. However, there are exceptions, such as tomatoes and cucumbers, which are botanically fruits but often treated as vegetables in culinary contexts."
+        }}
+    ]
+}},
+
+
+Example input 2:
+{{
+    "SLIDE_NUM": "2",
+    "SLIDE_LAYOUT": "CONTENT",
+    "FIELDS":[
+        {{
+            "FIELD_INDEX": "0",
+            "FIELD_TYPE": "QUESTION",
+            "FIELD_VALUE": "<SLIDE QUESTION HERE>"
+        }},
+        {{
+            "FIELD_INDEX": "1",
+            "FIELD_TYPE": "ANSWER",
+            "FIELD_VALUE": "<SLIDE ANSWER HERE>"
+        }}
+    ]
+}},
+
+Example output 2:
+{{
+    "SLIDE_NUM": "2",
+    "SLIDE_LAYOUT": "CONTENT",
+    "FIELDS":[
+        {{
+            "FIELD_INDEX": "0",
+            "FIELD_TYPE": "QUESTION",
+            "FIELD_VALUE": "How are fruits grown?"
+        }},
+        {{
+            "FIELD_INDEX": "1",
+            "FIELD_TYPE": "ANSWER",
+            "FIELD_VALUE": "Fruits grow through a process called pollination, where pollen from the male reproductive organs of a flower is transferred to the female reproductive organs. After successful pollination, the fertilized ovary develops into a fruit. Factors such as sunlight, water, soil nutrients, and temperature influence fruit growth. Depending on the type of fruit, it may take weeks to months for it to mature, during which time it undergoes various developmental stages before becoming ripe and ready for harvest."
         }}
     ]
 }}

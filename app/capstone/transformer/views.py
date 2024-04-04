@@ -266,11 +266,9 @@ def exercise(request: HttpRequest) -> HttpResponse:
                     exercise = Exercise.objects.create(
                         user = request.user,  # type: ignore
                         prompt = form.cleaned_data["prompt"],
-                        # num_true_false =  form.cleaned_data["num_true_false"],
-                        # num_multiple_choice =  form.cleaned_data["num_multiple_choice"],
-                        # num_short_ans =  form.cleaned_data["num_short_ans"],
-                        # num_long_ans =  form.cleaned_data["num_long_ans"],
-                        num_questions = form.cleaned_data["num_questions"],
+                        num_true_false =  form.cleaned_data["num_true_false"],
+                        num_multiple_choice =  form.cleaned_data["num_multiple_choice"],
+                        num_short_ans =  form.cleaned_data["num_short_ans"],
                         model = form.cleaned_data["model"],
                         complexity = form.cleaned_data["complexity"],
                         language = form.cleaned_data["language"],

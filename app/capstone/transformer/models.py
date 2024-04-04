@@ -86,11 +86,9 @@ class Exercise(models.Model):
     date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     prompt = models.TextField(default="")
-    # num_true_false = models.IntegerField(default=3)
-    # num_multiple_choice = models.IntegerField(default=3)
-    # num_short_ans = models.IntegerField(default=3)
-    # num_long_ans = models.IntegerField(default=3)
-    num_questions = models.IntegerField(default=3)
+    num_true_false = models.IntegerField(default=3)
+    num_multiple_choice = models.IntegerField(default=3)
+    num_short_ans = models.IntegerField(default=3)
     template = models.ForeignKey(
         "File", null=True, on_delete=models.CASCADE, related_name="template_exercise"
     )

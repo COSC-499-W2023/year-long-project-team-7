@@ -120,7 +120,7 @@ class ExerciseManager:
                 "Template does not have any text placeholders"
             )
 
-    def get_slide_layout_fields(self, layout: typing.Any) -> list[ExerciseField]:
+    def get_slide_layout_fields_multiple_choice(self, layout: typing.Any) -> list[ExerciseField]:
         fields = []
         temp_presentation = Presentation(self.template_path)
         temp_slide = temp_presentation.slides.add_slide(layout)
@@ -147,6 +147,70 @@ class ExerciseManager:
                 fields.append(
                     ExerciseField(
                         shapes.index(shape), FieldTypes.TEXT, "A) <SLIDE ANSWER HERE>  B) <SLIDE ANSWER HERE>  C) <SLIDE ANSWER HERE>  D) <SLIDE ANSWER HERE>"
+                    )
+                )
+
+        return fields
+    
+    def get_slide_layout_fields_true_false(self, layout: typing.Any) -> list[ExerciseField]:
+        fields = []
+        temp_presentation = Presentation(self.template_path)
+        temp_slide = temp_presentation.slides.add_slide(layout)
+        shapes = temp_slide.shapes
+        for shape in shapes:
+            if shape.is_placeholder:
+                phf = shape.placeholder_format
+                if phf.type == PP_PLACEHOLDER.TITLE:
+                    fields.append(
+                        ExerciseField(
+                            shapes.index(shape), FieldTypes.TITLE, "<SLIDE QUESTION HERE>"
+                        )
+                    )
+
+                elif phf.type == PP_PLACEHOLDER.BODY:
+                    fields.append(
+                        ExerciseField(
+                            shapes.index(shape), FieldTypes.TEXT, "A) TRUE  B) FALSE"
+                        )
+                    )
+                continue
+
+            if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX:
+                fields.append(
+                    ExerciseField(
+                        shapes.index(shape), FieldTypes.TEXT, "A) TRUE  B) FALSE"
+                    )
+                )
+
+        return fields
+    
+    def get_slide_layout_fields_short_ans(self, layout: typing.Any) -> list[ExerciseField]:
+        fields = []
+        temp_presentation = Presentation(self.template_path)
+        temp_slide = temp_presentation.slides.add_slide(layout)
+        shapes = temp_slide.shapes
+        for shape in shapes:
+            if shape.is_placeholder:
+                phf = shape.placeholder_format
+                if phf.type == PP_PLACEHOLDER.TITLE:
+                    fields.append(
+                        ExerciseField(
+                            shapes.index(shape), FieldTypes.TITLE, "<SLIDE QUESTION HERE>"
+                        )
+                    )
+
+                elif phf.type == PP_PLACEHOLDER.BODY:
+                    fields.append(
+                        ExerciseField(
+                            shapes.index(shape), FieldTypes.TEXT, "<SLIDE ANSWER HERE>"
+                        )
+                    )
+                continue
+
+            if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX:
+                fields.append(
+                    ExerciseField(
+                        shapes.index(shape), FieldTypes.TEXT, "<SLIDE ANSWER HERE>"
                     )
                 )
 

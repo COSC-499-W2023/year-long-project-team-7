@@ -92,10 +92,10 @@
                         </div>
                         <div class="mt-4 text-center d-flex flex-column align-items-center">
                             <p>
-                                Number of Questions
+                                Number of Multiple Choice Questions
                                 <a class="custom-tooltip"
                                    data-bs-toggle="tooltip"
-                                   data-bs-title="Change the size of the presentation by number of questions.">
+                                   data-bs-title="Change the size of the presentation by number of multiple choice questions.">
                                     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                          width="24px"
@@ -105,8 +105,44 @@
                                     </svg>
                                 </a>
                             </p>
-                            {{ form.num_questions }}
-                            <small id="num_questions_value" class="mt-2">Defualt</small>
+                            {{ form.num_multiple_choice }}
+                            <small id="num_multiple_choice" class="mt-2">Defualt</small>
+                        </div>
+                        <div class="mt-4 text-center d-flex flex-column align-items-center">
+                            <p>
+                                Number of True/False Choice Questions
+                                <a class="custom-tooltip"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-title="Change the size of the presentation by number of true false questions.">
+                                    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         width="24px"
+                                         height="24px"
+                                         viewBox="0 0 24 24">
+                                        <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                    </svg>
+                                </a>
+                            </p>
+                            {{ form.num_true_false }}
+                            <small id="num_true_false" class="mt-2">Defualt</small>
+                        </div>
+                        <div class="mt-4 text-center d-flex flex-column align-items-center">
+                            <p>
+                                Number of Short Answer Questions
+                                <a class="custom-tooltip"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-title="Change the size of the presentation by number of short answer questions.">
+                                    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         width="24px"
+                                         height="24px"
+                                         viewBox="0 0 24 24">
+                                        <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                    </svg>
+                                </a>
+                            </p>
+                            {{ form.num_short_ans }}
+                            <small id="num_short_ans" class="mt-2">Defualt</small>
                         </div>
                         <div class="mt-4 text-center d-flex flex-column align-items-center">
                             <p>
