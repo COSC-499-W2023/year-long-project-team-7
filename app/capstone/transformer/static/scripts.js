@@ -104,7 +104,7 @@ $(document).ready(function () {
                 .attr("name")
                 .replace("-0-", "-" + currentTotal + "-");
             let id = "id_" + name;
-            $(this).attr({ name: name, id: id }).val("").removeAttr("checked");
+            $(this).attr({ name: name, id: id }).removeAttr("checked");
         });
 
         fieldGroup.find('select[name$="-slide"]').val("1");

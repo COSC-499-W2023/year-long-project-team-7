@@ -232,7 +232,7 @@ class RepromptForm(forms.Form):
         super().__init__(*args, **kwargs)
         slide_choices = [(str(i), str(i)) for i in range(1, num_slides + 1)]
         self.fields["slide"] = forms.ChoiceField(
-            choices=slide_choices, label="Slide", initial="1"
+            choices=slide_choices, label="Slide Number", initial="1"
         )
 
     prompt = forms.CharField(required=False, max_length=100, label="Prompt")

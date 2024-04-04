@@ -75,13 +75,9 @@ class PresentationGenerator:
 
         results = search.get_dict()["images_results"]
 
-        jpegs_results = [
-            result for result in results if str(result["original"]).endswith(".jpg")
-        ]
-
         while True:
             try:
-                random_image_url = results[random.randint(0, len(jpegs_results) - 1)][
+                random_image_url = results[random.randint(0, len(results) - 1)][
                     "original"
                 ]
             except KeyError as e:
