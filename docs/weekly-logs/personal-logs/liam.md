@@ -397,3 +397,28 @@ Note: This week I'm hoping to finish the exercise feature frontend.
 
 
 <br>
+
+
+## Mar 25 2024 -> Apr 1 2024
+
+
+<br>
+_I missed the window to complete my team evaluation this week._
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w25-tasks.png)
+<br>
+Note: This week I completed the exercise frontend and helped combine it with the backend PR. The exercise creation feature is now complete.
+
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Milestone)
+<br>
+[Frontend PR](https://github.com/COSC-499-W2023/year-long-project-team-7/pull/278)
+<BR>
+[Backend/combined PR](https://github.com/COSC-499-W2023/year-long-project-team-7/pull/273)
+
+
+<br>
