@@ -325,21 +325,8 @@ def exercise(request: HttpRequest) -> HttpResponse:
 
                         input_files.append(new_file)
 
-                    if has_template_file:
-                        uploaded_template_file = request.FILES.getlist("template_file")[
-                            0
-                        ]
-                        template_file = ExerciseFile.objects.create(
-                            user=request.user,  # type: ignore
-                            exercise=exercise,
-                            is_input=False,
-                            is_output=False,
-                            file=uploaded_template_file,
-                            type=str(uploaded_template_file.content_type),
-                        )
-                    else:
-                        temp = form.cleaned_data["template"]
-                        template_file = File.objects.get(file=f"template_{temp}.pptx")
+                    temp = form.cleaned_data["template"]
+                    template_file = File.objects.get(file=f"template_{temp}.pptx") # type: ignore
 
                     exercise.template = template_file
 
@@ -450,7 +437,7 @@ def download_file(request: HttpRequest, file_id: int, flag: int) -> HttpResponse
     if flag == 0:
         file = get_object_or_404(File, id=file_id)
     elif flag == 1:
-        file = get_object_or_404(ExerciseFile, id=file_id)
+        file = get_object_or_404(ExerciseFile, id=file_id) # type: ignore
 
     if request.user.is_authenticated:
         if file.user != request.user:
