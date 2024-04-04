@@ -269,46 +269,59 @@ class ExerciseForm(forms.Form):
         ),
     )
 
-    num_true_false = forms.IntegerField(
-        label="Number of True/False Questions",
-        initial=3,
-        widget=NumberInput(
-            attrs={
-                "class": "form-control",
-                "aria-label": "Number of True/False questions",
-            }
-        ),
-    )
+    # num_true_false = forms.IntegerField(
+    #     label="Number of True/False Questions",
+    #     initial=3,
+    #     widget=NumberInput(
+    #         attrs={
+    #             "class": "form-control",
+    #             "aria-label": "Number of True/False questions",
+    #         }
+    #     ),
+    # )
 
-    num_multiple_choice = forms.IntegerField(
-        label="Number of Multiple Choice Questions",
-        initial=3,
-        widget=NumberInput(
-            attrs={
-                "class": "form-control",
-                "aria-label": "Number of Multiple Choice questions",
-            }
-        ),
-    )
+    # num_multiple_choice = forms.IntegerField(
+    #     label="Number of Multiple Choice Questions",
+    #     initial=3,
+    #     widget=NumberInput(
+    #         attrs={
+    #             "class": "form-control",
+    #             "aria-label": "Number of Multiple Choice questions",
+    #         }
+    #     ),
+    # )
 
-    num_short_ans = forms.IntegerField(
-        label="Number of Short Answer Questions",
-        initial=3,
-        widget=NumberInput(
-            attrs={
-                "class": "form-control",
-                "aria-label": "Number of Short Answer questions",
-            }
-        ),
-    )
+    # num_short_ans = forms.IntegerField(
+    #     label="Number of Short Answer Questions",
+    #     initial=3,
+    #     widget=NumberInput(
+    #         attrs={
+    #             "class": "form-control",
+    #             "aria-label": "Number of Short Answer questions",
+    #         }
+    #     ),
+    # )
 
-    num_long_ans = forms.IntegerField(
-        label="Number of Long Answer Questions",
-        initial=3,
+    # num_long_ans = forms.IntegerField(
+    #     label="Number of Long Answer Questions",
+    #     initial=3,
+    #     widget=NumberInput(
+    #         attrs={
+    #             "class": "form-control",
+    #             "aria-label": "Number of Long Answer questions",
+    #         }
+    #     ),
+    # )
+
+    num_questions = forms.IntegerField(
+        label="Number of Questions",
         widget=NumberInput(
             attrs={
-                "class": "form-control",
-                "aria-label": "Number of Long Answer questions",
+                "type": "range",
+                "min": 1,
+                "max": 40,
+                "class": "custom-slider",
+                "aria-label": "Number of multiple choice questions",
             }
         ),
     )

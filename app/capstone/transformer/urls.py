@@ -6,6 +6,7 @@ from .forms import CustomPasswordResetForm
 urlpatterns = [
     path("", views.index, name="index"),
     path("transform", views.transform, name="transform"),
+    path("exercise", views.exercise, name="exercise"),
     path("register", views.register, name="register"),
     path("login", views.login, name="login"),
     path("logout", views.logout, name="logout"),
@@ -13,6 +14,7 @@ urlpatterns = [
     path("history", views.history, name="history"),
     path("store", views.store, name="store"),
     path("results/<int:conversion_id>/", views.results, name="results"),
+    path("exercise_results/<int:exercise_id>/", views.exercise_results, name="exercise_results"),
     path("profile", views.profile, name="profile"),
     path(
         "create-checkout-session/<int:pk>/",

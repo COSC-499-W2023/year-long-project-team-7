@@ -82,10 +82,43 @@ class Conversion(models.Model):
     )
 
 
+class Exercise(models.Model):
+    date = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    prompt = models.TextField(default="")
+    # num_true_false = models.IntegerField(default=3)
+    # num_multiple_choice = models.IntegerField(default=3)
+    # num_short_ans = models.IntegerField(default=3)
+    # num_long_ans = models.IntegerField(default=3)
+    num_questions = models.IntegerField(default=3)
+    template = models.ForeignKey(
+        "File", null=True, on_delete=models.CASCADE, related_name="template_exercise"
+    )
+    model = models.CharField(
+        max_length=50, choices=ModelChoice.choices, default=ModelChoice.GPT_3_5
+    )
+    complexity = models.IntegerField(
+        choices=ComplexityLevelChoice.choices, default=ComplexityLevelChoice.DEFAULT
+    )
+    language = models.CharField(
+        max_length=50, choices=LanguageChoice.choices, default=LanguageChoice.AUTO
+    )
+
+
 class File(models.Model):
     date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     conversion = models.ForeignKey(Conversion, null=True, on_delete=models.CASCADE)
+    # exercise = models.ForeignKey(Exercise, null=True, on_delete=models.CASCADE)
+    is_output = models.BooleanField(default=False)
+    is_input = models.BooleanField(default=False)
+    type = models.TextField()
+    file = models.FileField(upload_to="", max_length=500)
+
+
+class ExerciseFile(models.Model):
+    date = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     exercise = models.ForeignKey(Exercise, null=True, on_delete=models.CASCADE)
     is_output = models.BooleanField(default=False)
     is_input = models.BooleanField(default=False)
@@ -145,26 +178,3 @@ class Profile(models.Model):
             if os.path.isfile(self.image.path):
                 os.remove(self.image.path)  # Delete the image file
         super().delete(*args, **kwargs)
-
-
-class Exercise(models.Model):
-    date = models.DateTimeField(default=timezone.now)
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    prompt = models.TextField(default="")
-    num_true_false = models.IntegerField(default=3)
-    num_multiple_choice = models.IntegerField(default=3)
-    num_short_ans = models.IntegerField(default=3)
-    num_long_ans = models.IntegerField(default=3)
-
-    template = models.ForeignKey(
-        "File", null=True, on_delete=models.CASCADE, related_name="template_conversions"
-    )
-    model = models.CharField(
-        max_length=50, choices=ModelChoice.choices, default=ModelChoice.GPT_3_5
-    )
-    complexity = models.IntegerField(
-        choices=ComplexityLevelChoice.choices, default=ComplexityLevelChoice.DEFAULT
-    )
-    language = models.CharField(
-        max_length=50, choices=LanguageChoice.choices, default=LanguageChoice.AUTO
-    )

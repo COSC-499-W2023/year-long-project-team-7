@@ -79,7 +79,7 @@ class OpenAiExerciseManager:
         for assistant in all_assistants:
             self.delete_assistant(assistant.id)
 
-        self.instructions = SYSTEM_PROMPT.format(
+        self.instructions = EXERCISE_PROMPT.format(
             language=exercise.language,
             complexity=exercise.complexity,
             prompt=exercise.prompt,

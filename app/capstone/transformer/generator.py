@@ -1,4 +1,4 @@
-from .models import Conversion, File, User, Exercise
+from .models import Conversion, File, User, Exercise, ExerciseFile
 from .presentationGenerator import PresentationGenerator
 from .exerciseGenerator import ExerciseGenerator
 from django.core.files.storage import FileSystemStorage
@@ -86,7 +86,7 @@ def generate_output(files: list[File], conversion: Conversion) -> str:
     return output_file_name
 
 
-def generate_exercise(files: list[File], exercise: Exercise) -> str:
+def generate_exercise(files: list[ExerciseFile], exercise: Exercise) -> str:
     input_file_text = ""
 
     for file in files:
@@ -99,9 +99,8 @@ def generate_exercise(files: list[File], exercise: Exercise) -> str:
                 error(e)
 
     exercise_generator = ExerciseGenerator(input_file_text, exercise)
-                
-    # use exerciseGenerator to build exercises
-    output_file_name = None
+
+    output_file_name = exercise_generator.build_presentation()
                 
     file_name, file_extension = os.path.splitext(output_file_name)
 
@@ -113,9 +112,8 @@ def generate_exercise(files: list[File], exercise: Exercise) -> str:
         except ObjectDoesNotExist:
             user = None
 
-    new_pptx = File(
+    new_pptx = ExerciseFile(
         user=user,
-        conversion=None,
         exercise=exercise,
         type=file_extension,
         file=output_file_name,
@@ -124,9 +122,8 @@ def generate_exercise(files: list[File], exercise: Exercise) -> str:
     new_pptx.save()
 
     pdf_preview_path = to_pdf(output_file_name)
-    new_pdf = File(
+    new_pdf = ExerciseFile(
         user=user,
-        conversion=None,
         exercise=exercise,
         type="application/pdf",
         file=pdf_preview_path,

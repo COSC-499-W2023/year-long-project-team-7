@@ -129,6 +129,7 @@ class ExerciseManager:
             if shape.is_placeholder:
                 phf = shape.placeholder_format
                 if phf.type == PP_PLACEHOLDER.TITLE:
+                    print("1")
                     fields.append(
                         ExerciseField(
                             shapes.index(shape), FieldTypes.TITLE, "<SLIDE TITLE HERE>"
@@ -136,6 +137,7 @@ class ExerciseManager:
                     )
 
                 elif phf.type == PP_PLACEHOLDER.BODY:
+                    print("2")
                     fields.append(
                         ExerciseField(
                             shapes.index(shape), FieldTypes.TEXT, "<SLIDE TEXT HERE>"
@@ -144,6 +146,7 @@ class ExerciseManager:
                 continue
 
             if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX:
+                print("3")
                 fields.append(
                     ExerciseField(
                         shapes.index(shape), FieldTypes.TEXT, "<SLIDE TEXT HERE>"

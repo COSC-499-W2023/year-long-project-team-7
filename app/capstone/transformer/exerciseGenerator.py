@@ -11,16 +11,14 @@ from .openAiManager import OpenAiExerciseManager
 class ExerciseGenerator:
     def __init__(self, input_file_text: str, exercise: Exercise):
         self.exercise_manager = ExerciseManager()
-
         self.openai_manager = OpenAiExerciseManager(input_file_text, exercise)
-
         self.exercise = exercise
-
-        self.num_true_false = exercise.num_true_false
-        self.num_multiple_choice = exercise.num_multiple_choice
-        self.num_short_ans = exercise.num_short_ans
-        self.num_long_ans = exercise.num_long_ans
-        self.num_slides = exercise.num_true_false + exercise.num_multiple_choice + exercise.num_short_ans + exercise.num_long_ans
+        # self.num_true_false = exercise.num_true_false
+        # self.num_multiple_choice = exercise.num_multiple_choice
+        # self.num_short_ans = exercise.num_short_ans
+        # self.num_long_ans = exercise.num_long_ans
+        # self.num_slides = exercise.num_true_false + exercise.num_multiple_choice + exercise.num_short_ans + exercise.num_long_ans
+        self.num_questions = exercise.num_questions
         self.template = exercise.template
 
     def build_slide(self, slide_num: int) -> ExerciseContent:
@@ -31,14 +29,19 @@ class ExerciseGenerator:
         exercise_content = ExerciseContent(slide_num, layout, fields)
 
         exercise_json = exercise_content.to_json_string()
-
-        response = self.openai_manager.prompt_chat(EXERCISE.format(slide_json=exercise_json))
+        exercise = """
+        Fill in the content for the following json object:
+        {exercise_json}
+        """
+        response = self.openai_manager.prompt_chat(exercise.format(exercise_json=exercise_json))
 
         try:
             exercise_content.update_from_json(response)
         except Exception as e:
             error(e)
-
+        
+        print("did not error")
+        print(response)
         return exercise_content
 
     def build_presentation(self) -> str:
@@ -50,7 +53,7 @@ class ExerciseGenerator:
         # Fetch slide content in parallel for speed
         with ThreadPoolExecutor() as executor:
             future_slides = executor.map(
-                self.build_slide, range(1, self.num_slides + 1)
+                self.build_slide, range(1, self.num_questions + 1)
             )
             slide_contents = list(future_slides)
 
@@ -63,3 +66,4 @@ class ExerciseGenerator:
             self.exercise_manager.add_slide_to_presentation(slide_content)
 
         return self.exercise_manager.save_presentation(self.exercise.id)
+    

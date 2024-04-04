@@ -11,24 +11,31 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 from .utils import error
-
 from .presentationManager import MissingPlaceholderError
-from .forms import TransformerForm
-from .forms import RegisterForm
-from .forms import LoginForm
 from .forms import (
     UpdateEmailForm,
     UpdatePasswordForm,
     ProfileUpdateForm,
     AccountDeletionForm,
     SubscriptionDeletionForm,
+    ExerciseForm,
+    LoginForm,
+    RegisterForm,
+    TransformerForm,
 )
-
-from .models import Conversion, File, ModelChoice, Product, Profile, Subscription
-
+from .models import (
+    Conversion, 
+    File, 
+    ExerciseFile,
+    ModelChoice, 
+    Product, 
+    Profile, 
+    Subscription, 
+    Exercise,
+)
 from .tokens import account_activation_token
 import json
-from .generator import generate_output
+from .generator import generate_output, generate_exercise
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 import stripe
@@ -248,6 +255,153 @@ def transform(request: HttpRequest) -> HttpResponse:
         messages.error(request, "You must have an active subscription to use Create.")
         return redirect("store")
 
+def exercise(request: HttpRequest) -> HttpResponse:
+    if has_valid_subscription(request.user.id):  # type: ignore
+        if request.method == "POST":
+            form = ExerciseForm(request.POST)
+            input_files: list[ExerciseFile] = []
+
+            if form.is_valid():
+                try:
+                    exercise = Exercise.objects.create(
+                        user = request.user,  # type: ignore
+                        prompt = form.cleaned_data["prompt"],
+                        # num_true_false =  form.cleaned_data["num_true_false"],
+                        # num_multiple_choice =  form.cleaned_data["num_multiple_choice"],
+                        # num_short_ans =  form.cleaned_data["num_short_ans"],
+                        # num_long_ans =  form.cleaned_data["num_long_ans"],
+                        num_questions = form.cleaned_data["num_questions"],
+                        model = form.cleaned_data["model"],
+                        complexity = form.cleaned_data["complexity"],
+                        language = form.cleaned_data["language"],
+                    )
+
+                    has_prompt = len(exercise.prompt) > 0
+                    has_file = len(request.FILES.getlist("input_files"))
+
+                    has_template_selection = form.cleaned_data["template"] != ""
+                    has_template_file = len(request.FILES.getlist("template_file"))
+                    if not has_template_selection and not has_template_file:
+                        messages.error(request, "No template provided.")
+                        return render(
+                            request,
+                            "exercise.html",
+                            {
+                                "form": ExerciseForm(),
+                            },
+                        )
+
+                    if exercise.model == ModelChoice.GPT_4:
+                        if not has_premium_subscription(request.user.id):  # type: ignore
+                            messages.error(
+                                request,
+                                "You must have a premium subscription to use the GPT-4 model.",
+                            )
+                            return render(
+                                request, "exercise.html", {"form": ExerciseForm()}
+                            )
+
+                    if not has_prompt and not has_file:
+                        messages.error(
+                            request, "Input must include a prompt and/or a file."
+                        )
+                        return render(
+                            request,
+                            "exercise.html",
+                            {
+                                "form": ExerciseForm(),
+                            },
+                        )
+
+                    for uploaded_file in request.FILES.getlist("input_files"):
+                        new_file = ExerciseFile.objects.create(
+                            user=request.user,  # type: ignore
+                            exercise=exercise,
+                            is_output=False,
+                            is_input=True,
+                            file=uploaded_file,
+                        )
+
+                        if uploaded_file.content_type is not None:
+                            new_file.type = uploaded_file.content_type
+
+                        input_files.append(new_file)
+
+                    if has_template_file:
+                        uploaded_template_file = request.FILES.getlist("template_file")[
+                            0
+                        ]
+                        template_file = ExerciseFile.objects.create(
+                            user=request.user,  # type: ignore
+                            exercise=exercise,
+                            is_input=False,
+                            is_output=False,
+                            file=uploaded_template_file,
+                            type=str(uploaded_template_file.content_type),
+                        )
+                    else:
+                        temp = form.cleaned_data["template"]
+                        template_file = File.objects.get(file=f"template_{temp}.pptx")
+
+                    exercise.template = template_file
+
+                    exercise.save()
+                    template_file.save()
+                    result = generate_exercise(input_files, exercise)
+
+                    return redirect("exercise_results", exercise_id=exercise.id)
+
+                except Exception as e:
+                    error(e)
+
+                    exercise.delete()
+                    for file in input_files:
+                        file.delete()
+
+                    if has_template_file:
+                        template_file.delete()
+
+                    if type(e) is MissingPlaceholderError:
+                        messages.error(request, e.message)
+                    else:
+                        messages.error(
+                            request,
+                            "We encountered an unexpected error while generating your content please try again.",
+                        )
+
+                    return render(
+                        request, "exercise.html", {"form": ExerciseForm()}
+                    )
+            else:
+                for field, errors in form.errors.items():
+                    if field != "__all__":
+                        field_name = (
+                            form.fields[field].label
+                            if form.fields[field].label
+                            else field
+                        )
+                        error_messages = "; ".join(
+                            [force_str(error) for error in errors]
+                        )
+                        error_message = f"{field_name}: {error_messages}"
+                    else:
+                        error_messages = "; ".join(
+                            [force_str(error) for error in errors]
+                        )
+                        error_message = error_messages
+
+                    messages.error(request, error_message)
+                return redirect("transform")
+        else:
+            form = ExerciseForm()
+            return render(
+                request,
+                "exercise.html",
+                {"form": ExerciseForm()},
+            )
+    else:
+        messages.error(request, "You must have an active subscription to use Exercise.")
+        return redirect("store")
 
 @login_required(login_url="login")
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
@@ -267,6 +421,28 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     return render(
         request,
         "results.html",
+        {"output_files": output_files},
+    )
+
+
+@login_required(login_url="login")
+def exercise_results(request: HttpRequest, exercise_id: int) -> HttpResponse:
+    exercise = get_object_or_404(Exercise, id=exercise_id)
+    if request.user.is_authenticated:
+        if exercise.user != request.user:
+            return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+            )
+    else:
+        return HttpResponseForbidden(
+            "You do not have permission to access this resource."
+        )
+
+    output_files = ExerciseFile.objects.filter(exercise=exercise, is_output=True)
+
+    return render(
+        request,
+        "exercise_results.html",
         {"output_files": output_files},
     )
 
