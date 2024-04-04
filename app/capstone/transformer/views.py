@@ -11,25 +11,25 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
+from django.forms import formset_factory
+from .presentationGenerator import SlideToBeUpdated
 from .utils import error
-
+import fitz  # type: ignore
 from .presentationManager import MissingPlaceholderError
-from .forms import TransformerForm
-from .forms import RegisterForm
-from .forms import LoginForm
 from .forms import (
+    LoginForm,
+    RegisterForm,
+    TransformerForm,
     UpdateEmailForm,
     UpdatePasswordForm,
     ProfileUpdateForm,
     AccountDeletionForm,
     SubscriptionDeletionForm,
+    RepromptForm,
 )
-
 from .models import Conversion, File, ModelChoice, Product, Profile, Subscription
-
 from .tokens import account_activation_token
-import json
-from .generator import generate_output
+from .generator import generate_presentation, reprompt_slides
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 import stripe
@@ -44,6 +44,7 @@ from .subscriptionManager import (
 )
 from django.contrib.auth.models import User
 from datetime import date, timedelta
+import sys
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -214,7 +215,7 @@ def transform(request: HttpRequest) -> HttpResponse:
 
                     conversion.save()
                     template_file.save()
-                    result = generate_output(input_files, conversion)
+                    result = generate_presentation(input_files, conversion)
 
                     return redirect("results", conversion_id=conversion.id)
 
@@ -274,6 +275,14 @@ def transform(request: HttpRequest) -> HttpResponse:
 @login_required(login_url="login")
 def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
     conversion = get_object_or_404(Conversion, id=conversion_id)
+
+    output_files = File.objects.filter(conversion=conversion, is_output=True)
+    # output_files = File.objects.filter(conversion=conversion, is_output=True).order_by(
+    #     "-id"
+    # )[
+    #     :2
+    # ]  # This is very stupid but it works
+
     if request.user.is_authenticated:
         if conversion.user != request.user:
             return HttpResponseForbidden(
@@ -284,12 +293,55 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
             "You do not have permission to access this resource."
         )
 
-    output_files = File.objects.filter(conversion=conversion, is_output=True)
+    num_slides = 10
+
+    for file in output_files:
+        if file.type == "application/pdf":
+            try:
+                doc = fitz.open(file.file.path)
+                num_slides = len(doc)
+                doc.close()
+                break
+            except Exception as e:
+                print(f"Failed to open PDF: {e}")
+
+    repromptFormSet = formset_factory(RepromptForm)
+
+    if request.method == "POST":
+        formset = repromptFormSet(request.POST, form_kwargs={"num_slides": num_slides})
+        if formset.is_valid():
+            slides_to_update = []
+            for form in formset:
+                slide_number = form.cleaned_data.get("slide")
+                prompt = str(form.cleaned_data.get("prompt"))
+                is_image_slide = form.cleaned_data.get("image_slide")
+
+                if (
+                    slide_number is not None
+                    and prompt is not None
+                    and is_image_slide is not None
+                ):
+                    slide_number = int(slide_number)
+                    slides_to_update.append(
+                        SlideToBeUpdated(slide_number, prompt, is_image_slide)
+                    )
+
+            new_conversion = reprompt_slides(slides_to_update, conversion)
+
+            return redirect("results", conversion_id=new_conversion.id)
+        else:
+            return render(
+                request,
+                "results.html",
+                {"output_files": output_files, "formset": formset},
+            )
+    else:
+        formset = repromptFormSet(form_kwargs={"num_slides": num_slides})
 
     return render(
         request,
         "results.html",
-        {"output_files": output_files},
+        {"output_files": output_files, "formset": formset},
     )
 
 
@@ -309,6 +361,28 @@ def download_file(request: HttpRequest, file_id: int) -> HttpResponse:
 
     response = HttpResponse(file.file, content_type=file.type)
     response["Content-Disposition"] = f'attachment; filename="{file.file.name}"'
+    return response
+
+
+@login_required(login_url="login")
+def serve_file(request: HttpRequest, file_id: int) -> HttpResponse:
+    file = get_object_or_404(File, id=file_id)
+
+    if request.user.is_authenticated:
+        if file.user != request.user:
+            return HttpResponseForbidden(
+                "You do not have permission to access this resource."
+            )
+    else:
+        return HttpResponseForbidden(
+            "You do not have permission to access this resource."
+        )
+
+    response = HttpResponse(file.file, content_type=file.type)
+    response["Content-Disposition"] = f'inline; filename="{file.file.name}"'
+
+    response["X-Frame-Options"] = "ALLOWALL"
+
     return response
 
 

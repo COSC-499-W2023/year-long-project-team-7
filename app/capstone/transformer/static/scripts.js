@@ -17,16 +17,18 @@ addEventListener("load", () => {
 });
 
 $(document).ready(function () {
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-
+    const tooltipTriggerList = document.querySelectorAll(
+        '[data-bs-toggle="tooltip"]'
+    );
+    const tooltipList = [...tooltipTriggerList].map(
+        (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+    );
 
     $(".file-download-button").click(function () {
         const fileUrl = $(this).attr("data-fileurl");
         window.location.href = fileUrl;
     });
 
-    
     $("#transform-file-upload").on("change", function (event) {
         $("#selected-file-names").empty();
 
@@ -36,14 +38,16 @@ $(document).ready(function () {
     });
 
     $("#transform-template-file-upload").on("change", function (event) {
-        $('input[name="template"]').prop('checked', false);
+        $('input[name="template"]').prop("checked", false);
         $("#selected-template-file-name").empty();
-        $("#selected-template-file-name").append(`<p>${event.target.files[0].name}</p>`);
-    })
+        $("#selected-template-file-name").append(
+            `<p>${event.target.files[0].name}</p>`
+        );
+    });
 
-    $('input[type=radio][name=template]').on("click", function (event) {
+    $("input[type=radio][name=template]").on("click", function (event) {
         $("#selected-template-file-name").empty();
-        $('#transform-template-file-upload').val('');
+        $("#transform-template-file-upload").val("");
     });
 
     $("#id_complexity").on("input change", function () {
@@ -87,6 +91,54 @@ $(document).ready(function () {
         $(".loading-overlay").show();
     });
 
+    $("#add-form").click(function (e) {
+        e.preventDefault();
+        let formset = $("#reprompt-formset");
+        let totalForms = $("#id_form-TOTAL_FORMS");
+        let currentTotal = parseInt(totalForms.val());
+
+        let fieldGroup = formset.find(".field-group").first().clone();
+        let fields = formset.find(".fields").last();
+        fieldGroup.find(":input").each(function () {
+            let name = $(this)
+                .attr("name")
+                .replace("-0-", "-" + currentTotal + "-");
+            let id = "id_" + name;
+            $(this).attr({ name: name, id: id }).removeAttr("checked");
+        });
+
+        fieldGroup.find('select[name$="-slide"]').val("1");
+
+        fields.append(fieldGroup);
+        totalForms.val(currentTotal + 1);
+    });
+
+    $("#remove-form").click(function (e) {
+        e.preventDefault();
+        let formset = $("#reprompt-formset");
+        let totalForms = $("#id_form-TOTAL_FORMS");
+        let currentTotal = parseInt(totalForms.val());
+
+        if (currentTotal > 1) {
+            let fieldGroup = formset.find(".field-group").last();
+            fieldGroup.remove();
+
+            totalForms.val(currentTotal - 1);
+
+            formset.find(".field-group").each(function (index) {
+                $(this)
+                    .find(":input")
+                    .each(function () {
+                        let name = $(this)
+                            .attr("name")
+                            .replace(/-\d+-/, "-" + index + "-");
+                        let id = "id_" + name;
+                        $(this).attr({ name: name, id: id });
+                    });
+            });
+        }
+    });
+
     $("#light-mode-toggle").on("click", function () {
         if (lightMode !== "enabled") {
             enableLightMode();
@@ -96,10 +148,9 @@ $(document).ready(function () {
         lightMode = localStorage.getItem("lightMode");
     });
 
-    $('.template-choice input[type="radio"]').on('keydown', function(event) {
+    $('.template-choice input[type="radio"]').on("keydown", function (event) {
         if (event.keyCode === 13) {
             $(this).click();
         }
     });
-
 });
