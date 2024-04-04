@@ -10,6 +10,7 @@ from pptx.enum.shapes import PP_PLACEHOLDER  # type: ignore
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 import random
 
+
 class FieldTypes(Enum):
     TITLE = "QUESTION"
     TEXT = "ANSWER"
@@ -95,7 +96,7 @@ class ExerciseManager:
         file_system.save(rel_path, file_content)
 
         return rel_path
-    
+
     def get_content_slide_layout(self) -> typing.Any:
         potential_layouts = []
 
@@ -120,7 +121,9 @@ class ExerciseManager:
                 "Template does not have any text placeholders"
             )
 
-    def get_slide_layout_fields_multiple_choice(self, layout: typing.Any) -> list[ExerciseField]:
+    def get_slide_layout_fields_multiple_choice(
+        self, layout: typing.Any
+    ) -> list[ExerciseField]:
         fields = []
         temp_presentation = Presentation(self.template_path)
         temp_slide = temp_presentation.slides.add_slide(layout)
@@ -131,14 +134,18 @@ class ExerciseManager:
                 if phf.type == PP_PLACEHOLDER.TITLE:
                     fields.append(
                         ExerciseField(
-                            shapes.index(shape), FieldTypes.TITLE, "<SLIDE QUESTION HERE>"
+                            shapes.index(shape),
+                            FieldTypes.TITLE,
+                            "<SLIDE QUESTION HERE>",
                         )
                     )
 
                 elif phf.type == PP_PLACEHOLDER.BODY:
                     fields.append(
                         ExerciseField(
-                            shapes.index(shape), FieldTypes.TEXT, "A) <SLIDE ANSWER HERE>  B) <SLIDE ANSWER HERE>  C) <SLIDE ANSWER HERE>  D) <SLIDE ANSWER HERE>"
+                            shapes.index(shape),
+                            FieldTypes.TEXT,
+                            "A) <SLIDE ANSWER HERE>  B) <SLIDE ANSWER HERE>  C) <SLIDE ANSWER HERE>  D) <SLIDE ANSWER HERE>",
                         )
                     )
                 continue
@@ -146,13 +153,17 @@ class ExerciseManager:
             if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX:
                 fields.append(
                     ExerciseField(
-                        shapes.index(shape), FieldTypes.TEXT, "A) <SLIDE ANSWER HERE>  B) <SLIDE ANSWER HERE>  C) <SLIDE ANSWER HERE>  D) <SLIDE ANSWER HERE>"
+                        shapes.index(shape),
+                        FieldTypes.TEXT,
+                        "A) <SLIDE ANSWER HERE>  B) <SLIDE ANSWER HERE>  C) <SLIDE ANSWER HERE>  D) <SLIDE ANSWER HERE>",
                     )
                 )
 
         return fields
-    
-    def get_slide_layout_fields_true_false(self, layout: typing.Any) -> list[ExerciseField]:
+
+    def get_slide_layout_fields_true_false(
+        self, layout: typing.Any
+    ) -> list[ExerciseField]:
         fields = []
         temp_presentation = Presentation(self.template_path)
         temp_slide = temp_presentation.slides.add_slide(layout)
@@ -163,7 +174,9 @@ class ExerciseManager:
                 if phf.type == PP_PLACEHOLDER.TITLE:
                     fields.append(
                         ExerciseField(
-                            shapes.index(shape), FieldTypes.TITLE, "<SLIDE QUESTION HERE>"
+                            shapes.index(shape),
+                            FieldTypes.TITLE,
+                            "<SLIDE QUESTION HERE>",
                         )
                     )
 
@@ -183,8 +196,10 @@ class ExerciseManager:
                 )
 
         return fields
-    
-    def get_slide_layout_fields_short_ans(self, layout: typing.Any) -> list[ExerciseField]:
+
+    def get_slide_layout_fields_short_ans(
+        self, layout: typing.Any
+    ) -> list[ExerciseField]:
         fields = []
         temp_presentation = Presentation(self.template_path)
         temp_slide = temp_presentation.slides.add_slide(layout)
@@ -195,7 +210,9 @@ class ExerciseManager:
                 if phf.type == PP_PLACEHOLDER.TITLE:
                     fields.append(
                         ExerciseField(
-                            shapes.index(shape), FieldTypes.TITLE, "<SLIDE QUESTION HERE>"
+                            shapes.index(shape),
+                            FieldTypes.TITLE,
+                            "<SLIDE QUESTION HERE>",
                         )
                     )
 

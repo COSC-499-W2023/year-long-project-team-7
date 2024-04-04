@@ -250,6 +250,7 @@ class CustomPasswordResetForm(PasswordResetForm):
 
         email_message.send()
 
+
 class ExerciseForm(forms.Form):
     def __init__(self, *args, **kwargs):  # type: ignore
         super(ExerciseForm, self).__init__(*args, **kwargs)
@@ -271,39 +272,33 @@ class ExerciseForm(forms.Form):
 
     num_true_false = forms.IntegerField(
         label="Number of True False Questions",
+        initial=3,
         widget=NumberInput(
             attrs={
-                "type": "range",
-                "min": 1,
-                "max": 10,
-                "class": "custom-slider",
-                "aria-label": "Number of true false questions",
+                "class": "form-control",
+                "aria-label": "Number of True/False questions",
             }
         ),
     )
 
     num_multiple_choice = forms.IntegerField(
         label="Number of Multiple Choice Questions",
+        initial=3,
         widget=NumberInput(
             attrs={
-                "type": "range",
-                "min": 1,
-                "max": 10,
-                "class": "custom-slider",
-                "aria-label": "Number of multiple choice questions",
+                "class": "form-control",
+                "aria-label": "Number of Multiple Choice questions",
             }
         ),
     )
 
     num_short_ans = forms.IntegerField(
         label="Number of Short Answer Questions",
+        initial=3,
         widget=NumberInput(
             attrs={
-                "type": "range",
-                "min": 1,
-                "max": 10,
-                "class": "custom-slider",
-                "aria-label": "Number of short answer questions",
+                "class": "form-control",
+                "aria-label": "Number of Short Answer questions",
             }
         ),
     )

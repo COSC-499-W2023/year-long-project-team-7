@@ -101,7 +101,7 @@ def generate_exercise(files: list[ExerciseFile], exercise: Exercise) -> str:
     exercise_generator = ExerciseGenerator(input_file_text, exercise)
 
     output_file_name = exercise_generator.build_presentation()
-                
+
     file_name, file_extension = os.path.splitext(output_file_name)
 
     user = None
@@ -132,4 +132,3 @@ def generate_exercise(files: list[ExerciseFile], exercise: Exercise) -> str:
     new_pdf.save()
 
     return output_file_name
-    

@@ -27,7 +27,9 @@
                                         <span class="bi bi-arrow-right"></span>
                                     </a>
                                 </div>
-                                <input type="hidden" id="pdf-file" value="{% url 'download_file' file.id 0 %}">
+                                <input type="hidden"
+                                       id="pdf-file"
+                                       value="{% url 'download_file' file.id 0 %}">
                             {% endif %}
                         {% endfor %}
                     {% endif %}

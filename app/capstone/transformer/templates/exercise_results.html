@@ -27,7 +27,9 @@
                                         <span class="bi bi-arrow-right"></span>
                                     </a>
                                 </div>
-                                <input type="hidden" id="pdf-file" value="{% url 'download_file' file.id 1 %}">
+                                <input type="hidden"
+                                       id="pdf-file"
+                                       value="{% url 'download_file' file.id 1 %}">
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -43,7 +45,7 @@
                 </div>
                 <div class="card-footer border-light mt-5">
                     <div class="d-flex justify-content-center align-items-center">
-                        <a class="btn mt-3 btn-primary" href="{% url "exercise" %}">Back to Exercise</a>
+                        <a class="btn mt-3 btn-primary" href="{% url "transform" %}">Back to Transform</a>
                     </div>
                 </div>
             </div>
