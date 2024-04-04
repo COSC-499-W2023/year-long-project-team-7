@@ -446,8 +446,11 @@ def exercise_results(request: HttpRequest, exercise_id: int) -> HttpResponse:
 
 
 @login_required(login_url="login")
-def download_file(request: HttpRequest, file_id: int) -> HttpResponse:
-    file = get_object_or_404(File, id=file_id)
+def download_file(request: HttpRequest, file_id: int, flag: int) -> HttpResponse:
+    if flag == 0:
+        file = get_object_or_404(File, id=file_id)
+    elif flag == 1:
+        file = get_object_or_404(ExerciseFile, id=file_id)
 
     if request.user.is_authenticated:
         if file.user != request.user:

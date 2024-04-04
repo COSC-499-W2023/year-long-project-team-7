@@ -27,7 +27,7 @@
                                         <span class="bi bi-arrow-right"></span>
                                     </a>
                                 </div>
-                                <input type="hidden" id="pdf-file" value="{% url 'download_file' file.id %}">
+                                <input type="hidden" id="pdf-file" value="{% url 'download_file' file.id 1 %}">
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -36,7 +36,7 @@
                     {% for file in output_files %}
                         <a class="btn btn-primary"
                            style="text-align: center"
-                           href="{% url 'download_file' file.id %}"
+                           href="{% url 'download_file' file.id 1 %}"
                            download>{{ file.file }}</a>
                         {% if not forloop.last %}&nbsp;&nbsp;{% endif %}
                     {% endfor %}

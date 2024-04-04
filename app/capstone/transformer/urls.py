@@ -25,7 +25,7 @@ urlpatterns = [
     path("cancel", views.cancel, name="cancel"),
     path("webhook", views.stripe_webhook, name="webhook"),
     path("activate/<uidb64>/<token>", views.activate, name="activate"),
-    path("download_file/<int:file_id>/", views.download_file, name="download_file"),
+    path("download_file/<int:file_id>/<int:flag>/", views.download_file, name="download_file"),
     path(
         "download_profile_pic/<int:user_id>/",
         views.download_profile_pic,
