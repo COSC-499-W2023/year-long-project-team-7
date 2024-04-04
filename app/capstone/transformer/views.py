@@ -547,8 +547,12 @@ def history(request: HttpRequest) -> HttpResponse:
         user_conversions = (
             Conversion.objects.filter(user=request.user).order_by("-date").all()
         )
+        user_exercises = (
+            Exercise.objects.filter(user=request.user).order_by("-date").all()
+        )
 
         history = {}
+        exercise_history = {}
 
         for conversion in user_conversions:
             input_files = File.objects.filter(conversion=conversion, is_input=True)
@@ -558,11 +562,19 @@ def history(request: HttpRequest) -> HttpResponse:
                 "output_files": output_files,
             }
 
+        for exercise in user_exercises:
+            input_file = ExerciseFile.objects.filter(exercise=exercise, is_input=True)
+            output_file = ExerciseFile.objects.filter(exercise=exercise, is_output=True)
+            exercise_history[exercise] = {
+                "input_file": input_file,
+                "output_file": output_file, 
+            }
+
     else:
         return HttpResponseForbidden(
             "You do not have permission to access this resource."
         )
-    return render(request, "history.html", {"history": history})
+    return render(request, "history.html", {"history": history, "exercise_history": exercise_history})
 
 
 def store(request: HttpRequest) -> HttpResponse:

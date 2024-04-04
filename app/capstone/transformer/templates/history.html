@@ -6,6 +6,7 @@
             <h1 class="text-center title" tabindex="0">Transformation History</h1>
             <br />
             <div id="accordion">
+                <h1>Presentations</h1>
                 {% for conversion, files in history.items %}
                     <div class="card mb-3 border-light">
                         <button class="card-header accordion-button d-flex flex-row"
@@ -79,6 +80,54 @@
                          style="height: 200px">
                         <p>You have no transformations.</p>
                         <a href="/transform" class="btn btn-primary">Start a new transformation</a>
+                    </div>
+                {% endfor %}
+                <h1>Exercises</h1>
+                {% for exercise, exercisefiles in exercise_history.items %}
+                    <div class="card mb-3 border-light">
+                        <button class="card-header accordion-button d-flex flex-row"
+                                aria-label="History entry for date: {{ exercise.date }}"
+                                role="tree"
+                                aria-expanded="false"
+                                aria-controls="collapse{{ forloop.counter }}"
+                                id="heading{{ forloop.counter }}"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse{{ forloop.counter }}">
+                            <h3 class="entry-date">{{ exercise.date }} UTC</h3>
+                            <img class="entry-dropdown" src="{% static 'img/dropdown.svg' %}">
+                        </button>
+                        <div id="collapse{{ forloop.counter }}"
+                             class="collapse"
+                             aria-labelledby="heading{{ forloop.counter }}"
+                             data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="accordion-text" tabindex="0">
+                                            <strong>Prompt:</strong> {{ exercise.prompt }}
+                                        </p>
+                                        <p class="accordion-text" tabindex="0">
+                                            <strong>Language:</strong> {{ exercise.language }}
+                                        </p>
+                                        <p class="accordion-text" tabindex="0">
+                                            <strong>Complexity:</strong> {{ exercise.complexity }}/6
+                                        </p>
+                                        <p class="accordion-text" tabindex="0">
+                                            <strong># of True False:</strong> {{ exercise.num_true_false }}
+                                        </p>
+                                        <p class="accordion-text" tabindex="0">
+                                            <strong># of Multiple Choice:</strong> {{ exercise.num_multiple_choice }}
+                                        </p>
+                                        <p class="accordion-text" tabindex="0">
+                                            <strong># of Short Answer:</strong> {{ exercise.num_short_ans }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer border-light d-flex justify-content-center">
+                                <a href="/exercise_results/{{ exercise.id }}" class="btn btn-primary">View Results</a>
+                            </div>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
