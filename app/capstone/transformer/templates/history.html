@@ -51,7 +51,7 @@
                                             {% for file in files.input_files %}
                                                 <p class="accordion-text">
                                                     <a class="btn btn-primary history-download"
-                                                       href="{% url 'download_file' file.id %}"
+                                                       href="{% url 'download_file' file.id 0 %}"
                                                        download
                                                        aria-label="Download {{ file.file }}">{{ file.file }}</a>
                                                 </p>
@@ -61,7 +61,7 @@
                                         {% for file in files.output_files %}
                                             <p class="accordion-text">
                                                 <a class="btn btn-primary history-download"
-                                                   href="{% url 'download_file' file.id %}"
+                                                   href="{% url 'download_file' file.id 0 %}"
                                                    download
                                                    aria-label="Download {{ file.file }}">{{ file.file }}</a>
                                             </p>
