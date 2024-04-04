@@ -326,7 +326,7 @@ def exercise(request: HttpRequest) -> HttpResponse:
                         input_files.append(new_file)
 
                     temp = form.cleaned_data["template"]
-                    template_file = File.objects.get(file=f"template_{temp}.pptx") # type: ignore
+                    template_file = File.objects.get(file=f"template_{temp}.pptx")
 
                     exercise.template = template_file
 
