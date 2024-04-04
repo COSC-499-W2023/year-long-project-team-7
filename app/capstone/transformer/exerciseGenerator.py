@@ -40,8 +40,6 @@ class ExerciseGenerator:
         except Exception as e:
             error(e)
         
-        print("did not error")
-        print(response)
         return exercise_content
 
     def build_presentation(self) -> str:

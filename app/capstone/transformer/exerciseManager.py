@@ -11,8 +11,8 @@ from pptx.enum.shapes import MSO_SHAPE_TYPE
 import random
 
 class FieldTypes(Enum):
-    TITLE = "TITLE"
-    TEXT = "TEXT"
+    TITLE = "QUESTION"
+    TEXT = "ANSWER"
 
 
 class ExerciseField:
@@ -129,27 +129,24 @@ class ExerciseManager:
             if shape.is_placeholder:
                 phf = shape.placeholder_format
                 if phf.type == PP_PLACEHOLDER.TITLE:
-                    print("1")
                     fields.append(
                         ExerciseField(
-                            shapes.index(shape), FieldTypes.TITLE, "<SLIDE TITLE HERE>"
+                            shapes.index(shape), FieldTypes.TITLE, "<SLIDE QUESTION HERE>"
                         )
                     )
 
                 elif phf.type == PP_PLACEHOLDER.BODY:
-                    print("2")
                     fields.append(
                         ExerciseField(
-                            shapes.index(shape), FieldTypes.TEXT, "<SLIDE TEXT HERE>"
+                            shapes.index(shape), FieldTypes.TEXT, "A) <SLIDE ANSWER HERE>  B) <SLIDE ANSWER HERE>  C) <SLIDE ANSWER HERE>  D) <SLIDE ANSWER HERE>"
                         )
                     )
                 continue
 
             if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX:
-                print("3")
                 fields.append(
                     ExerciseField(
-                        shapes.index(shape), FieldTypes.TEXT, "<SLIDE TEXT HERE>"
+                        shapes.index(shape), FieldTypes.TEXT, "A) <SLIDE ANSWER HERE>  B) <SLIDE ANSWER HERE>  C) <SLIDE ANSWER HERE>  D) <SLIDE ANSWER HERE>"
                     )
                 )
 
