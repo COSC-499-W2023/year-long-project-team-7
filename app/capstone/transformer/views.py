@@ -14,6 +14,7 @@ from .utils import error
 
 from .presentationManager import MissingPlaceholderError
 from .forms import TransformerForm
+from .forms import ExerciseForm
 from .forms import RegisterForm
 from .forms import LoginForm
 from .forms import (
@@ -24,7 +25,15 @@ from .forms import (
     SubscriptionDeletionForm,
 )
 
-from .models import Conversion, File, ModelChoice, Product, Profile, Subscription
+from .models import (
+    Conversion,
+    ##    Exercise,
+    File,
+    ModelChoice,
+    Product,
+    Profile,
+    Subscription,
+)
 
 from .tokens import account_activation_token
 import json
@@ -105,26 +114,27 @@ def logout(request: HttpRequest) -> HttpResponse:
 def transform(request: HttpRequest) -> HttpResponse:
     if has_valid_subscription(request.user.id):  # type: ignore
         if request.method == "POST":
-            form = TransformerForm(request.POST)
+            TForm = TransformerForm(request.POST)
+            EForm = ExerciseForm(request.POST)
             input_files: list[File] = []
 
-            if form.is_valid():
+            if TForm.is_valid():
                 try:
                     conversion = Conversion.objects.create(
-                        prompt=form.cleaned_data["prompt"],
-                        language=form.cleaned_data["language"],
-                        tone=form.cleaned_data["tone"],
-                        complexity=form.cleaned_data["complexity"],
-                        num_slides=form.cleaned_data["num_slides"],
-                        image_frequency=form.cleaned_data["image_frequency"],
-                        model=form.cleaned_data["model"],
+                        prompt=TForm.cleaned_data["prompt"],
+                        language=TForm.cleaned_data["language"],
+                        tone=TForm.cleaned_data["tone"],
+                        complexity=TForm.cleaned_data["complexity"],
+                        num_slides=TForm.cleaned_data["num_slides"],
+                        image_frequency=TForm.cleaned_data["image_frequency"],
+                        model=TForm.cleaned_data["model"],
                         user=request.user,  # type: ignore
                     )
 
                     has_prompt = len(conversion.prompt) > 0
                     has_file = len(request.FILES.getlist("input_files"))
 
-                    has_template_selection = form.cleaned_data["template"] != ""
+                    has_template_selection = TForm.cleaned_data["template"] != ""
                     has_template_file = len(request.FILES.getlist("template_file"))
                     if not has_template_selection and not has_template_file:
                         messages.error(request, "No template provided.")
@@ -132,7 +142,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                             request,
                             "transform.html",
                             {
-                                "form": TransformerForm(),
+                                "TForm": TransformerForm(),
                             },
                         )
 
@@ -143,7 +153,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                                 "You must have a premium subscription to use the GPT-4 model.",
                             )
                             return render(
-                                request, "transform.html", {"form": TransformerForm()}
+                                request, "transform.html", {"TForm": TransformerForm()}
                             )
 
                     if not has_prompt and not has_file:
@@ -154,7 +164,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                             request,
                             "transform.html",
                             {
-                                "form": TransformerForm(),
+                                "TForm": TransformerForm(),
                             },
                         )
 
@@ -185,7 +195,7 @@ def transform(request: HttpRequest) -> HttpResponse:
                             type=str(uploaded_template_file.content_type),
                         )
                     else:
-                        temp = form.cleaned_data["template"]
+                        temp = TForm.cleaned_data["template"]
                         template_file = File.objects.get(file=f"template_{temp}.pptx")
 
                     conversion.template = template_file
@@ -215,14 +225,140 @@ def transform(request: HttpRequest) -> HttpResponse:
                         )
 
                     return render(
-                        request, "transform.html", {"form": TransformerForm()}
+                        request, "transform.html", {"TForm": TransformerForm()}
                     )
+            # if EForm.is_valid():
+            #     try:
+            #         conversion = Exercise.objects.create(
+            #             prompt=EForm.cleaned_data["prompt"],
+            #             language=EForm.cleaned_data["language"],
+            #             complexity=EForm.cleaned_data["complexity"],
+            #             num_true_false=EForm.cleaned_data["num_true_false"],
+            #             num_multiple_choice=EForm.cleaned_data["num_multiple_choice"],
+            #             num_short_ans=EForm.cleaned_data["num_short_ans"],
+            #             num_long_ans=EForm.cleaned_data["num_long_ans"],
+            #             model=EForm.cleaned_data["model"],
+            #             user=request.user,
+            #         )
+
+            #         has_prompt = len(conversion.prompt) > 0
+            #         has_file = len(request.FILES.getlist("input_files"))
+
+            #         has_template_selection = EForm.cleaned_data["template"] != ""
+            #         has_template_file = len(request.FILES.getlist("template_file"))
+            #         if not has_template_selection and not has_template_file:
+            #             messages.error(request, "No template provided.")
+            #             return render(
+            #                 request,
+            #                 "transform.html",
+            #                 {
+            #                     "EForm": ExerciseForm(),
+            #                 },
+            #             )
+
+            #         if conversion.model == ModelChoice.GPT_4:
+            #             if not has_premium_subscription(request.user.id):  # type: ignore
+            #                 messages.error(
+            #                     request,
+            #                     "You must have a premium subscription to use the GPT-4 model.",
+            #                 )
+            #                 return render(
+            #                     request, "transform.html", {"EForm": ExerciseForm()}
+            #                 )
+
+            #         if not has_prompt and not has_file:
+            #             messages.error(
+            #                 request, "Input must include a prompt and/or a file."
+            #             )
+            #             return render(
+            #                 request,
+            #                 "transform.html",
+            #                 {
+            #                     "EForm": ExerciseForm(),
+            #                 },
+            #             )
+
+            #         for uploaded_file in request.FILES.getlist("input_files"):
+            #             new_file = File.objects.create(
+            #                 user=request.user,  # type: ignore
+            #                 conversion=conversion,
+            #                 is_output=False,
+            #                 is_input=True,
+            #                 file=uploaded_file,
+            #             )
+
+            #             if uploaded_file.content_type is not None:
+            #                 new_file.type = uploaded_file.content_type
+
+            #             input_files.append(new_file)
+
+            #         if has_template_file:
+            #             uploaded_template_file = request.FILES.getlist("template_file")[
+            #                 0
+            #             ]
+            #             template_file = File.objects.create(
+            #                 user=request.user,  # type: ignore
+            #                 conversion=conversion,
+            #                 is_input=False,
+            #                 is_output=False,
+            #                 file=uploaded_template_file,
+            #                 type=str(uploaded_template_file.content_type),
+            #             )
+            #         else:
+            #             temp = EForm.cleaned_data["template"]
+            #             template_file = File.objects.get(file=f"template_{temp}.pptx")
+
+            #         conversion.template = template_file
+
+            #         conversion.save()
+            #         template_file.save()
+            #         result = generate_output(input_files, conversion)
+
+            #         return redirect("results", conversion_id=conversion.id)
+
+            #     except Exception as e:
+            #         error(e)
+
+            #         conversion.delete()
+            #         for file in input_files:
+            #             file.delete()
+
+            #         if has_template_file:
+            #             template_file.delete()
+
+            #         if type(e) is MissingPlaceholderError:
+            #             messages.error(request, e.message)
+            #         else:
+            #             messages.error(
+            #                 request,
+            #                 "We encountered an unexpected error while generating your content please try again.",
+            #             )
+
+            #         return render(request, "transform.html", {"EForm": ExerciseForm()})
             else:
-                for field, errors in form.errors.items():
+                for field, errors in TForm.errors.items():
                     if field != "__all__":
                         field_name = (
-                            form.fields[field].label
-                            if form.fields[field].label
+                            TForm.fields[field].label
+                            if TForm.fields[field].label
+                            else field
+                        )
+                        error_messages = "; ".join(
+                            [force_str(error) for error in errors]
+                        )
+                        error_message = f"{field_name}: {error_messages}"
+                    else:
+                        error_messages = "; ".join(
+                            [force_str(error) for error in errors]
+                        )
+                        error_message = error_messages
+
+                    messages.error(request, error_message)
+                for field, errors in EForm.errors.items():
+                    if field != "__all__":
+                        field_name = (
+                            EForm.fields[field].label
+                            if EForm.fields[field].label
                             else field
                         )
                         error_messages = "; ".join(
@@ -238,11 +374,12 @@ def transform(request: HttpRequest) -> HttpResponse:
                     messages.error(request, error_message)
                 return redirect("transform")
         else:
-            form = TransformerForm()
+            TForm = TransformerForm()
+            EForm = ExerciseForm()
             return render(
                 request,
                 "transform.html",
-                {"form": TransformerForm()},
+                {"TForm": TransformerForm(), "EForm": ExerciseForm()},
             )
     else:
         messages.error(request, "You must have an active subscription to use Create.")
