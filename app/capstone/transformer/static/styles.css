@@ -18,6 +18,7 @@
     --clr-light: #ffffff;
     --clr-dark: #252a2e;
     --clr-card: #434c54;
+    --clr-top-card: #252a2e;
 
     --background: var(--clr-dark);
     --background-opacity: rgba(37, 42, 46, 0.8);
@@ -50,6 +51,7 @@
     --clr-light: #dbdbdb;
     --clr-dark: #000000;
     --clr-card: #a59be2;
+    --clr-top-card: #f0f0f1;
 
     --background: var(--clr-light);
     --background-opacity: rgba(247, 235, 235, 0.8);
@@ -584,6 +586,34 @@ input[type="range"]::-moz-range-thumb {
     .pdf-iframe {
         width: 18.75em;
     }
+}
+
+#reprompt-formset {
+    background-color: var(--clr-top-card);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.field-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+#reprompt-formset .fields label {
+    margin-right: 1em;
+    font-weight: bold;
+    text-align: right;
+}
+
+#reprompt-formset .fields input,
+#reprompt-formset .fields select,
+#reprompt-formset .fields textarea {
+    margin-right: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .subtitle {
