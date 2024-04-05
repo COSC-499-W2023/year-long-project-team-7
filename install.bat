@@ -1,5 +1,5 @@
 virtualenv venv
-venv\Scripts\activate
+call venv\Scripts\activate
 mkdir app\capstone\files
 copy slide-templates\* app\capstone\files
 copy app\capstone\transformer\static\img\default_pfp.jpg app\capstone\files
