@@ -81,6 +81,8 @@ class Conversion(models.Model):
         choices=ImageFrequencyChoice.choices, default=ImageFrequencyChoice.DEFAULT
     )
 
+    slides_contents = JSONField(default=dict)
+
 
 class Exercise(models.Model):
     date = models.DateTimeField(default=timezone.now)
@@ -102,21 +104,13 @@ class Exercise(models.Model):
         max_length=50, choices=LanguageChoice.choices, default=LanguageChoice.AUTO
     )
 
+    slides_contents = JSONField(default=dict)
+
 
 class File(models.Model):
     date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     conversion = models.ForeignKey(Conversion, null=True, on_delete=models.CASCADE)
-    # exercise = models.ForeignKey(Exercise, null=True, on_delete=models.CASCADE)
-    is_output = models.BooleanField(default=False)
-    is_input = models.BooleanField(default=False)
-    type = models.TextField()
-    file = models.FileField(upload_to="", max_length=500)
-
-
-class ExerciseFile(models.Model):
-    date = models.DateTimeField(default=timezone.now)
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     exercise = models.ForeignKey(Exercise, null=True, on_delete=models.CASCADE)
     is_output = models.BooleanField(default=False)
     is_input = models.BooleanField(default=False)

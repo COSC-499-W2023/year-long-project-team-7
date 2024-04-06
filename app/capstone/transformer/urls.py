@@ -33,6 +33,8 @@ urlpatterns = [
         views.download_file,
         name="download_file",
     ),
+    path("download_file/<int:file_id>/", views.download_file, name="download_file"),
+    path("serve_file/<int:file_id>/", views.serve_file, name="serve_file"),
     path(
         "download_profile_pic/<int:user_id>/",
         views.download_profile_pic,

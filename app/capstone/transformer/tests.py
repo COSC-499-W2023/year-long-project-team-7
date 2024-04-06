@@ -33,7 +33,7 @@ class TransformViewTestCase(TestCase):
 
     def test_transform_view_post_request_valid_form(self):
         self.client.login(username="test", password="testpassword123")
-        with patch("transformer.views.generate_output") as mock_generate_output:
+        with patch("transformer.views.generate_presentation") as mock_generate_output:
             file = SimpleUploadedFile("file.txt", b"file_content")
 
             test_template = File(

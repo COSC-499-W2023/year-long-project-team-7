@@ -244,3 +244,34 @@ _Tasks Screenshot_
 2. Stripe user permissions (subscription_checkout branch)
 
 [16]: https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=+assignee%3A%40me
+
+## Feb 5 -> Mar 10
+
+Missed these logs.
+
+## Mar 11 -> 17
+
+![evaluation screenshot](../../img/keiran-w22-tasks.png)
+_Team evaluation Screenshot_
+
+![w17 tasks screenshot](../../img/keiran-eval-22.png)
+_Tasks Screenshot_
+
+### Goals this week
+1. Start exercise creation backend
+2. Add markdown input
+3. Finish subscription issues
+
+## Mar 18 - 24
+
+Missed this log.
+
+## Mar 25 - 31 
+![evaluation screenshot](../../img/keiran-eval-23.png)
+_Team evaluation Screenshot_
+
+![w17 tasks screenshot](../../img/keiran-w23-tasks.png)
+_Tasks Screenshot_
+
+### Goals this week
+1. Continue exercise creation backend

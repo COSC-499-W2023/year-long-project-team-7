@@ -1,6 +1,7 @@
-from .models import Conversion, File, User, Exercise, ExerciseFile
-from .presentationGenerator import PresentationGenerator
-from .exerciseGenerator import ExerciseGenerator
+from .models import Conversion, File, User, Exercise
+from .presentationGenerator import PresentationGenerator, SlideTypes
+from .models import Conversion, File, User
+from .presentationGenerator import PresentationGenerator, SlideToBeUpdated
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
 import os
@@ -38,23 +39,38 @@ def extract_text_from_pdf(filename: str) -> str:
     return text
 
 
-def generate_output(files: list[File], conversion: Conversion) -> str:
-    input_file_text = ""
+def extract_text_from_md(filename: str) -> str:
+    file_system = FileSystemStorage()
+    file_path = file_system.path(filename)
+    text = open(file_path, "r").read()
+    return text
+
+
+def extract_text_from_multiple_files(files: list[File]) -> str:
+    text = ""
 
     for file in files:
+        ext = os.path.splitext(file.file.name)[1].lower()
         if "pdf" in file.type:
-            input_file_text += extract_text_from_pdf(file.file.name)
+            text += extract_text_from_pdf(file.file.name)
+        elif ext == ".md":
+            text += extract_text_from_md(file.file.name)
         else:
             try:
-                input_file_text += extract_text_from_pdf(to_pdf(file.file.name))
+                text += extract_text_from_pdf(to_pdf(file.file.name))
             except Exception as e:
                 error(e)
+    return text
 
-    pres_manager = PresentationGenerator(input_file_text, conversion)
 
-    output_file_name = pres_manager.build_presentation()
+def generate_presentation(files: list[File], conversion: Conversion) -> str:
+    input_file_text = extract_text_from_multiple_files(files)
 
-    file_name, file_extension = os.path.splitext(output_file_name)
+    presentation_generator = PresentationGenerator(conversion)
+
+    new_presentation_path = presentation_generator.build_presentation(input_file_text)
+
+    file_name, file_extension = os.path.splitext(new_presentation_path)
 
     user = None
 
@@ -68,12 +84,12 @@ def generate_output(files: list[File], conversion: Conversion) -> str:
         user=user,
         conversion=conversion,
         type=file_extension,
-        file=output_file_name,
+        file=new_presentation_path,
         is_output=True,
     )
     new_pptx.save()
 
-    pdf_preview_path = to_pdf(output_file_name)
+    pdf_preview_path = to_pdf(new_presentation_path)
     new_pdf = File(
         user=user,
         conversion=conversion,
@@ -83,24 +99,23 @@ def generate_output(files: list[File], conversion: Conversion) -> str:
     )
     new_pdf.save()
 
-    return output_file_name
+    return new_presentation_path
 
 
-def generate_exercise(files: list[ExerciseFile], exercise: Exercise) -> str:
-    input_file_text = ""
+def generate_exercise(files: list[File], exercise: Exercise) -> str:
+    input_file_text = extract_text_from_multiple_files(files)
 
-    for file in files:
-        if "pdf" in file.type:
-            input_file_text += extract_text_from_pdf(file.file.name)
-        else:
-            try:
-                input_file_text += extract_text_from_pdf(to_pdf(file.file.name))
-            except Exception as e:
-                error(e)
+    presentation_generator = PresentationGenerator(exercise)
 
-    exercise_generator = ExerciseGenerator(input_file_text, exercise)
+    slide_types = (
+        [SlideTypes.MULTIPLE_CHOICE] * exercise.num_multiple_choice
+        + [SlideTypes.TRUE_FALSE] * exercise.num_true_false
+        + [SlideTypes.SHORT_ANSWER] * exercise.num_short_ans
+    )
 
-    output_file_name = exercise_generator.build_presentation()
+    output_file_name = presentation_generator.build_excercise(
+        input_file_text, slide_types
+    )
 
     file_name, file_extension = os.path.splitext(output_file_name)
 
@@ -112,7 +127,7 @@ def generate_exercise(files: list[ExerciseFile], exercise: Exercise) -> str:
         except ObjectDoesNotExist:
             user = None
 
-    new_pptx = ExerciseFile(
+    new_pptx = File(
         user=user,
         exercise=exercise,
         type=file_extension,
@@ -122,7 +137,7 @@ def generate_exercise(files: list[ExerciseFile], exercise: Exercise) -> str:
     new_pptx.save()
 
     pdf_preview_path = to_pdf(output_file_name)
-    new_pdf = ExerciseFile(
+    new_pdf = File(
         user=user,
         exercise=exercise,
         type="application/pdf",
@@ -132,3 +147,92 @@ def generate_exercise(files: list[ExerciseFile], exercise: Exercise) -> str:
     new_pdf.save()
 
     return output_file_name
+
+
+def reprompt_slides(
+    slides_to_be_updated: list[SlideToBeUpdated], old_conv_or_ex: Conversion | Exercise
+) -> Conversion | Exercise:
+    if isinstance(old_conv_or_ex, Conversion):
+        old_conversion = old_conv_or_ex
+        new_conversion = Conversion.objects.create(
+            prompt=old_conversion.prompt,
+            language=old_conversion.language,
+            template=old_conversion.template,
+            tone=old_conversion.tone,
+            complexity=old_conversion.complexity,
+            num_slides=old_conversion.num_slides,
+            image_frequency=old_conversion.image_frequency,
+            user=old_conversion.user,
+        )
+
+        new_conversion = Conversion.objects.create(
+            prompt=old_conversion.prompt,
+            language=old_conversion.language,
+            template=old_conversion.template,
+            tone=old_conversion.tone,
+            complexity=old_conversion.complexity,
+            num_slides=old_conversion.num_slides,
+            image_frequency=old_conversion.image_frequency,
+            user=old_conversion.user,
+        )
+
+        old_conversion_files = list(File.objects.filter(conversion=old_conversion))
+        for file in old_conversion_files:
+            if file.is_output:
+                continue
+            File.objects.create(
+                user=file.user,
+                conversion=new_conversion,
+                type=file.type,
+                file=file.file,
+                is_input=file.is_input,
+                is_output=file.is_output,
+            )
+
+        old_conversion_inputs = list(
+            File.objects.filter(conversion=old_conversion, is_input=True)
+        )
+        input_file_text = extract_text_from_multiple_files(old_conversion_inputs)
+
+        presentation_generator = PresentationGenerator(old_conversion)
+
+        new_presentation_path = presentation_generator.regenerate_slides(
+            slides_to_be_updated,
+            input_file_text,
+            new_conversion,
+        )
+
+        file_name, file_extension = os.path.splitext(new_presentation_path)
+
+        user = None
+
+        if old_conversion.user_id is not None:
+            try:
+                user = User.objects.get(id=old_conversion.user_id)
+            except ObjectDoesNotExist:
+                user = None
+
+        new_pptx = File(
+            user=user,
+            conversion=new_conversion,
+            type=file_extension,
+            file=new_presentation_path,
+            is_output=True,
+        )
+        new_pptx.save()
+
+        pdf_preview_path = to_pdf(new_presentation_path)
+        new_pdf = File(
+            user=user,
+            conversion=new_conversion,
+            type="application/pdf",
+            file=pdf_preview_path,
+            is_output=True,
+        )
+        new_pdf.save()
+
+        return new_conversion
+
+    elif isinstance(old_conv_or_ex, Exercise):
+        # TODO: Implement this
+        return old_conv_or_ex

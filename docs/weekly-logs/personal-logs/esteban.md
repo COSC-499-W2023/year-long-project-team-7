@@ -488,7 +488,7 @@ _Team Evaluation Screenshot_
 
 This week the team decided to focus on merging the multiple large features that had been getting worked on over the break. We mostly focused on more intensive code review and fixing merge conflict with the master branch, as well as locating bugs that arose later as a result of the merging. We also had a couple of meetings to discuss the peer testing tasks for the upcoming session and prepare the deployed site.
 
-I also took some time to reorganize the tasks we had set up in the Github Project and organize them into new milestones which cover progress up until the end of the project. I also added start and end dates to every issue in the project so we could best use the timeline feature of the board and follow a schedule which let us cover all the work we want by the end of the project. 
+I also took some time to reorganize the tasks we had set up in the Github Project and organize them into new milestones which cover progress up until the end of the project. I also added start and end dates to every issue in the project so we could best use the timeline feature of the board and follow a schedule which let us cover all the work we want by the end of the project.
 
 ## Feb 04 2024 -> Mar 10 2024
 
@@ -504,14 +504,63 @@ _Team Evaluation Screenshot_
 
 ### Goals
 
-
-- [x] Re-prompting tasks meeting
-- [x] Bug fixes
-- [x] Peer testing issues
-- [ ] Front-end Reprompt
-	- [x] PDF Rework (`iframe`)
-	- [ ] Slide selection form (WIP)
+-   [x] Re-prompting tasks meeting
+-   [x] Bug fixes
+-   [x] Peer testing issues
+-   [ ] Front-end Reprompt
+    -   [x] PDF Rework (`iframe`)
+    -   [ ] Slide selection form (WIP)
 
 ### Self Reflection and Learning
 
 This week we focused on the second peer testing round, which included some new UI changes and bugfixes. I also continued work on the frontend of the re-prompting feature by reworking our PDF preview system to use an `<iframe>` element instead of the previous method with JavaScript. I will continue working on a method to specify which slides to re-prompt that will hopefully be part of the PDF preview system.
+
+## Mar 11 2024 -> Mar 18 2024
+
+![evaluation-screenshot](../../img/esteban-eval-22.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-22.png)
+
+### Goals
+
+-   [x] Frontend Formset
+    -   [x] Variable form fields
+    -   [x] Variable form values (slide numbers)
+-   [x] View routing
+
+### Self Reflection and Learning
+
+This week I completed work on the frontend to process the form we will use for the reprompting system. This entailed working with the Django FromSet to manage multiple forms in the frontend. The user will be able to add more forms to do multiple reprompts. I also had to read the appropriate PDF slides to generate a variable form value.
+
+## Mar 25 2024 -> Mar 21 2024
+
+![evaluation-screenshot](../../img/esteban-eval-23.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Tasks
+
+![tasks-screenshot](../../img/esteban-tasks-22.png)
+
+### Goals
+
+-   [x] Slide number validation
+-   [x] Can't send empty prompt
+-   [x] Multiple outputs
+-   [x] Delete `file-preview.js`
+-   [x] Slide 1 reprompt fails (template not found) after first reprompt
+    -   [x] Template bug
+    -   [x] JSON Slide Contents Bug
+-   [x] Duplicates
+
+### Self Reflection and Learning
+
+This week I focused on improving the validation for the re-prompt form, as well as work on multiple backend issues.
