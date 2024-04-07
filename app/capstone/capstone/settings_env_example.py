@@ -1,16 +1,12 @@
 from .settings import *
 
-
 OPENAI_API_KEY = "your open ai api key here"
-
 
 STRIPE_SECRET_KEY = "stripe secret key here"
 STRIPE_PUBLIC_KEY = "stripe public key here"
 STRIPE_WEBHOOK_SECRET = "stripe webhook secret"
 
-
-SERP_API_KEY = "unsplash access key here"
-
+SERP_API_KEY = "serp access key here"
 
 DOMAIN = "http://127.0.0.1:8000"
 EMAIL_HOST_PASSWORD = "email host password here"
