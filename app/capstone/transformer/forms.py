@@ -237,6 +237,13 @@ class ExerciseRepromptForm(forms.Form):
 
     prompt = forms.CharField(required=False, max_length=100, label="Prompt")
 
+    slide_type = forms.ChoiceField(
+        label="Slide Type",
+        choices=SlideTypeChoice.choices,
+        widget=RadioSelect(),
+        required=False,
+    )
+
     def clean_prompt(self) -> str:
         prompt = str(self.cleaned_data.get("prompt", ""))
         if not prompt:

@@ -40,6 +40,7 @@ from .models import (
     Profile,
     Subscription,
     Exercise,
+    SlideTypes,
 )
 from .tokens import account_activation_token
 from .generator import generate_exercise
@@ -477,15 +478,16 @@ def results(request: HttpRequest, conversion_id: int) -> HttpResponse:
                 slide_number = form.cleaned_data.get("slide")
                 prompt = str(form.cleaned_data.get("prompt"))
                 is_image_slide = form.cleaned_data.get("image_slide")
+                slide_type = SlideTypes.IMAGE if is_image_slide else SlideTypes.CONTENT
 
                 if (
                     slide_number is not None
                     and prompt is not None
-                    and is_image_slide is not None
+                    and slide_type is not None
                 ):
                     slide_number = int(slide_number)
                     slides_to_update.append(
-                        SlideToBeUpdated(slide_number, prompt, is_image_slide)
+                        SlideToBeUpdated(slide_number, prompt, slide_type)
                     )
 
             new_conversion = reprompt_slides(slides_to_update, conversion)
@@ -544,21 +546,23 @@ def exercise_results(request: HttpRequest, exercise_id: int) -> HttpResponse:
             for form in formset:
                 slide_number = form.cleaned_data.get("slide")
                 prompt = str(form.cleaned_data.get("prompt"))
-                is_image_slide = form.cleaned_data.get("image_slide")
+                slide_type = getattr(
+                    SlideTypes, str(form.cleaned_data.get("slide_type"))
+                )
 
                 if (
                     slide_number is not None
                     and prompt is not None
-                    and is_image_slide is not None
+                    and slide_type is not None
                 ):
                     slide_number = int(slide_number)
                     slides_to_update.append(
-                        SlideToBeUpdated(slide_number, prompt, is_image_slide)
+                        SlideToBeUpdated(slide_number, prompt, slide_type)
                     )
 
             new_exercise = reprompt_slides(slides_to_update, exercise)
 
-            return redirect("results", conversion_id=new_exercise.id)
+            return redirect("exercise_results", exercise_id=new_exercise.id)
         else:
             return render(
                 request,
@@ -576,11 +580,8 @@ def exercise_results(request: HttpRequest, exercise_id: int) -> HttpResponse:
 
 
 @login_required(login_url="login")
-def download_file(request: HttpRequest, file_id: int, flag: int) -> HttpResponse:
-    if flag == 0:
-        file = get_object_or_404(File, id=file_id)
-    elif flag == 1:
-        file = get_object_or_404(ExerciseFile, id=file_id)  # type: ignore
+def download_file(request: HttpRequest, file_id: int) -> HttpResponse:
+    file = get_object_or_404(File, id=file_id)
 
     if request.user.is_authenticated:
         if file.user != request.user:
@@ -716,8 +717,8 @@ def history(request: HttpRequest) -> HttpResponse:
             input_file = File.objects.filter(exercise=exercise, is_input=True)
             output_file = File.objects.filter(exercise=exercise, is_output=True)
             exercise_history[exercise] = {
-                "input_file": input_file,
-                "output_file": output_file,
+                "input_files": input_file,
+                "output_files": output_file,
             }
 
     else:

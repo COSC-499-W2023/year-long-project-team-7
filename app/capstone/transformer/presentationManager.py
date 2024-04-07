@@ -1,4 +1,3 @@
-from enum import Enum
 from io import BytesIO
 import json
 import typing
@@ -8,24 +7,9 @@ from django.core.files.base import ContentFile
 import random
 from pptx.enum.shapes import PP_PLACEHOLDER  # type: ignore
 from pptx.enum.shapes import MSO_SHAPE_TYPE
-from .models import File
+from .models import FieldTypes, File, SlideTypes
 from .utils import error
 from typing import List, Optional, Dict, Any
-
-
-class FieldTypes(Enum):
-    TITLE = "TITLE"
-    TEXT = "TEXT"
-    IMAGE = "IMAGE"
-
-
-class SlideTypes(Enum):
-    TITLE = "TITLE"
-    CONTENT = "CONTENT"
-    IMAGE = "IMAGE"
-    MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
-    TRUE_FALSE = "TRUE_FALSE"
-    SHORT_ANSWER = "SHORT_ANSWER"
 
 
 class SlideField:
@@ -40,12 +24,14 @@ class SlideContent:
         self,
         slide_num: Optional[int] = None,
         layout: Optional[str] = None,
+        slide_type: Optional[SlideTypes] = None,
         fields: Optional[List[SlideField]] = None,
         json: Optional[Dict[Any, Any]] = None,
     ):
         if json is not None:
             self.slide_num = json["SLIDE_NUM"]
             self.layout = json["SLIDE_LAYOUT"]
+            self.slide_type = SlideTypes(json["SLIDE_TYPE"])
             self.fields = [
                 SlideField(
                     field["FIELD_INDEX"],
@@ -58,11 +44,13 @@ class SlideContent:
             self.slide_num = slide_num or 0
             self.layout = layout or ""
             self.fields = fields or []
+            self.slide_type = slide_type or SlideTypes.CONTENT
 
     def to_json_string(self) -> str:
         slide_json = {
             "SLIDE_NUM": self.slide_num,
             "SLIDE_LAYOUT": self.layout,
+            "SLIDE_TYPE": self.slide_type.value,
             "FIELDS": [
                 {
                     "FIELD_INDEX": field.field_index,
@@ -78,6 +66,7 @@ class SlideContent:
         slide_json = {
             "SLIDE_NUM": self.slide_num,
             "SLIDE_LAYOUT": self.layout,
+            "SLIDE_TYPE": self.slide_type.value,
             "FIELDS": [
                 {
                     "FIELD_INDEX": field.field_index,
@@ -93,7 +82,7 @@ class SlideContent:
         object = json.loads(response)
         for field in self.fields:
             for new_field in object["FIELDS"]:
-                if str(field.field_index) == new_field["FIELD_INDEX"]:
+                if str(field.field_index) == str(new_field["FIELD_INDEX"]):
                     field.value = new_field["FIELD_VALUE"]
 
 

@@ -4,9 +4,8 @@ from .presentationManager import (
     FieldTypes,
     PresentationManager,
     SlideContent,
-    SlideTypes,
 )
-from .models import Conversion, Exercise
+from .models import Conversion, Exercise, SlideTypes
 from django.conf import settings
 import json
 from django.core.files.storage import FileSystemStorage
@@ -27,11 +26,11 @@ class SlideToBeUpdated:
         self,
         slide_number: int,
         prompt: str,
-        is_image_slide: bool,
+        slide_type: SlideTypes,
     ):
         self.slide_number = slide_number
         self.prompt = prompt
-        self.is_image_slide = is_image_slide
+        self.slide_type = slide_type
 
 
 class PresentationGenerator:
@@ -141,7 +140,7 @@ class PresentationGenerator:
 
         fields = self.presentation_manager.get_slide_layout_fields(layout, slide_type)
 
-        slide_content = SlideContent(slide_num, layout.name, fields)
+        slide_content = SlideContent(slide_num, layout.name, slide_type, fields)
 
         slide_json = slide_content.to_json_string()
 
@@ -197,19 +196,10 @@ class PresentationGenerator:
 
     def update_slide(self, update_slide_params: SlideToBeUpdated) -> SlideContent:
         slide_num = update_slide_params.slide_number
-        is_image_slide = update_slide_params.is_image_slide
         prompt = update_slide_params.prompt
 
-        slide_type = (
-            SlideTypes.IMAGE
-            if is_image_slide
-            else SlideTypes.TITLE
-            if slide_num == 1
-            else SlideTypes.CONTENT
-        )
-
         return self.generate_slide_content(
-            slide_num, slide_type, regenerate=True, prompt=prompt
+            slide_num, update_slide_params.slide_type, regenerate=True, prompt=prompt
         )
 
     def new_question_slide(
@@ -272,21 +262,31 @@ class PresentationGenerator:
         self,
         slides_to_be_updated: list[SlideToBeUpdated],
         input_file_text: str,
-        new_conversion: Conversion,
+        new_conv_or_ex: Conversion | Exercise,
     ) -> str:
         self.presentation_manager.delete_all_slides()
 
-        system_prompt = Prompts.PRESENTATION.format(
-            tone=self.conversion.tone,
-            language=self.conversion.language,
-            complexity=self.conversion.complexity,
-            prompt=self.conversion.prompt,
-            input_file_text=input_file_text,
-        )
+        if isinstance(new_conv_or_ex, Conversion):
+            system_prompt = Prompts.PRESENTATION.format(
+                tone=self.conversion.tone,
+                language=self.conversion.language,
+                complexity=self.conversion.complexity,
+                prompt=self.conversion.prompt,
+                input_file_text=input_file_text,
+            )
+            existing_slides_contents = json.loads(self.conversion.slides_contents)
+
+        elif isinstance(new_conv_or_ex, Exercise):
+            system_prompt = Prompts.EXERCISES.format(
+                language=self.exercise.language,
+                complexity=self.exercise.complexity,
+                prompt=self.exercise.prompt,
+                input_file_text=input_file_text,
+            )
+            existing_slides_contents = json.loads(self.exercise.slides_contents)
 
         self.openai_manager.set_system_prompt(system_prompt)
 
-        existing_slides_contents = json.loads(self.conversion.slides_contents)
         existing_slides_contents = [
             SlideContent(json=content) for content in existing_slides_contents
         ]
@@ -311,6 +311,6 @@ class PresentationGenerator:
 
         # Now convert the dictionary values to a list
         combined_slides_list = list(combined_slides.values())
-        self.add_slides(combined_slides_list, new_conversion)
+        self.add_slides(combined_slides_list, new_conv_or_ex)
 
-        return self.presentation_manager.save_presentation(new_conversion.id)
+        return self.presentation_manager.save_presentation(new_conv_or_ex.id)

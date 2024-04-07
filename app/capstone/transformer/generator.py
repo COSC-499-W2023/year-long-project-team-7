@@ -1,5 +1,6 @@
+import json
 from .models import Conversion, File, User, Exercise
-from .presentationGenerator import PresentationGenerator, SlideTypes
+from .presentationGenerator import PresentationGenerator, SlideTypes, SlideContent
 from .models import Conversion, File, User
 from .presentationGenerator import PresentationGenerator, SlideToBeUpdated
 from django.core.files.storage import FileSystemStorage
@@ -165,21 +166,10 @@ def reprompt_slides(
             user=old_conversion.user,
         )
 
-        new_conversion = Conversion.objects.create(
-            prompt=old_conversion.prompt,
-            language=old_conversion.language,
-            template=old_conversion.template,
-            tone=old_conversion.tone,
-            complexity=old_conversion.complexity,
-            num_slides=old_conversion.num_slides,
-            image_frequency=old_conversion.image_frequency,
-            user=old_conversion.user,
+        old_conversion_files = list(
+            File.objects.filter(conversion=old_conversion, is_output=False)
         )
-
-        old_conversion_files = list(File.objects.filter(conversion=old_conversion))
         for file in old_conversion_files:
-            if file.is_output:
-                continue
             File.objects.create(
                 user=file.user,
                 conversion=new_conversion,
@@ -234,5 +224,97 @@ def reprompt_slides(
         return new_conversion
 
     elif isinstance(old_conv_or_ex, Exercise):
-        # TODO: Implement this
-        return old_conv_or_ex
+        old_exercise = old_conv_or_ex
+        old_exercise_slides_contents = [
+            SlideContent(json=content)
+            for content in json.loads(old_exercise.slides_contents)
+        ]
+
+        num_multiple_choice = old_exercise.num_multiple_choice
+        num_true_false = old_exercise.num_true_false
+        num_short_ans = old_exercise.num_short_ans
+
+        for content in old_exercise_slides_contents:
+            for slide in slides_to_be_updated:
+                if content.slide_num == slide.slide_number:
+                    if content.slide_type == SlideTypes.MULTIPLE_CHOICE:
+                        num_multiple_choice -= 1
+                    elif content.slide_type == SlideTypes.TRUE_FALSE:
+                        num_true_false -= 1
+                    elif content.slide_type == SlideTypes.SHORT_ANSWER:
+                        num_short_ans -= 1
+
+                    if slide.slide_type == SlideTypes.MULTIPLE_CHOICE:
+                        num_multiple_choice += 1
+                    elif slide.slide_type == SlideTypes.TRUE_FALSE:
+                        num_true_false += 1
+                    elif slide.slide_type == SlideTypes.SHORT_ANSWER:
+                        num_short_ans += 1
+
+        new_exercise = Exercise.objects.create(
+            prompt=old_exercise.prompt,
+            language=old_exercise.language,
+            template=old_exercise.template,
+            complexity=old_exercise.complexity,
+            user=old_exercise.user,
+            num_true_false=num_true_false,
+            num_short_ans=num_short_ans,
+            num_multiple_choice=num_multiple_choice,
+        )
+
+        old_exercise_files = list(
+            File.objects.filter(exercise=old_exercise, is_output=False)
+        )
+        for file in old_exercise_files:
+            File.objects.create(
+                user=file.user,
+                exercise=new_exercise,
+                type=file.type,
+                file=file.file,
+                is_input=file.is_input,
+                is_output=file.is_output,
+            )
+
+        old_exercise_inputs = list(
+            File.objects.filter(exercise=old_exercise, is_input=True)
+        )
+        input_file_text = extract_text_from_multiple_files(old_exercise_inputs)
+
+        presentation_generator = PresentationGenerator(old_exercise)
+
+        new_exercise_path = presentation_generator.regenerate_slides(
+            slides_to_be_updated,
+            input_file_text,
+            new_exercise,
+        )
+
+        file_name, file_extension = os.path.splitext(new_exercise_path)
+
+        user = None
+
+        if old_exercise.user_id is not None:
+            try:
+                user = User.objects.get(id=old_exercise.user_id)
+            except ObjectDoesNotExist:
+                user = None
+
+        new_pptx = File(
+            user=user,
+            exercise=new_exercise,
+            type=file_extension,
+            file=new_exercise_path,
+            is_output=True,
+        )
+        new_pptx.save()
+
+        pdf_preview_path = to_pdf(new_exercise_path)
+        new_pdf = File(
+            user=user,
+            exercise=new_exercise,
+            type="application/pdf",
+            file=pdf_preview_path,
+            is_output=True,
+        )
+        new_pdf.save()
+
+        return new_exercise

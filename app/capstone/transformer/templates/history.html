@@ -52,7 +52,7 @@
                                             {% for file in files.input_files %}
                                                 <p class="accordion-text">
                                                     <a class="btn btn-primary history-download"
-                                                       href="{% url 'download_file' file.id 0 %}"
+                                                       href="{% url 'download_file' file.id %}"
                                                        download
                                                        aria-label="Download {{ file.file }}">{{ file.file }}</a>
                                                 </p>
@@ -62,7 +62,7 @@
                                         {% for file in files.output_files %}
                                             <p class="accordion-text">
                                                 <a class="btn btn-primary history-download"
-                                                   href="{% url 'download_file' file.id 0 %}"
+                                                   href="{% url 'download_file' file.id %}"
                                                    download
                                                    aria-label="Download {{ file.file }}">{{ file.file }}</a>
                                             </p>
@@ -121,6 +121,28 @@
                                         <p class="accordion-text" tabindex="0">
                                             <strong># of Short Answer:</strong> {{ exercise.num_short_ans }}
                                         </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% if exercisefiles.input_files %}
+                                            <h4 class="card-subtitle mb-2" tabindex="0">Input Files</h4>
+                                            {% for file in exercisefiles.input_files %}
+                                                <p class="accordion-text">
+                                                    <a class="btn btn-primary history-download"
+                                                       href="{% url 'download_file' file.id %}"
+                                                       download
+                                                       aria-label="Download {{ file.file }}">{{ file.file }}</a>
+                                                </p>
+                                            {% endfor %}
+                                        {% endif %}
+                                        <h4 class="card-subtitle mb-2" tabindex="0">Output Files</h4>
+                                        {% for file in exercisefiles.output_files %}
+                                            <p class="accordion-text">
+                                                <a class="btn btn-primary history-download"
+                                                   href="{% url 'download_file' file.id %}"
+                                                   download
+                                                   aria-label="Download {{ file.file }}">{{ file.file }}</a>
+                                            </p>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>

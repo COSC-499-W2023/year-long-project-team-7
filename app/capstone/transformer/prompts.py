@@ -22,17 +22,18 @@ class Prompts:
     Example input 1:
     {{
         "SLIDE_NUM": "1",
-        "SLIDE_LAYOUT": "TITLE",
+        "SLIDE_LAYOUT": "title and subtitle",
+        "SLIDE_TYPE": "TITLE",
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
                 "FIELD_TYPE": "TITLE",
-                "FIELD_VALUE": "<SLIDE TITLE HERE>"
+                "FIELD_VALUE": "<PRESENTATION TITLE HERE>"
             }},
             {{
                 "FIELD_INDEX": "1",
                 "FIELD_TYPE": "TEXT",
-                "FIELD_VALUE": "<SLIDE TEXT HERE>"
+                "FIELD_VALUE": "<PRESENTATION SUBTITLE HERE>"
             }}
         ]
     }},
@@ -40,7 +41,8 @@ class Prompts:
     Example ouptut 1:
     {{
         "SLIDE_NUM": "1",
-        "SLIDE_LAYOUT": "TITLE",
+        "SLIDE_LAYOUT": "title and subtitle",
+        "SLIDE_TYPE": "TITLE",
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
@@ -59,7 +61,8 @@ class Prompts:
     Example input 2:
     {{
         "SLIDE_NUM": "2",
-        "SLIDE_LAYOUT": "CONTENT",
+        "SLIDE_LAYOUT": "single text box",
+        "SLIDE_TYPE": "CONTENT",
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
@@ -77,7 +80,8 @@ class Prompts:
     Example output 2:
     {{
         "SLIDE_NUM": "2",
-        "SLIDE_LAYOUT": "CONTENT",
+        "SLIDE_LAYOUT": "single text box",
+        "SLIDE_TYPE": "CONTENT",
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
@@ -96,7 +100,8 @@ class Prompts:
     Example input 3:
     {{
         "SLIDE_NUM": "3",
-        "SLIDE_LAYOUT": "CONTENT",
+        "SLIDE_LAYOUT": "two text boxes",
+        "SLIDE_TYPE": "CONTENT",
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
@@ -119,7 +124,8 @@ class Prompts:
     Example output 3:
     {{
         "SLIDE_NUM": "3",
-        "SLIDE_LAYOUT": "CONTENT",
+        "SLIDE_LAYOUT": "two text boxes",
+        "SLIDE_TYPE": "CONTENT",
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
@@ -143,7 +149,8 @@ class Prompts:
     Example input 4:
     {{
         "SLIDE_NUM": "4",
-        "SLIDE_LAYOUT": "CONTENT_IMAGE",
+        "SLIDE_LAYOUT": "text and image",
+        "SLIDE_TYPE": "IMAGE",
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
@@ -166,7 +173,8 @@ class Prompts:
     Example output 4:
     {{
         "SLIDE_NUM": "4",
-        "SLIDE_LAYOUT": "CONTENT_IMAGE",
+        "SLIDE_LAYOUT": "text and image",
+        "SLIDE_TYPE": "IMAGE",
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
@@ -257,16 +265,17 @@ class Prompts:
     Example input:
     {{
         "SLIDE_NUM": "1",
-        "SLIDE_LAYOUT": "CONTENT",
+        "SLIDE_LAYOUT": "title and single text box",
+        "SLIDE_TYPE": "MULTIPLE_CHOICE",
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
-                "FIELD_TYPE": "QUESTION",
+                "FIELD_TYPE": "TITLE",
                 "FIELD_VALUE": "<SLIDE QUESTION HERE>"
             }},
             {{
                 "FIELD_INDEX": "1",
-                "FIELD_TYPE": "ANSWER", 
+                "FIELD_TYPE": "TEXT", 
                 "FIELD_VALUE": "A) <SLIDE ANSWER HERE>  B) <SLIDE ANSWER HERE>  C) <SLIDE ANSWER HERE>  D) <SLIDE ANSWER HERE>"
             }}
         ]
@@ -275,7 +284,8 @@ class Prompts:
     Example output:
     {{
         "SLIDE_NUM": "1",
-        "SLIDE_LAYOUT": "CONTENT",
+        "SLIDE_LAYOUT": "title and single text box",
+        "SLIDE_TYPE": "MULTIPLE_CHOICE",        
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
@@ -306,16 +316,17 @@ class Prompts:
     Example:
     {{
         "SLIDE_NUM": "1",
-        "SLIDE_LAYOUT": "CONTENT",
+        "SLIDE_LAYOUT": "title and single text box",
+        "SLIDE_TYPE": "TRUE_FALSE", 
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
-                "FIELD_TYPE": "QUESTION",
+                "FIELD_TYPE": "TITLE",
                 "FIELD_VALUE": "<SLIDE QUESTION HERE>"
             }},
             {{
                 "FIELD_INDEX": "1",
-                "FIELD_TYPE": "ANSWER", 
+                "FIELD_TYPE": "TEXT", 
                 "FIELD_VALUE": "A) TRUE  B) FALSE"
             }}
         ]
@@ -324,16 +335,17 @@ class Prompts:
     Example:
     {{
         "SLIDE_NUM": "1",
-        "SLIDE_LAYOUT": "CONTENT",
+        "SLIDE_LAYOUT": "title and single text box",
+        "SLIDE_TYPE": "TRUE_FALSE", 
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
-                "FIELD_TYPE": "QUESTION",
+                "FIELD_TYPE": "TITLE",
                 "FIELD_VALUE": "Is an apple a fruit?"
             }},
             {{
                 "FIELD_INDEX": "1",
-                "FIELD_TYPE": "ANSWER",
+                "FIELD_TYPE": "TEXT",
                 "FIELD_VALUE": "A) TRUE  B) FALSE"
             }}
         ]
@@ -354,16 +366,17 @@ class Prompts:
     Example input:
     {{
         "SLIDE_NUM": "1",
-        "SLIDE_LAYOUT": "CONTENT",
+        "SLIDE_LAYOUT": "title and single text box",
+        "SLIDE_TYPE": "SHORT_ANSWER", 
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
-                "FIELD_TYPE": "QUESTION",
+                "FIELD_TYPE": "TITLE",
                 "FIELD_VALUE": "<SLIDE QUESTION HERE>"
             }},
             {{
                 "FIELD_INDEX": "1",
-                "FIELD_TYPE": "ANSWER", 
+                "FIELD_TYPE": "TEXT", 
                 "FIELD_VALUE": "<SLIDE ANSWER HERE>"
             }}
         ]
@@ -372,16 +385,17 @@ class Prompts:
     Example output:
     {{
         "SLIDE_NUM": "1",
-        "SLIDE_LAYOUT": "CONTENT",
+        "SLIDE_LAYOUT": "title and single text box",
+        "SLIDE_TYPE": "SHORT_ANSWER", 
         "FIELDS":[
             {{
                 "FIELD_INDEX": "0",
-                "FIELD_TYPE": "QUESTION",
+                "FIELD_TYPE": "TITLE",
                 "FIELD_VALUE": "What is the difference between fruits and vegetables?"
             }},
             {{
                 "FIELD_INDEX": "1",
-                "FIELD_TYPE": "ANSWER",
+                "FIELD_TYPE": "TEXT",
                 "FIELD_VALUE": "Fruits are the mature ovaries of flowering plants and contain seeds, while vegetables encompass other parts of the plant, such as roots, stems, and leaves. Generally, fruits are sweet or sour due to their sugar content, whereas vegetables tend to have a more savory flavor profile. Additionally, fruits are typically eaten raw, while vegetables can be consumed raw or cooked. However, there are exceptions, such as tomatoes and cucumbers, which are botanically fruits but often treated as vegetables in culinary contexts."
             }}
         ]
