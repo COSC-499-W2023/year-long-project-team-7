@@ -1,7 +1,7 @@
 import typing
 from openai import OpenAI
 from django.conf import settings
-from .models import Conversion, File
+from .models import Conversion, File, Exercise
 from tenacity import retry, stop_after_attempt, wait_random_exponential
 import re
 from .prompts import *

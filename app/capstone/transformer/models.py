@@ -1,9 +1,25 @@
+from enum import Enum
 from django.db import models
 from django.utils import timezone
 from django.db.models import JSONField
 from django.contrib.auth.models import User
 from PIL import Image
 import os
+
+
+class FieldTypes(Enum):
+    TITLE = "TITLE"
+    TEXT = "TEXT"
+    IMAGE = "IMAGE"
+
+
+class SlideTypes(Enum):
+    TITLE = "TITLE"
+    CONTENT = "CONTENT"
+    IMAGE = "IMAGE"
+    MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
+    TRUE_FALSE = "TRUE_FALSE"
+    SHORT_ANSWER = "SHORT_ANSWER"
 
 
 class TemplateChoice(models.IntegerChoices):
@@ -13,6 +29,12 @@ class TemplateChoice(models.IntegerChoices):
     TEMPLATE_4 = 4, "Template 4"
     TEMPLATE_5 = 5, "Template 5"
     TEMPLATE_6 = 6, "Template 6"
+
+
+class SlideTypeChoice(models.TextChoices):
+    MUTLTIPE_CHOICE = "MULTIPLE_CHOICE", "Multiple Choice"
+    TRUE_FALSE = "TRUE_FALSE", "True/False"
+    SHORT_ANSWER = "SHORT_ANSWER", "Short Answer"
 
 
 class LanguageChoice(models.TextChoices):
@@ -84,10 +106,34 @@ class Conversion(models.Model):
     slides_contents = JSONField(default=dict)
 
 
+class Exercise(models.Model):
+    date = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    prompt = models.TextField(default="")
+    num_true_false = models.IntegerField(default=3)
+    num_multiple_choice = models.IntegerField(default=3)
+    num_short_ans = models.IntegerField(default=3)
+    template = models.ForeignKey(
+        "File", null=True, on_delete=models.CASCADE, related_name="template_exercise"
+    )
+    model = models.CharField(
+        max_length=50, choices=ModelChoice.choices, default=ModelChoice.GPT_3_5
+    )
+    complexity = models.IntegerField(
+        choices=ComplexityLevelChoice.choices, default=ComplexityLevelChoice.DEFAULT
+    )
+    language = models.CharField(
+        max_length=50, choices=LanguageChoice.choices, default=LanguageChoice.AUTO
+    )
+
+    slides_contents = JSONField(default=dict)
+
+
 class File(models.Model):
     date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     conversion = models.ForeignKey(Conversion, null=True, on_delete=models.CASCADE)
+    exercise = models.ForeignKey(Exercise, null=True, on_delete=models.CASCADE)
     is_output = models.BooleanField(default=False)
     is_input = models.BooleanField(default=False)
     type = models.TextField()

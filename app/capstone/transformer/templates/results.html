@@ -18,6 +18,7 @@
                                         <iframe class="pdf-iframe" src="{% url 'serve_file' file.id %}"></iframe>
                                     </div>
                                 </div>
+                                <input type="hidden" id="pdf-file" value="{% url 'download_file' file.id %}">
                             {% endif %}
                         {% endfor %}
                     {% endif %}

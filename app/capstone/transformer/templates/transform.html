@@ -16,200 +16,432 @@
             <h1 class="text-center mb-5 title bigger-h1"
                 aria-label="Create Page"
                 tabindex="0">Create</h1>
-            <form id="generator-form" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="mb-5">
-                    <h2 class="text-left" tabindex="0">
-                        Input
-                        <a class="custom-tooltip"
-                           data-bs-toggle="tooltip"
-                           data-bs-title="Upload a PowerPoint or any text file to the transformer. You can add extra instructions with a prompt, or use it by itself.">
-                            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="24px"
-                                 height="24px"
-                                 viewBox="0 0 24 24">
-                                <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
-                            </svg>
-                        </a>
-                    </h2>
-                    <hr />
-                    <div class="row">
-                        <div class="col-lg-8">{{ form.prompt }}</div>
-                        <div class="col-lg-4 mt-4 mx-auto mt-lg-0">
-                            <input id="transform-file-upload"
-                                   class="custom-file-upload"
-                                   name="input_files"
-                                   type="file"
-                                   multiple
-                                   tabindex="-1"
-                                   aria-label="File upload" />
-                            <button id="transform-file-btn" type="button" class="btn btn-primary">
-                                <label for="transform-file-upload">Choose File(s)</label>
-                            </button>
-                            <div class="mt-3 text-center" id="selected-input-file-names"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-5">
-                    <h2 class="text-left" tabindex="0">Options</h2>
-                    <hr />
-                    <div class="options">
-                        <div class="mt-4 text-center d-flex flex-column align-items-center">
-                            <p>
-                                Language
-                                <a class="custom-tooltip"
-                                   data-bs-toggle="tooltip"
-                                   data-bs-title="Change language of presentation. Auto uses the language of your prompt.">
-                                    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         width="24px"
-                                         height="24px"
-                                         viewBox="0 0 24 24">
-                                        <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
-                                    </svg>
-                                </a>
-                            </p>
-                            {{ form.language }}
-                        </div>
-                        <div class="mt-4 text-center d-flex flex-column align-items-center">
-                            <p>
-                                Tone
-                                <a class="custom-tooltip"
-                                   data-bs-toggle="tooltip"
-                                   data-bs-title="Change the tone of the writing in the presentation.">
-                                    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         width="24px"
-                                         height="24px"
-                                         viewBox="0 0 24 24">
-                                        <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
-                                    </svg>
-                                </a>
-                            </p>
-                            {{ form.tone }}
-                        </div>
-                        <div class="mt-4 text-center d-flex flex-column align-items-center">
-                            <p>
-                                Complexity
-                                <a class="custom-tooltip"
-                                   data-bs-toggle="tooltip"
-                                   data-bs-title="Change the level of detail of the information in the presentation.">
-                                    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         width="24px"
-                                         height="24px"
-                                         viewBox="0 0 24 24">
-                                        <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
-                                    </svg>
-                                </a>
-                            </p>
-                            {{ form.complexity }}
-                            <small id="complexity_value" class="mt-2">Default</small>
-                        </div>
-                        <div class="mt-4 text-center d-flex flex-column align-items-center">
-                            <p>
-                                Number of Images
-                                <a class="custom-tooltip"
-                                   data-bs-toggle="tooltip"
-                                   data-bs-title="Change the number of images your presentation will have.">
-                                    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         width="24px"
-                                         height="24px"
-                                         viewBox="0 0 24 24">
-                                        <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
-                                    </svg>
-                                </a>
-                            </p>
-                            {{ form.image_frequency }}
-                            <small id="image_frequency_value" class="mt-2">Default</small>
-                        </div>
-                        <div class="mt-4 text-center d-flex flex-column align-items-center">
-                            <p>
-                                Number of slides
-                                <a class="custom-tooltip"
-                                   data-bs-toggle="tooltip"
-                                   data-bs-title="Change the size of the presentation by number of slides.">
-                                    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         width="24px"
-                                         height="24px"
-                                         viewBox="0 0 24 24">
-                                        <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
-                                    </svg>
-                                </a>
-                            </p>
-                            {{ form.num_slides }}
-                            <small id="num_slides_value" class="mt-2">{{ form.num_slides.value }}</small>
-                        </div>
-                        <div class="mt-4 text-center d-flex flex-column align-items-center">
-                            <p>
-                                Model
-                                <a class="custom-tooltip"
-                                   data-bs-toggle="tooltip"
-                                   data-bs-title="Change the AI model used to generate presentations. GPT-4 produces better presentations.">
-                                    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         width="24px"
-                                         height="24px"
-                                         viewBox="0 0 24 24">
-                                        <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
-                                    </svg>
-                                </a>
-                            </p>
-                            {{ form.model }}
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-5">
-                    <h2 class="text-left" tabindex="0">
-                        Template
-                        <a class="custom-tooltip"
-                           data-bs-toggle="tooltip"
-                           data-bs-title="Choose one of our templates for your presentation, or base it off your own!">
-                            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="24px"
-                                 height="24px"
-                                 viewBox="0 0 24 24">
-                                <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
-                            </svg>
-                        </a>
-                    </h2>
-                    <hr />
-                    <div class="template-picker" role="radiogroup">
-                        {% for value, text in form.template.field.choices %}
-                            <label class="template-choice" for="template_{{ value }}">
-                                <input type="radio"
-                                       name="template"
-                                       id="template_{{ value }}"
-                                       value="{{ value }}"
-                                       aria-label="Presentation template choice {{ value }}" />
-                                <img src="{% static 'img/template_' %}{{ value }}.png"
-                                     alt="{{ text }}"
-                                     class="template-image" />
-                            </label>
-                        {% endfor %}
-                    </div>
-                    <div class="d-flex justify-content-center mt-3">
-                        <input id="transform-template-file-upload"
-                               class="custom-file-upload"
-                               name="template_file"
-                               type="file"
-                               tabindex="-1"
-                               aria-label="File upload"
-                               accept="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
-                        <button id="transform-template-file-btn"
+            <!-- Form Type Selection -->
+            <div class="form-type-selection mb-5">
+                <h2 class="text-center mb-3">Presentation Type</h2>
+                <ul class="nav nav-tabs" id="formTypeTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active"
+                                id="lecture-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#lecture"
                                 type="button"
-                                class="btn btn-primary">
-                            <label for="transform-template-file-upload">Choose Custom Template</label>
-                        </button>
-                        <div class="mt-3 text-center" id="selected-template-file-name"></div>
+                                role="tab"
+                                aria-controls="lecture"
+                                aria-selected="true">Lecture</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link"
+                                id="exercise-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#exercise"
+                                type="button"
+                                role="tab"
+                                aria-controls="exercise"
+                                aria-selected="false">Exercises</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="formTypeTabContent">
+                    <div class="tab-pane fade show active"
+                         id="lecture"
+                         role="tabpanel"
+                         aria-labelledby="lecture-tab">
+                        <br>
+                        <!-- Transformer Form -->
+                        <form id="generator-form" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-5">
+                                <h2 class="text-left" tabindex="0">
+                                    Input
+                                    <a class="custom-tooltip"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-title="Upload a PowerPoint or any text file to the transformer. You can add extra instructions with a prompt, or use it by itself.">
+                                        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             width="24px"
+                                             height="24px"
+                                             viewBox="0 0 24 24">
+                                            <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                        </svg>
+                                    </a>
+                                </h2>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-lg-8">{{ TForm.prompt }}</div>
+                                    <div class="col-lg-4 mt-4 mx-auto mt-lg-0">
+                                        <input id="transform-file-upload"
+                                               class="custom-file-upload"
+                                               name="input_files"
+                                               type="file"
+                                               multiple
+                                               tabindex="-1"
+                                               aria-label="File upload" />
+                                        <button id="transform-file-btn" type="button" class="btn btn-primary">
+                                            <label for="transform-file-upload">Choose File(s)</label>
+                                        </button>
+                                        <div class="mt-3 text-center" id="selected-input-file-names"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <h2 class="text-left" tabindex="0">Options</h2>
+                                <hr />
+                                <div class="options">
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            Language
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change language of presentation. Auto uses the language of your prompt.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ TForm.language }}
+                                    </div>
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            Tone
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change the tone of the writing in the presentation.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ TForm.tone }}
+                                    </div>
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            Complexity
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change the level of detail of the information in the presentation.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ TForm.complexity }}
+                                        <small id="complexity_value" class="mt-2">Default</small>
+                                    </div>
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            Number of Images
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change the number of images your presentation will have.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ TForm.image_frequency }}
+                                        <small id="image_frequency_value" class="mt-2">Default</small>
+                                    </div>
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            Number of slides
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change the size of the presentation by number of slides.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ TForm.num_slides }}
+                                        <small id="num_slides_value" class="mt-2">{{ TForm.num_slides.value }}</small>
+                                    </div>
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            Model
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change the AI model used to generate presentations. GPT-4 produces better presentations.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ TForm.model }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <h2 class="text-left" tabindex="0">
+                                    Template
+                                    <a class="custom-tooltip"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-title="Choose one of our templates for your presentation, or base it off your own!">
+                                        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             width="24px"
+                                             height="24px"
+                                             viewBox="0 0 24 24">
+                                            <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                        </svg>
+                                    </a>
+                                </h2>
+                                <hr />
+                                <div class="template-picker" role="radiogroup">
+                                    {% for value, text in TForm.template.field.choices %}
+                                        <label class="template-choice" for="template_{{ value }}">
+                                            <input type="radio"
+                                                   name="template"
+                                                   id="template_{{ value }}"
+                                                   value="{{ value }}"
+                                                   aria-label="Presentation template choice {{ value }}" />
+                                            <img src="{% static 'img/template_' %}{{ value }}.png"
+                                                 alt="{{ text }}"
+                                                 class="template-image" />
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <input id="transform-template-file-upload"
+                                           class="custom-file-upload"
+                                           name="template_file"
+                                           type="file"
+                                           tabindex="-1"
+                                           aria-label="File upload"
+                                           accept="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+                                    <button id="transform-template-file-btn"
+                                            type="button"
+                                            class="btn btn-primary">
+                                        <label for="transform-template-file-upload">Choose Custom Template</label>
+                                    </button>
+                                    <div class="mt-3 text-center" id="selected-template-file-name"></div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary submit-btn mx-auto mb-5">Generate Presentation</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade"
+                         id="exercise"
+                         role="tabpanel"
+                         aria-labelledby="exercise-tab">
+                        <br>
+                        <!-- Exercise Form -->
+                        <form id="exercise-form" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-5">
+                                <h2 class="text-left" tabindex="0">
+                                    Input
+                                    <a class="custom-tooltip"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-title="Upload a PowerPoint or any text file to the transformer. You can add extra instructions with a prompt, or use it by itself.">
+                                        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             width="24px"
+                                             height="24px"
+                                             viewBox="0 0 24 24">
+                                            <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                        </svg>
+                                    </a>
+                                </h2>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-lg-8">{{ EForm.prompt }}</div>
+                                    <div class="col-lg-4 mt-4 mx-auto mt-lg-0">
+                                        <input id="exercise-file-upload"
+                                               class="custom-file-upload"
+                                               name="input_files"
+                                               type="file"
+                                               multiple
+                                               tabindex="-1"
+                                               aria-label="File upload" />
+                                        <button id="exercise-file-btn" type="button" class="btn btn-primary">
+                                            <label for="exercise-file-upload">Choose File(s)</label>
+                                        </button>
+                                        <div class="mt-3 text-center" id="selected-exercise-input-file-names"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <h2 class="text-left" tabindex="0">Options</h2>
+                                <hr />
+                                <div class="options">
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            Language
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change language of presentation. Auto uses the language of your prompt.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ EForm.language }}
+                                    </div>
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            Complexity
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change the level of detail of the information in the presentation.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ EForm.complexity }}
+                                        <small id="complexity_value" class="mt-2">Default</small>
+                                    </div>
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            # of True or False
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change the amount of true or false questions.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ EForm.num_true_false }}
+                                    </div>
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            # of Multiple Choice
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change the amount of multiple choice questions.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ EForm.num_multiple_choice }}
+                                    </div>
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            # of Short Answer
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change the amount of short answer questions.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ EForm.num_short_ans }}
+                                    </div>
+                                    <div class="mt-4 text-center d-flex flex-column align-items-center">
+                                        <p>
+                                            Model
+                                            <a class="custom-tooltip"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="Change the AI model used to generate presentations. GPT-4 produces better presentations.">
+                                                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24px"
+                                                     height="24px"
+                                                     viewBox="0 0 24 24">
+                                                    <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        {{ EForm.model }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <h2 class="text-left" tabindex="0">
+                                    Template
+                                    <a class="custom-tooltip"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-title="Choose one of our templates for your presentation, or base it off your own!">
+                                        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             width="24px"
+                                             height="24px"
+                                             viewBox="0 0 24 24">
+                                            <path id="tooltip-svg" fill="var(--foreground)" stroke="black" stroke-width="0" d="M 12.00,2.00 C 6.48,2.00 2.00,6.48 2.00,12.00 2.00,17.52 6.48,22.00 12.00,22.00 17.52,22.00 22.00,17.52 22.00,12.00 22.00,6.48 17.52,2.00 12.00,2.00 Z M 13.00,17.00 C 13.00,17.00 11.00,17.00 11.00,17.00 11.00,17.00 11.00,11.00 11.00,11.00 11.00,11.00 13.00,11.00 13.00,11.00 13.00,11.00 13.00,17.00 13.00,17.00 Z M 13.00,9.00 C 13.00,9.00 11.00,9.00 11.00,9.00 11.00,9.00 11.00,7.00 11.00,7.00 11.00,7.00 13.00,7.00 13.00,7.00 13.00,7.00 13.00,9.00 13.00,9.00 Z" />
+                                        </svg>
+                                    </a>
+                                </h2>
+                                <hr />
+                                <div class="template-picker" role="radiogroup">
+                                    {% for value, text in EForm.template.field.choices %}
+                                        <label class="template-choice" for="template_{{ value }}">
+                                            <input type="radio"
+                                                   name="template"
+                                                   id="template_{{ value }}"
+                                                   value="{{ value }}"
+                                                   aria-label="Presentation template choice {{ value }}" />
+                                            <img src="{% static 'img/template_' %}{{ value }}.png"
+                                                 alt="{{ text }}"
+                                                 class="template-image" />
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <input id="exercise-template-file-upload"
+                                           class="custom-file-upload"
+                                           name="template_file"
+                                           type="file"
+                                           tabindex="-1"
+                                           aria-label="File upload"
+                                           accept="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+                                    <button id="exercise-template-file-btn" type="button" class="btn btn-primary">
+                                        <label for="exercise-template-file-upload">Choose Custom Template</label>
+                                    </button>
+                                    <div class="mt-3 text-center" id="selected-template-file-name"></div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary submit-btn mx-auto mb-5">Generate Presentation</button>
+                        </form>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary submit-btn mx-auto mb-5">Generate Presentation</button>
-            </form>
+            </div>
         </div>
     </div>
     <!--Loading Overlay-->

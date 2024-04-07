@@ -227,6 +227,36 @@ class SubscriptionDeletionForm(forms.Form):
     )
 
 
+class ExerciseRepromptForm(forms.Form):
+    def __init__(self, *args, num_slides: int, **kwargs) -> None:  # type: ignore
+        super().__init__(*args, **kwargs)
+        slide_choices = [(str(i), str(i)) for i in range(1, num_slides + 1)]
+        self.fields["slide"] = forms.ChoiceField(
+            choices=slide_choices, label="Slide Number", initial="1"
+        )
+
+    prompt = forms.CharField(required=False, max_length=100, label="Prompt")
+
+    slide_type = forms.ChoiceField(
+        label="Slide Type",
+        choices=SlideTypeChoice.choices,
+        widget=RadioSelect(),
+        required=False,
+    )
+
+    def clean_prompt(self) -> str:
+        prompt = str(self.cleaned_data.get("prompt", ""))
+        if not prompt:
+            raise forms.ValidationError("The prompt field is required.")
+        return prompt
+
+    def clean_slide(self) -> str:
+        slide = str(self.cleaned_data.get("slide", ""))
+        if not slide:
+            raise forms.ValidationError("The slide number is required.")
+        return slide
+
+
 class RepromptForm(forms.Form):
     def __init__(self, *args, num_slides: int, **kwargs) -> None:  # type: ignore
         super().__init__(*args, **kwargs)
@@ -273,3 +303,93 @@ class CustomPasswordResetForm(PasswordResetForm):
             email_message.attach_alternative(html_email, "text/html")
 
         email_message.send()
+
+
+class ExerciseForm(forms.Form):
+    def __init__(self, *args, **kwargs):  # type: ignore
+        super(ExerciseForm, self).__init__(*args, **kwargs)
+        self.fields["complexity"].initial = 3
+
+    prompt = forms.CharField(
+        label="Prompt",
+        required=False,
+        widget=Textarea(
+            attrs={
+                "rows": 10,
+                "cols": 40,
+                "placeholder": "Enter your prompt here (optional)",
+                "class": "form-control rounded custom-text-area",
+                "aria-label": "Optional prompt text input",
+            }
+        ),
+    )
+
+    num_true_false = forms.IntegerField(
+        label="Number of True False Questions",
+        initial=3,
+        widget=NumberInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": "Number of True/False questions",
+            }
+        ),
+    )
+
+    num_multiple_choice = forms.IntegerField(
+        label="Number of Multiple Choice Questions",
+        initial=3,
+        widget=NumberInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": "Number of Multiple Choice questions",
+            }
+        ),
+    )
+
+    num_short_ans = forms.IntegerField(
+        label="Number of Short Answer Questions",
+        initial=3,
+        widget=NumberInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": "Number of Short Answer questions",
+            }
+        ),
+    )
+
+    model = forms.ChoiceField(
+        label="Model",
+        choices=ModelChoice.choices,
+        widget=forms.Select(attrs={"class": "form-control dropdown"}),
+    )
+
+    complexity = forms.IntegerField(
+        label="Complexity",
+        widget=NumberInput(
+            attrs={
+                "type": "range",
+                "min": 0,
+                "max": 6,
+                "class": "custom-slider",
+                "aria-label": "Exercise complexity selection",
+            }
+        ),
+    )
+
+    language = forms.ChoiceField(
+        label="Language",
+        choices=LanguageChoice.choices,
+        widget=forms.Select(
+            attrs={
+                "class": "form-control dropdown",
+                "aria-label": "Exercise language selection",
+            }
+        ),
+    )
+
+    template = forms.ChoiceField(
+        label="Templates",
+        choices=TemplateChoice.choices,
+        widget=RadioSelect(),
+        required=False,
+    )

@@ -37,6 +37,14 @@ $(document).ready(function () {
         });
     });
 
+    $("#exercise-file-upload").on("change", function (event) {
+        $("#selected-file-names").empty();
+
+        Array.from(event.target.files).forEach((file) => {
+            $("#selected-exercise-input-file-names").append(`<p>${file.name}</p>`);
+        });
+    });
+
     $("#transform-template-file-upload").on("change", function (event) {
         $('input[name="template"]').prop("checked", false);
         $("#selected-template-file-name").empty();
@@ -94,6 +102,10 @@ $(document).ready(function () {
 
     $("#reprompt-formset").on("submit", function (event) {
         $(".loading-overlay#results-overlay").show();
+    });
+
+    $("#exercise-form").on("submit", function (event) {
+        $(".loading-overlay").show();
     });
 
     $("#add-form").click(function (e) {
