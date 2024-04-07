@@ -59,9 +59,9 @@
                                 </div>
                             </div>
                         {% endfor %}
-                        <button class="mt-3" id="add-form">Add</button>
-                        <button class="mt-3" id="remove-form">Remove</button>
-                        <button class="mt-5" type="submit">Submit</button>
+                        <button class="mt-3 btn btn-primary" id="add-form">Add</button>
+                        <button class="mt-3 btn btn-primary" id="remove-form">Remove</button>
+                        <button class="mt-3 btn btn-primary" type="submit">Submit</button>
                     </form>
                 </div>
                 <div class="card-footer border-light mt-5">
@@ -70,6 +70,14 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <!--Loading Overlay-->
+    <div class="loading-overlay"id="results-overlay">
+        <div class="loading-overlay-textbox">
+            <div class="spinner"></div>
+            <h1>Fixing your slides...</h1>
+            <h2>Should only take a little bit</h2>
         </div>
     </div>
     <link rel="stylesheet"

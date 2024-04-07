@@ -93,10 +93,15 @@ $(document).ready(function () {
         $(this).find('input[type="radio"]').prop("checked", true);
     });
 
-    $(".loading-overlay").hide();
+    $(".loading-overlay#transform-overlay").hide();
+    $(".loading-overlay#results-overlay").hide();
 
     $("#generator-form").on("submit", function (event) {
-        $(".loading-overlay").show();
+        $(".loading-overlay#transform-overlay").show();
+    });
+
+    $("#reprompt-formset").on("submit", function (event) {
+        $(".loading-overlay#results-overlay").show();
     });
 
     $("#exercise-form").on("submit", function (event) {
