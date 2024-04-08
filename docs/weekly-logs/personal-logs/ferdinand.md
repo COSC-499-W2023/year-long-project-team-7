@@ -240,3 +240,18 @@ _Team Evaluation Screenshot Week 27_
 ![tasks-screenshot](../../img/ferdinand-tasks-26.png)
 <br>
 _Tasks Screenshot_
+
+## Mar 31 2024 -> APR 11 2024
+
+![evaluation-screenshot](../../img/ferdinand-eval-28.png)
+<br>
+_Team Evaluation Screenshot Week 28_
+
+![evaluation-screenshot](../../img/ferdinand-eval-27.png)
+<br>
+_Team Evaluation Screenshot Week 27_
+
+
+![tasks-screenshot](../../img/ferdinand-tasks-27-28.png)
+<br>
+_Tasks Screenshot_
