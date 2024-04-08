@@ -64,6 +64,7 @@ class TransformerForm(forms.Form):
         label="Complexity",
         widget=NumberInput(
             attrs={
+                "id": "id_complexity_presentation",
                 "type": "range",
                 "min": 0,
                 "max": 6,
@@ -367,6 +368,7 @@ class ExerciseForm(forms.Form):
         label="Complexity",
         widget=NumberInput(
             attrs={
+                "id": "id_complexity_exercises",
                 "type": "range",
                 "min": 0,
                 "max": 6,

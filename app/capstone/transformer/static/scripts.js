@@ -58,7 +58,7 @@ $(document).ready(function () {
         $("#transform-template-file-upload").val("");
     });
 
-    $("#id_complexity").on("input change", function () {
+    $("#id_complexity_presentation").on("input change", function () {
         var value = $(this).val();
         var text = "Default";
         if (value == 0) text = "Very Basic";
@@ -68,7 +68,20 @@ $(document).ready(function () {
         else if (value == 4) text = "Highly Advanced";
         else if (value == 5) text = "Very Detailed";
         else if (value == 6) text = "Extremely Detailed";
-        $("#complexity_value").text(text);
+        $("#complexity_value_presentation").text(text);
+    });
+
+    $("#id_complexity_exercises").on("input change", function () {
+        var value = $(this).val();
+        var text = "Default";
+        if (value == 0) text = "Very Basic";
+        else if (value == 1) text = "Basic";
+        else if (value == 2) text = "Moderate";
+        else if (value == 3) text = "Default";
+        else if (value == 4) text = "Highly Advanced";
+        else if (value == 5) text = "Very Detailed";
+        else if (value == 6) text = "Extremely Detailed";
+        $("#complexity_value_exercises").text(text);
     });
 
     $("#id_image_frequency").on("input change", function () {

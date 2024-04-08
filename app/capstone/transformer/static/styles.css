@@ -269,6 +269,20 @@ a:hover {
     transform: scale(1.05);
 }
 
+#formTypeTab .nav-link.active {
+    color: var(--background);
+    background-color: var(--foreground) !important;
+}
+
+#formTypeTab .nav-link {
+    border: 1px solid var(--foreground);
+    color: var(--foreground);
+}
+
+.nav-tabs {
+    border-bottom: var(--foreground) 1px solid;
+}
+
 .homepage-nav:hover {
     transform: none;
 }

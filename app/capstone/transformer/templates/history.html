@@ -13,16 +13,16 @@
                                 aria-label="History entry for date: {{ conversion.date }}"
                                 role="tree"
                                 aria-expanded="false"
-                                aria-controls="collapse{{ forloop.counter }}"
-                                id="heading{{ forloop.counter }}"
+                                aria-controls="collapse-presentation"
+                                id="presentation-heading"
                                 data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{ forloop.counter }}">
+                                data-bs-target="#collapse-presentation">
                             <h3 class="entry-date">{{ conversion.date }} UTC</h3>
                             <img class="entry-dropdown" src="{% static 'img/dropdown.svg' %}">
                         </button>
-                        <div id="collapse{{ forloop.counter }}"
+                        <div id="collapse-presentation"
                              class="collapse"
-                             aria-labelledby="heading{{ forloop.counter }}"
+                             aria-labelledby="presentation-heading""
                              data-parent="#accordion">
                             <div class="card-body">
                                 <div class="row">
@@ -89,16 +89,16 @@
                                 aria-label="History entry for date: {{ exercise.date }}"
                                 role="tree"
                                 aria-expanded="false"
-                                aria-controls="collapse{{ forloop.counter }}"
-                                id="heading{{ forloop.counter }}"
+                                aria-controls="collapse-exercises"
+                                id="exercise-heading"
                                 data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{ forloop.counter }}">
+                                data-bs-target="#collapse-exercises">
                             <h3 class="entry-date">{{ exercise.date }} UTC</h3>
                             <img class="entry-dropdown" src="{% static 'img/dropdown.svg' %}">
                         </button>
-                        <div id="collapse{{ forloop.counter }}"
+                        <div id="collapse-exercises"
                              class="collapse"
-                             aria-labelledby="heading{{ forloop.counter }}"
+                             aria-labelledby="exercise-heading"
                              data-parent="#accordion">
                             <div class="card-body">
                                 <div class="row">
