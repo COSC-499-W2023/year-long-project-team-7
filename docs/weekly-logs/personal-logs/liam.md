@@ -436,7 +436,7 @@ _Team Evaluation Screenshot_
 
 ![tasks-screenshot](../../img/liam-w26-tasks.png)
 <br>
-Note: Last week I reviewed some hot-fixes for our app and worked on my individual report/video demo.
+Note: Last week we got our major features merged to the master branch, I reviewed some hot-fixes for the app, and worked on my individual report/video demo.
 
 <br>
 [Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Milestone)
