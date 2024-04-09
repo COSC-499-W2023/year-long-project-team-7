@@ -275,3 +275,14 @@ _Tasks Screenshot_
 
 ### Goals this week
 1. Continue exercise creation backend
+
+## Apr 1 - 7
+![evaluation screenshot](../../img/keiran-eval-24.png)
+_Team evaluation Screenshot_
+
+![w17 tasks screenshot](../../img/keiran-w24-tasks.png)
+_Tasks Screenshot_
+
+### Goals this week
+1. Finish exercise creation backend
+2. Write project report
