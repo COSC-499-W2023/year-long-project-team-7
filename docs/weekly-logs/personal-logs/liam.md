@@ -422,3 +422,24 @@ Note: This week I completed the exercise frontend and helped combine it with the
 
 
 <br>
+
+## Apr 1 -> Apr 7 2024
+
+
+![evaluation-screenshot](../../img/liam-eval-26.png)
+<br>
+_Team Evaluation Screenshot_
+
+<br>
+
+### Goals/Features this week
+
+![tasks-screenshot](../../img/liam-w26-tasks.png)
+<br>
+Note: Last week we got our major features merged to the master branch, I reviewed some hot-fixes for the app, and worked on my individual report/video demo.
+
+<br>
+[Individual Tasks](https://github.com/orgs/COSC-499-W2023/projects/1/views/8?filterQuery=liamras&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Milestone)
+
+
+<br>
