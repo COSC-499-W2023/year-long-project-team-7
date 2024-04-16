@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    {% include "login_form_template.html" with form=form form_title="Login" form_action="/login" submit_text="Login" form_alt_action="/register" form_alt_text="Create a new account" %}
+{% endblock content %}

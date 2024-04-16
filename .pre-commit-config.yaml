@@ -1,0 +1,15 @@
+repos:
+-   repo: local
+    hooks:
+    -   id: format
+        name: format
+        entry: bash -c 'black . && djlint . --reformat --format-css || true'
+        language: system
+        stages: [commit]
+        pass_filenames: false
+    -   id: mypy
+        name: mypy
+        entry: bash -c 'cd app/capstone && mypy .'
+        language: system
+        stages: [commit]
+        pass_filenames: false

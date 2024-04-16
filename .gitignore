@@ -1,0 +1,12 @@
+.env
+venv/
+__pycache__/
+*.pyc
+files/
+.vscode/
+.mypy_cache/
+ssl-cert/
+logs/
+settings_env.py
+stripe.exe
+loggo.txt
